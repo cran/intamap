@@ -1,0 +1,280 @@
+
+R version 2.9.1 (2009-06-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(intamap)
+Loading required package: sp
+Loading required package: gstat
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
+Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
+Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: akima
+Loading required package: automap
+Loading required package: mvtnorm
+Loading required package: MASS
+Loading required package: evd
+Loading required package: lattice
+
+Attaching package: 'lattice'
+
+
+	The following object(s) are masked from package:evd :
+
+	 qq 
+
+> set.seed(13531)
+> 
+> plotFigs = FALSE
+> library(gstat)
+> npts = 1000
+> pts=SpatialPoints(cbind(runif(npts),runif(npts)))
+> d = SpatialPointsDataFrame(cbind(0,0),data.frame(z=1))
+> observations = krige(z~1,d,pts,vgm(1, "Sph", .5,anis=c(90,0.5)),nsim=1,nmax=50,beta=0)
+[using conditional Gaussian simulation]
+> 
+> #spplot(sim)
+> 
+> predictionLocations = spsample(observations, 1000, "regular")
+> 
+> # We dont know the projection of the data at this stage, assume it is
+> # somehow metric
+> 
+> 
+> 
+> formulaString = as.formula(sim1~1)
+> krigingObject = createIntamapObject(
++ 	observations = observations,
++ 	predictionLocations = predictionLocations,
++   formulaString = formulaString
++ )
+> class(krigingObject) = c("automap")
+> 
+> checkSetup(krigingObject)
+Checking object ... OK
+> object = preProcess(krigingObject)
+> objTemp=estimateAnisotropy(object)
+> #rotate Data
+> objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+> #Estimate Variogram Model
+> vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+> objTemp$anisPar
+$ratio
+[1] 1.216656
+
+$direction
+[1] 5.979585
+
+$Q
+          Q11      Q22      Q12
+[1,] 66.88105 98.14077 -3.31059
+
+$doRotation
+[1] TRUE
+
+> if (plotFigs) {
++   spplot(object$observations,"sim1",col.regions=bpy.colors())
++   spplot(objTemp$observations,"sim1",col.regions=bpy.colors())
++   plot(variogram(sim1~1,object$observations,alpha=c(0,90)),vario)
++ }
+> vario
+  model       psill    range
+1   Nug 0.005973228 0.000000
+2   Sph 0.700494800 0.336453
+> 
+> 
+> vmod = vgm(1,"Sph",1,anis=c(90,0.5))
+> krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=50,beta=0)
+[using conditional Gaussian simulation]
+> object = preProcess(krigingObject)
+> objTemp=estimateAnisotropy(object)
+> objTemp$anisPar
+$ratio
+[1] 1.492972
+
+$direction
+[1] 11.65244
+
+$Q
+          Q11      Q22       Q12
+[1,] 33.54031 69.58986 -7.764514
+
+$doRotation
+[1] TRUE
+
+> objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+> vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+> vario
+  model      psill    range
+1   Nug 0.01484620 0.000000
+2   Sph 0.62990427 0.634356
+> vmod
+  model psill range ang1 anis1
+1   Sph     1     1   90   0.5
+> 
+> vmod = vgm(1,"Sph",2,anis=c(45,0.2))
+> krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=50,beta=0)
+[using conditional Gaussian simulation]
+> object = preProcess(krigingObject)
+> objTemp=estimateAnisotropy(object)
+> objTemp$anisPar
+$ratio
+[1] 2.97331
+
+$direction
+[1] 46.18629
+
+$Q
+         Q11     Q22       Q12
+[1,] 87.3733 81.7935 -67.33488
+
+$doRotation
+[1] TRUE
+
+> objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+> vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+> vario
+  model    psill    range
+1   Nug 0.000000 0.000000
+2   Sph 1.045157 1.074695
+> vmod
+  model psill range ang1 anis1
+1   Sph     1     2   45   0.2
+> 
+> 
+> vmod = vgm(1,"Sph",1,anis=c(135,0.5))
+> krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=50,beta=0)
+[using conditional Gaussian simulation]
+> object = preProcess(krigingObject)
+> objTemp=estimateAnisotropy(object)
+> objTemp$anisPar
+$ratio
+[1] 1.377259
+
+$direction
+[1] -42.62945
+
+$Q
+          Q11      Q22      Q12
+[1,] 43.80091 46.10142 13.86895
+
+$doRotation
+[1] TRUE
+
+> objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+> vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+> vario
+  model       psill     range
+1   Nug 0.009883548 0.0000000
+2   Sph 0.656978547 0.6645132
+> vmod
+  model psill range ang1 anis1
+1   Sph     1     1  135   0.5
+> 
+> 
+> 
+> vmod = vgm(1,"Sph",.3,anis=c(90,0.5))
+> krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=100,beta=0)
+[using conditional Gaussian simulation]
+> object = preProcess(krigingObject)
+> objTemp=estimateAnisotropy(object)
+> objTemp$anisPar
+$ratio
+[1] 1.251126
+
+$direction
+[1] -1.564169
+
+$Q
+          Q11      Q22      Q12
+[1,] 103.3680 161.6921 1.593826
+
+$doRotation
+[1] TRUE
+
+> objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+> vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+> vario
+  model      psill     range
+1   Nug 0.01828198 0.0000000
+2   Sph 0.98777590 0.2893055
+> vmod
+  model psill range ang1 anis1
+1   Sph     1   0.3   90   0.5
+> if (plotFigs) {
++   p1 = plot(variogram(sim1~1,object$observations,alpha=c(0,90)),vmod,ylim = c(0,1.2),xlim=c(0,0.6),main="orig,orig")
++   p2 = plot(variogram(sim1~1,object$observations,alpha=c(0,90)),vario,ylim = c(0,1.2),xlim=c(0,0.6),main="orig,fitted")
++   p3 = plot(variogram(sim1~1,objTemp$observations,alpha=c(0,90)),vmod,ylim = c(0,1.2),xlim=c(0,0.6),main="rot,orig")
++   p4 = plot(variogram(sim1~1,objTemp$observations,alpha=c(0,90)),vario,ylim = c(0,1.2),xlim=c(0,0.6),main = "rot,fitted")
++ 
++   print(p1,position = c(0,0.5,0.5,1),more = TRUE)
++   print(p2,position = c(0.5,0.5,1,1),more = TRUE)
++   print(p3,position = c(0,0,0.5,0.5),more = TRUE)
++   print(p4,position = c(0.5,0,1,0.5))
++ 
++   plot(variogram(sim1~1,objTemp$observations,alpha=c(seq(0,150,30))),vmod,ylim = c(0,1.2),xlim=c(0,0.6),main="rot,orig")
++ 
++   spplot(object$observations,"sim1",col.regions=bpy.colors())
++   spplot(objTemp$observations,"sim1",col.regions=bpy.colors())
++ }
+> 
+> 
+> 
+> 
+> data(sic2004)
+> coordinates(sic.val)=~x+y
+> sic.val$value=sic.val$dayx
+> x = sic.test$x
+> y = sic.test$y
+> 
+> coordinates(sic.test)=~x+y
+> 
+> stest = sic.test[(x > -10000 & x < 140000 & y > 100000 & y < 240000),]
+>  
+> obj<-createIntamapObject(formulaString = "joker~1",
++    observations=sic.val,
++    predictionLocations = stest,
++    params = list(doAnisotropy = TRUE),
++    class = "automap" )
+> obj = preProcess(obj)
+> obj = estimateParameters(obj)
+> obj$anisPar
+$ratio
+[1] 1.456433
+
+$direction
+[1] 49.90075
+
+$Q
+              Q11          Q22           Q12
+[1,] 3.928022e-06 3.475294e-06 -1.310301e-06
+
+$doRotation
+[1] TRUE
+
+> obj = spatialPredict(obj)
+> obj = postProcess(obj)
+> summary(as.data.frame(obj$outputTable))
+       x                y               mean          variance    
+ Min.   : -8351   Min.   :103106   Min.   :118.9   Min.   : 3333  
+ 1st Qu.: 20626   1st Qu.:136147   1st Qu.:142.4   1st Qu.:17222  
+ Median : 63885   Median :167801   Median :151.7   Median :18926  
+ Mean   : 59128   Mean   :170171   Mean   :175.4   Mean   :17704  
+ 3rd Qu.: 94458   3rd Qu.:210897   3rd Qu.:155.8   3rd Qu.:19281  
+ Max.   :131632   Max.   :239246   Max.   :675.9   Max.   :19372  
+> 

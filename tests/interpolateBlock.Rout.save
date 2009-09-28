@@ -1,0 +1,121 @@
+
+R version 2.9.1 (2009-06-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(intamap)
+Loading required package: sp
+Loading required package: gstat
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
+Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
+Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: akima
+Loading required package: automap
+Loading required package: mvtnorm
+Loading required package: MASS
+Loading required package: evd
+Loading required package: lattice
+
+Attaching package: 'lattice'
+
+
+	The following object(s) are masked from package:evd :
+
+	 qq 
+
+> data(meuse)
+> coordinates(meuse) = ~x+y
+> data(meuse.grid)
+> coordinates(meuse.grid) = ~x+y
+> set.seed(13531)
+> 
+> predictionLocations = spsample(meuse,50,"regular")
+> gridded(predictionLocations) = TRUE
+> cs = predictionLocations@grid@cellsize[1]/2
+> meuse$value = log(meuse$zinc)
+> 
+> outputWhat = list(mean=TRUE,variance=TRUE,quantile=0.025,quantile=0.0975)
+> res1 = interpolateBlock(meuse,predictionLocations,outputWhat,methodName = "automap")$outputTable
+R 2009-09-16 14:06:05 interpolating 155 observations, 48 prediction locations
+Checking object ... OK
+[using ordinary kriging]
+[1] "performed ordinary block kriging"
+Warning message:
+In predictTime("spatialPredict", nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
+  
+ using standard model for estimating time. For better 
+ platform spesific predictions, please run 
+ timeModels <- generateTimeModels()
+  and save the workspace
+> summary(t(res1))
+       x                y               mean          variance       
+ Min.   :179019   Min.   :330013   Min.   :4.916   Min.   :0.007477  
+ 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.482   1st Qu.:0.022377  
+ Median :180183   Median :331644   Median :5.797   Median :0.133184  
+ Mean   :180183   Mean   :331644   Mean   :5.963   Mean   :0.207104  
+ 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388234  
+ Max.   :181348   Max.   :333275   Max.   :7.185   Max.   :0.521745  
+ quantile0.025   quantile0.0975 
+ Min.   :4.139   Min.   :4.574  
+ 1st Qu.:4.731   1st Qu.:5.012  
+ Median :5.133   Median :5.410  
+ Mean   :5.198   Mean   :5.457  
+ 3rd Qu.:5.652   3rd Qu.:5.839  
+ Max.   :6.741   Max.   :6.891  
+> 
+> Srl = list()
+> for (i in 1:dim(coordinates(predictionLocations))[1]) {
++   pt1 = coordinates(predictionLocations)[i,]
++   x1 = pt1[1]-cs
++   x2 = pt1[1]+cs
++   y1 = pt1[2]-cs
++   y2 = pt1[2]+cs
++ 
++   boun = data.frame(x=c(x1,x2,x2,x1,x1),y=c(y1,y1,y2,y2,y1))
++   coordinates(boun) = ~x+y
++   boun = Polygon(boun)
++   Srl[[i]] = Polygons(list(boun),ID = as.character(i))
++ }
+> predictionLocations = SpatialPolygons(Srl)
+> 
+> res2 = interpolateBlock(meuse,predictionLocations,outputWhat,methodName="automap")$outputTable
+R 2009-09-16 14:06:07 interpolating 155 observations, 48 prediction locations
+[Time models loaded...]
+Checking object ... OK
+[using ordinary kriging]
+[1] "performed ordinary block kriging"
+> summary(t(res2))
+       x                y               mean          variance       
+ Min.   :179019   Min.   :330013   Min.   :4.913   Min.   :0.005564  
+ 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.481   1st Qu.:0.020854  
+ Median :180183   Median :331644   Median :5.799   Median :0.134431  
+ Mean   :180183   Mean   :331644   Mean   :5.964   Mean   :0.206540  
+ 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388670  
+ Max.   :181348   Max.   :333275   Max.   :7.189   Max.   :0.523013  
+ quantile0.025   quantile0.0975 
+ Min.   :4.136   Min.   :4.570  
+ 1st Qu.:4.733   1st Qu.:5.013  
+ Median :5.132   Median :5.409  
+ Mean   :5.205   Mean   :5.462  
+ 3rd Qu.:5.656   3rd Qu.:5.852  
+ Max.   :6.758   Max.   :6.904  
+> 
+> max((res2-res1)/res1)
+[1] 0.01628060
+> 
+> 

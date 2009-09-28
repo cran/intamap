@@ -1,0 +1,346 @@
+
+R version 2.9.1 (2009-06-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> options(error = recover)
+> print(getwd())
+[1] "D:/SVN/intamap.Rcheck/tests"
+> set.seed(15331)
+> library(intamap)
+Loading required package: sp
+Loading required package: gstat
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
+Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
+Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: akima
+Loading required package: automap
+Loading required package: mvtnorm
+Loading required package: MASS
+Loading required package: evd
+Loading required package: lattice
+
+Attaching package: 'lattice'
+
+
+	The following object(s) are masked from package:evd :
+
+	 qq 
+
+> data(meuse)
+> meuse$value=meuse$zinc
+> coordinates(meuse) = ~x+y
+> data(meuse.grid)
+> gridded(meuse.grid)=~x+y
+> output = interpolate(meuse, meuse.grid, list(mean=T, variance=T, nsim = 5),methodName = "automap")
+R 2009-09-16 14:05:12 interpolating 155 observations, 3103 prediction locations
+Checking object ... OK
+Warning messages:
+1: In predictTime("spatialPredict", nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
+  
+ using standard model for estimating time. For better 
+ platform spesific predictions, please run 
+ timeModels <- generateTimeModels()
+  and save the workspace
+2: closing unused connection 3 (D:\DOCUME~1\skoien\LOCALS~1\Temp\Rtmp0GoXh5\file678418be) 
+> summary(t(output$outputTable))
+       x                y               mean           variance     
+ Min.   :178460   Min.   :329620   Min.   : 121.0   Min.   :  8357  
+ 1st Qu.:179420   1st Qu.:330460   1st Qu.: 201.3   1st Qu.: 45118  
+ Median :179980   Median :331220   Median : 304.3   Median : 55113  
+ Mean   :179985   Mean   :331348   Mean   : 400.7   Mean   : 59098  
+ 3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 544.9   3rd Qu.: 69337  
+ Max.   :181540   Max.   :333740   Max.   :1755.7   Max.   :131310  
+      sim1             sim2             sim3             sim4       
+ Min.   :-642.0   Min.   :-519.7   Min.   :-519.8   Min.   :-710.4  
+ 1st Qu.: 172.2   1st Qu.: 166.8   1st Qu.: 209.4   1st Qu.: 126.5  
+ Median : 370.6   Median : 379.2   Median : 413.5   Median : 335.6  
+ Mean   : 407.9   Mean   : 423.1   Mean   : 451.0   Mean   : 365.8  
+ 3rd Qu.: 618.8   3rd Qu.: 643.0   3rd Qu.: 654.8   3rd Qu.: 582.3  
+ Max.   :1835.0   Max.   :1959.2   Max.   :1943.8   Max.   :2040.8  
+      sim5       
+ Min.   :-701.9  
+ 1st Qu.: 153.4  
+ Median : 373.7  
+ Mean   : 414.3  
+ 3rd Qu.: 647.0  
+ Max.   :1829.6  
+> 
+> 
+> library(intamap)
+> data(meuse)
+> meuse$value=meuse$zinc
+> coordinates(meuse) = ~x+y
+> data(meuse.grid)
+> gridded(meuse.grid)=~x+y
+> output = interpolate(meuse, meuse.grid, list(mean=TRUE),methodName = "idw")
+R 2009-09-16 14:05:41 interpolating 155 observations, 3103 prediction locations
+[Time models loaded...]
+Checking object ... OK
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[inverse distance weighted interpolation]
+[1] "best idp value found is 2.7 rmse 257.008699665581"
+> summary(t(output$outputTable))
+       x                y               mean       
+ Min.   :178460   Min.   :329620   Min.   : 113.9  
+ 1st Qu.:179420   1st Qu.:330460   1st Qu.: 230.1  
+ Median :179980   Median :331220   Median : 322.6  
+ Mean   :179985   Mean   :331348   Mean   : 407.7  
+ 3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 523.9  
+ Max.   :181540   Max.   :333740   Max.   :1836.4  
+> 
+> 
+> library(intamap)
+> data(meuse)
+> data(meuse.grid)
+> coordinates(meuse) = ~x+y
+> coordinates(meuse.grid) = ~x+y
+> meuse$value=meuse$zinc
+> output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
+R 2009-09-16 14:05:50 interpolating 155 observations, 3103 prediction locations
+[Time models loaded...]
+Checking object ... OK
+Warning message:
+closing unused connection 3 (D:\DOCUME~1\skoien\LOCALS~1\Temp\Rtmp0GoXh5\file3d6c4ae1) 
+> summary(t(output$outputTable))
+       x                y               mean           variance     
+ Min.   :178460   Min.   :329620   Min.   : 127.9   Min.   :  3316  
+ 1st Qu.:179420   1st Qu.:330460   1st Qu.: 214.9   1st Qu.: 10760  
+ Median :179980   Median :331220   Median : 282.5   Median : 15977  
+ Mean   :179985   Mean   :331348   Mean   : 385.8   Mean   : 19133  
+ 3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 505.4   3rd Qu.: 22655  
+ Max.   :181540   Max.   :333740   Max.   :1850.6   Max.   :105085  
+> 
+> 
+> 
+> library(intamap)
+> data(meuse)
+> meuse = meuse[sample(dim(meuse)[1],30),]
+> meuse$value=meuse$zinc
+> coordinates(meuse) = ~x+y
+> mgrid = spsample(meuse,25,"regular")
+> output = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
++                      methodName = "copula")
+R 2009-09-16 14:05:55 interpolating 30 observations, 24 prediction locations
+[Time models loaded...]
+Checking object ... OK
+There were 29 warnings (use warnings() to see them)
+> 
+> output2 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
++                      methodName = "copula",optList = list(methodParameters = output$methodParameters))
+R 2009-09-16 14:05:59 interpolating 30 observations, 24 prediction locations
+[Time models loaded...]
+Checking object ... OK
+Warning messages:
+1: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  pseudoinverse used at 30
+2: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  neighborhood radius 30
+3: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  reciprocal condition number  0
+4: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  pseudoinverse used at 30
+5: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  neighborhood radius 30
+6: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+  reciprocal condition number  0
+> 
+> summary(t(output2$outputTable))
+       x                y               mean              variance        
+ Min.   :179283   Min.   :330139   Min.   :1.409e+02   Min.   :        0  
+ 1st Qu.:179753   1st Qu.:330765   1st Qu.:2.314e+02   1st Qu.:     6007  
+ Median :180222   Median :331704   Median :5.278e+02   Median :   655114  
+ Mean   :180222   Mean   :331704   Mean   :1.667e+07   Mean   : 39155822  
+ 3rd Qu.:180691   3rd Qu.:332642   3rd Qu.:4.838e+03   3rd Qu.:100000000  
+ Max.   :181161   Max.   :333268   Max.   :1.000e+08   Max.   :100000000  
+  excprob1000         quantile0.5    
+ Min.   :4.021e-05   Min.   : 131.0  
+ 1st Qu.:5.635e-03   1st Qu.: 167.9  
+ Median :8.296e-02   Median : 253.7  
+ Mean   :1.653e-01   Mean   : 439.5  
+ 3rd Qu.:2.798e-01   3rd Qu.: 572.1  
+ Max.   :6.134e-01   Max.   :1427.6  
+> 
+> output2$outputTable - output$outputTable
+            [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+x              0    0    0    0    0    0    0    0    0     0     0     0
+y              0    0    0    0    0    0    0    0    0     0     0     0
+mean           0    0    0    0    0    0    0    0    0     0     0     0
+variance       0    0    0    0    0    0    0    0    0     0     0     0
+excprob1000    0    0    0    0    0    0    0    0    0     0     0     0
+quantile0.5    0    0    0    0    0    0    0    0    0     0     0     0
+            [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23]
+x               0     0     0     0     0     0     0     0     0     0     0
+y               0     0     0     0     0     0     0     0     0     0     0
+mean            0     0     0     0     0     0     0     0     0     0     0
+variance        0     0     0     0     0     0     0     0     0     0     0
+excprob1000     0     0     0     0     0     0     0     0     0     0     0
+quantile0.5     0     0     0     0     0     0     0     0     0     0     0
+            [,24]
+x               0
+y               0
+mean            0
+variance        0
+excprob1000     0
+quantile0.5     0
+> 
+> 
+> 

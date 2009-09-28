@@ -1,0 +1,214 @@
+
+R version 2.9.1 (2009-06-26)
+Copyright (C) 2009 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> options(error = recover)
+> library(intamap)
+Loading required package: sp
+Loading required package: gstat
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
+Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
+Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: akima
+Loading required package: automap
+Loading required package: mvtnorm
+Loading required package: MASS
+Loading required package: evd
+Loading required package: lattice
+
+Attaching package: 'lattice'
+
+
+	The following object(s) are masked from package:evd :
+
+	 qq 
+
+> 
+> data(meuse)
+> coordinates(meuse) = ~x+y
+> data(meuse.grid)
+> coordinates(meuse.grid) = ~x+y
+> 
+> meuse$zinc = log(meuse$zinc)
+> 
+> set.seed(112233)
+> krigingObject = createIntamapObject(
++ 	observations = meuse,
++ 	predictionLocations = spsample(meuse.grid,50,"regular"),
++ #	targetCRS = "+init=epsg:3035",
++ #	boundCRS = "+proj=laea +lat_0=48 +lon_0=9 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m",
++ #	boundCRS = boundCRS,
++ #	boundaries = boundaries,
++   formulaString = as.formula("zinc~1"),
++ 	params =  list(debug.level = 1),
++   outputWhat = list(mean = TRUE, variance = TRUE, MOK=7,IWQSEL = 7,excprob = 7.0)
++ )
+> class(krigingObject) = c("automap")
+> 
+> checkSetup(krigingObject)
+Checking object ... OK
+> krigingObject = preProcess(krigingObject)
+> krigingObject = estimateParameters(krigingObject)
+> krigingObject = spatialPredict(krigingObject)
+[using ordinary kriging]
+drawing 100 GLS realisations of beta...
+[using conditional Gaussian simulation]
+[1] "Finished simulations"
+> krigingObject = postProcess(krigingObject)
+> summary(krigingObject$outputTable)
+       x                y               mean          variance      
+ Min.   :178955   Min.   :329893   Min.   :4.802   Min.   :0.09422  
+ 1st Qu.:179459   1st Qu.:330775   1st Qu.:5.524   1st Qu.:0.16062  
+ Median :180215   Median :331657   Median :5.826   Median :0.40595  
+ Mean   :180215   Mean   :331657   Mean   :5.982   Mean   :0.42215  
+ 3rd Qu.:180970   3rd Qu.:332538   3rd Qu.:6.390   3rd Qu.:0.68990  
+ Max.   :181474   Max.   :333420   Max.   :7.511   Max.   :0.78230  
+      MOK7          IWQSEL7         excprob7        
+ Min.   :5.050   Min.   :5.207   Min.   :9.661e-10  
+ 1st Qu.:5.771   1st Qu.:6.101   1st Qu.:2.605e-03  
+ Median :6.074   Median :6.665   Median :5.434e-02  
+ Mean   :6.229   Mean   :6.483   Mean   :1.430e-01  
+ 3rd Qu.:6.637   3rd Qu.:6.871   3rd Qu.:2.341e-01  
+ Max.   :7.759   Max.   :7.604   Max.   :8.434e-01  
+> 
+> 
+> class(krigingObject) = c("yamamoto")
+> 
+> checkSetup(krigingObject)
+Checking object ... OK
+> krigingObject = preProcess(krigingObject)
+> krigingObject = estimateParameters(krigingObject)
+> krigingObject = spatialPredict(krigingObject)
+Conditional simulation  1 
+Conditional simulation  2 
+Conditional simulation  3 
+Conditional simulation  4 
+Conditional simulation  5 
+Conditional simulation  6 
+Conditional simulation  7 
+Conditional simulation  8 
+Conditional simulation  9 
+Conditional simulation  10 
+Conditional simulation  11 
+Conditional simulation  12 
+Conditional simulation  13 
+Conditional simulation  14 
+Conditional simulation  15 
+Conditional simulation  16 
+Conditional simulation  17 
+Conditional simulation  18 
+Conditional simulation  19 
+Conditional simulation  20 
+Conditional simulation  21 
+Conditional simulation  22 
+Conditional simulation  23 
+Conditional simulation  24 
+Conditional simulation  25 
+Conditional simulation  26 
+Conditional simulation  27 
+Conditional simulation  28 
+Conditional simulation  29 
+Conditional simulation  30 
+Conditional simulation  31 
+Conditional simulation  32 
+Conditional simulation  33 
+Conditional simulation  34 
+Conditional simulation  35 
+Conditional simulation  36 
+Conditional simulation  37 
+Conditional simulation  38 
+Conditional simulation  39 
+Conditional simulation  40 
+Conditional simulation  41 
+Conditional simulation  42 
+Conditional simulation  43 
+Conditional simulation  44 
+Conditional simulation  45 
+Conditional simulation  46 
+Conditional simulation  47 
+Conditional simulation  48 
+Conditional simulation  49 
+Conditional simulation  50 
+Conditional simulation  51 
+Conditional simulation  52 
+Conditional simulation  53 
+Conditional simulation  54 
+Conditional simulation  55 
+Conditional simulation  56 
+Conditional simulation  57 
+Conditional simulation  58 
+Conditional simulation  59 
+Conditional simulation  60 
+Conditional simulation  61 
+Conditional simulation  62 
+Conditional simulation  63 
+Conditional simulation  64 
+Conditional simulation  65 
+Conditional simulation  66 
+Conditional simulation  67 
+Conditional simulation  68 
+Conditional simulation  69 
+Conditional simulation  70 
+Conditional simulation  71 
+Conditional simulation  72 
+Conditional simulation  73 
+Conditional simulation  74 
+Conditional simulation  75 
+Conditional simulation  76 
+Conditional simulation  77 
+Conditional simulation  78 
+Conditional simulation  79 
+Conditional simulation  80 
+Conditional simulation  81 
+Conditional simulation  82 
+Conditional simulation  83 
+Conditional simulation  84 
+Conditional simulation  85 
+Conditional simulation  86 
+Conditional simulation  87 
+Conditional simulation  88 
+Conditional simulation  89 
+Conditional simulation  90 
+Conditional simulation  91 
+Conditional simulation  92 
+Conditional simulation  93 
+Conditional simulation  94 
+Conditional simulation  95 
+Conditional simulation  96 
+Conditional simulation  97 
+Conditional simulation  98 
+Conditional simulation  99 
+Conditional simulation  100 
+> krigingObject = postProcess(krigingObject)
+> summary(krigingObject$outputTable)
+       x                y               mean          variance     
+ Min.   :178955   Min.   :329893   Min.   :5.185   Min.   :0.1447  
+ 1st Qu.:179459   1st Qu.:330775   1st Qu.:5.509   1st Qu.:0.3649  
+ Median :180215   Median :331657   Median :5.742   Median :0.4812  
+ Mean   :180215   Mean   :331657   Mean   :5.841   Mean   :0.4616  
+ 3rd Qu.:180970   3rd Qu.:332538   3rd Qu.:6.257   3rd Qu.:0.5345  
+ Max.   :181474   Max.   :333420   Max.   :6.575   Max.   :0.8321  
+      MOK7          IWQSEL7         excprob7        
+ Min.   :5.840   Min.   :5.731   Min.   :2.170e-06  
+ 1st Qu.:6.164   1st Qu.:6.361   1st Qu.:7.998e-03  
+ Median :6.397   Median :6.667   Median :3.568e-02  
+ Mean   :6.496   Mean   :6.611   Mean   :7.672e-02  
+ 3rd Qu.:6.912   3rd Qu.:6.893   3rd Qu.:1.566e-01  
+ Max.   :7.230   Max.   :7.190   Max.   :2.979e-01  
+> 
