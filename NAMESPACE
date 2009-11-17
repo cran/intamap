@@ -7,7 +7,7 @@ import(MASS)
 import(lattice)
 
 export(
-	bayesCopula,
+  bayesCopula,
   blockPredict,
 	checkSetup,
 	coarsenGrid,

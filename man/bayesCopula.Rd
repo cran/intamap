@@ -30,6 +30,11 @@ misleading since  no Bayesian approach is implemented so far. It is possible to 
  quantiles are only supported for the Gaussian copula model. Note that it may occur that the predictive distribution has 
  no finite moments. In this case, a possible predictor is the median of the predictive distribution. If \code{testMean=TRUE} and
 the predictive means have no reasonable values, the median is automatically calculated and a warning is produced.
+
+The copula prediction method is computationally demanding.
+There is a possibility of running it as a parallel process by setting the parameter
+\code{nclus > 1} for the interpolation process. This requires a previous installation
+of the package \code{doSNOW}.
 }
 \value{
   List with the following elements:

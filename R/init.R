@@ -56,11 +56,11 @@ getIntamapParams = function(oldPar, newPar,...){
 getIntamapDefaultParams = function(doAnisotropy = TRUE, 
   testMean = FALSE, removeBias = NA,  addBias = NA, biasRemovalMethod = "LM", 
   nmax = 50, ngrid = 100, nsim = 100, block=numeric(0), processType="gaussian",
-  confProj = FALSE, debug.level = 0, ... ) {
+  confProj = FALSE, debug.level = 0, nclus = 1, ... ) {
 return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = removeBias, addBias = addBias,
   biasRemovalMethod = biasRemovalMethod, 
   nmax = nmax, ngrid = ngrid, nsim = nsim, processType = processType,
-  confProj = confProj, debug.level = debug.level,... ))
+  confProj = confProj, debug.level = debug.level, nclus = nclus, ... ))
 }
 
 
@@ -92,7 +92,7 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
     if ("value" %in% names(observations)) {
       formulaString = "value~1"
     } else formulaString = paste(names(observations)[1],"~1")
-    print(paste("createIntamapProject: formulaString is missing, using: ",formulaString))
+    print(paste("createIntamapObject: formulaString is missing, using: ",formulaString))
   }
   if (!inherits(formulaString,"formula")) 
   	formulaString = as.formula(formulaString)

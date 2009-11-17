@@ -1,5 +1,3 @@
-options(error = recover)
-print(getwd())
 set.seed(15331)
 library(intamap)
 data(meuse)

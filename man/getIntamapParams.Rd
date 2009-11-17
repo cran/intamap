@@ -49,6 +49,9 @@ to be included in the object described in \code{\link{intamap-package}}}
                 calling the function \code{\link{conformProjections}}.}
 \item{\code{debug.level = 0}}{Used in some functions for giving additional output. See 
                 individual functions for more information. }
+\item{\code{nclus = 1}}{it is possible to use parallel processing for some interpolation methods
+        (currently only the copula method), nclus defines the number of processes to 
+        spawn. This requires previous installation of the \code{doSNOW} package}
 \item{\code{...}}{Additional parameters that do not exist in the default parameter set,
            this could be parameters necessary for new methods within or outside the 
            \code{\link{intamap-package}}

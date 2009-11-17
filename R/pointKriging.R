@@ -18,11 +18,16 @@ estimateParameters.automap = function(object,...) {
 				objTemp = object
         objTemp$observations=rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
 				#Estimate Variogram Model
-        if (dim(coordinates(object$predictionLocations))[1] > 100000) 
+        if ("model" %in% names(dots)) {
+    			 afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
+                   verbose = (debug.level >=2), ...)
+        } else {
+          if (dim(coordinates(object$predictionLocations))[1] > 100000) 
             model = c("Sph", "Exp", "Gau") else model = c("Sph", "Exp", "Gau", "Ste")
-				afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
+			    afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
                    verbose = (debug.level >=2), model = model, ...)
-			  vario = afv$var_model				
+			  }
+        vario = afv$var_model				
 				ovar = var(observations[,depVar]@data)
       	if ((vario$model[2]  == "Gau" | (vario$model[2] == "Ste" && vario$kappa[2] > 2)) 
             && vario$psill[1] <= ovar/1e5 ) vario$psill[1] = ovar/1e5   

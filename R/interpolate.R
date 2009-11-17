@@ -29,9 +29,9 @@ interpolate = function(observations, predictionLocations,
   } else if (is.finite(maximumTime)) {
 #    predTime = try(predictTime("spatialPredict",nObs= dim(observations)[1], 
 #          nPred = dim(coordinates(predictionLocations))[1], formula = value~1, class = methodName, outputWhat = outputWhat))
-    predTime = predictTime("spatialPredict",nObs= dim(observations)[1], 
+    predTime = predictTime(nObs= dim(observations)[1], 
           nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, 
-          class = methodName, outputWhat = outputWhat)
+          class = methodName, outputWhat = outputWhat, FUN = "spatialPredict")
     if (is.na(predTime)) {
       warning(paste("was not able to estimate prediction time for methodName",methodName))
     } else if (maximumTime < predTime) {
@@ -122,8 +122,9 @@ interpolateBlock = function(observations, predictionLocations, outputWhat, block
   if (methodName == "automatic") {
     methodName = chooseMethod(observations,predictionLocations,formulaString,obsChar,maximumTime, outputWhat)
   } else {
-    predTime = predictTime("spatialPredict",nObs= dim(observations)[1], 
-          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, class = methodName, outputWhat = outputWhat)
+    predTime = predictTime(nObs= dim(observations)[1], 
+          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, 
+          class = methodName, outputWhat = outputWhat, FUN = "spatialPredict")
     if (is.na(predTime)) {
       warning(paste("was not able to estimate prediction time for methodName",methodName))
     } else if (maximumTime < predTime) {
@@ -237,7 +238,7 @@ if (length(obsChar) > 0 && !is.na(obsChar) && "psgp" %in% installed.packages()) 
     print(paste("estimated time for ",methodNames[i],pTime))
     if (methodNames[i] == "copula") {
       dataObs = observations[[as.character(formulaString[[2]]) ]]
-      test = doNonGauss(dataObs)
+      test = isNonGauss(dataObs)
       if (test) return(ifelse(!is.na(pTime) && pTime < maximumTime && 
            !("nsim" %in% names(outputWhat)) ,"copula","transGaussian"))
     }
@@ -247,18 +248,22 @@ if (length(obsChar) > 0 && !is.na(obsChar) && "psgp" %in% installed.packages()) 
 }
 }
 
-doNonGauss = function(dataObs) {
-  test = TRUE
+isNonGauss = function(dataObs, which = FALSE) {
+  test = logical(4)
   md = min(dataObs)
-  if (md <=0) dataObs = dataObs + abs(md) + sd(dataObs)
+  if (md <= 0)
+    dataObs = dataObs + abs(md) + sd(dataObs)
+  fn = fivenum(dataObs)
+  iqr = IQR(dataObs)
   test[1] = length(boxplot.stats(dataObs)$out)/length(dataObs) > 0.1
-  test[2] = fivenum(dataObs)[3] - fivenum(dataObs)[2] < IQR(dataObs)/3
-  test[3] = fivenum(dataObs)[4] - fivenum(dataObs)[3] < IQR(dataObs)/3
+  test[2] = fn[3] - fn[2] < iqr/3
+  test[3] = fn[4] - fn[3] < iqr/3
   g=boxcox(dataObs ~ 1,lambda=seq(-2.5,2.5,len=101),plotit=FALSE)$y
   test[4] = g[71] < sort(g)[91]
-  sum(test)
+  if (which)
+  	return(list(newObs = dataObs, test=test))
+  else
+    return(any(test))
 }
-
-
 
 #chooseMethod(meuse,predictionLocations,as.formula(value~1),obsChar,Inf)

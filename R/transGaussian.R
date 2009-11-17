@@ -5,7 +5,7 @@ estimateParameters.transGaussian = function(object, lambda, significant = TRUE, 
   formulaString = object$formulaString
   dataObs = observations[[as.character(formulaString[[2]]) ]]
   if (missing(lambda)) {
-    test = doNonGauss(dataObs)
+    test = isNonGauss(dataObs)
 #    if (min(dataObs <=0)) {
 #      pcor = sqrt(var(dataObs))/10000
 #      if (min(dataObs) + pcor > 0 & length(dataObs <= 0) < length(dataObs)/4) {
