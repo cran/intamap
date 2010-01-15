@@ -168,7 +168,7 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
   	  stop("nclus is > 1, but package doSNOW is not available")
     clus <- c(rep("localhost", nclus))
     cl <- makeCluster(clus, type = "SOCK")
-    clusterEvalQ(cl, library(intamap))
+#    clusterEvalQ(cl, intamap:::pfunc)
     registerDoSNOW(cl)
     i = 1 # just to avoid check warnings
     res <- foreach(i = 1:length(locations$x), .combine = rbind) %dopar% {

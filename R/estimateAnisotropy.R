@@ -15,22 +15,32 @@
 #										& input.								
 #																		
 #######################################################################
-estimateAnisotropy<-function(object,depVar){
+estimateAnisotropy<-function(object, depVar, formulaString){
 	
   if (is(object,"Spatial")) {
     observations = object
+  	if (missing(formulaString)) {
+	    if (!missing(depVar)) {
+	      formulaString = as.formula(paste(depVar,"~1"))
+      } else formulaString = as.formula("value~1")
+    }
   } else {
     observations = object$observations
+    formulaString = object$formulaString
 	}
-  if (missing(depVar)) {
-    if ("formulaString" %in% names(object)) {
-	    depVar=as.character(object$formulaString[[2]])
-    } else depVar = "value"
-  }
+	
+	depVar = as.character(formulaString[[2]])
+	if (!(formulaString[[3]] == 1)) {
+  	m = autofitVariogram(formulaString,observations)$var_model
+    g <- gstat(NULL, "value", formulaString, observations, model = m)
+     blue0 <- predict(g, newdata = observations, BLUE = TRUE)
+     residual <- observations[[depVar]] - blue0$value.pred
+  } else residual = observations[[depVar]]
+	
 	# params = object$params
 	xy<-as.matrix(coordinates(observations))
 
-  anisPar<-estimateAnisotropySc(xy[,1],xy[,2],observations[[depVar]],method="linear",pl=FALSE)
+  anisPar<-estimateAnisotropySc(xy[,1],xy[,2],residual,method="linear",pl=FALSE)
   if (is(object,"Spatial")) {
     anisPar
   } else {

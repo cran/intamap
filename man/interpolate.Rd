@@ -124,6 +124,13 @@ This is particularly useful when the function is called through a WPS, when
 the element with the estimated parameters cannot be preserved in a state 
 that makes it possible to use them for a later call to \code{interpolate}.
 
+The possibility
+for doing parallel processing is enabled for some of the main methods.
+To be able to take advantage of multiple CPUs on a computer, the package
+\code{doSNOW} must be downloaded, additionally the parameter nclus must be set to
+a value larger than 1. Parallel computation is not taken into account when 
+estimating the prediction times.
+
 }
 
 \seealso{

@@ -35,24 +35,54 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
   } else nmax = object$params$nmax
   if ("debug.level" %in% names(dots)) debug.level = dots$debug.level else
     debug.level = object$params$debug.level
-    if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
-    if ("lambda" %in% names(object)) lambda = object$lambda else lambda = 1
-    observations = object$observations
-    formulaString = object$formulaString
+  if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
+  if ("lambda" %in% names(object)) lambda = object$lambda else lambda = 1
+  observations = object$observations
+  formulaString = object$formulaString
+  predictionLocations = object$predictionLocations
 #    if (!is.null(object$TGcorrection)) 
 #      observations[[as.character(formulaString[[2]])]] = 
 #             observations[[as.character(formulaString[[2]])]]+ object$TGcorrection
-    pred = krigeTg(formulaString,observations,
+
+  nPred = nrow(coordinates(object$predictionLocations))
+  if (!"nclus" %in% names(dots) && "nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
+    nclus = object$params$nclus else nclus = 1
+  if (nclus > 1) {
+    if (!suppressMessages(suppressWarnings(require(doSNOW))))
+  	    stop("nclus is > 1, but package doSNOW is not available")    
+
+    clus <- c(rep("localhost", nclus))
+    cl <- makeCluster(clus, type = "SOCK")
+      registerDoSNOW(cl)
+      clusterEvalQ(cl, library(gstat))
+      variogramModel = object$variogramModel
+      splt = rep(1:nclus, each = ceiling(nPred/nclus), length.out = nPred)
+      newPredLoc = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
+      i = 1 # To avoid R CMD check complain about missing i
+      pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
+        krigeTg(formulaString,observations,
+           newPredLoc[[i]],variogramModel,nmax = nmax,
+           debug.level = debug.level, lambda = lambda)
+      }
+      pred = pred[c("var1TG.pred","var1TG.var")]
+      names(pred) = c("var1.pred","var1.var")
+      stopCluster(cl)
+    } else {  
+      pred = krigeTg(formulaString,observations,
            object$predictionLocations,object$variogramModel,nmax = nmax,
            debug.level = debug.level, lambda = lambda)
-    pred = pred[c("var1TG.pred","var1TG.var")]
-    names(pred) = c("var1.pred","var1.var")
-    if (nsim >0) {
-      pred2 = krigeTg(formulaString,observations,
+      pred = pred[c("var1TG.pred","var1TG.var")]
+      names(pred) = c("var1.pred","var1.var")
+      if (nsim >0) {
+        pred2 = krigeTg(formulaString,observations,
            object$predictionLocations,object$variogramModel,nmax = nmax,
            debug.level = debug.level, nsim = nsim, lambda = lambda)
-      pred@data = cbind(pred@data,pred2@data)
+        pred@data = cbind(pred@data,pred2@data)
+      }
     }
+
+
+
 #    if (!is.null(object$TGcorrection)) pred$var1.pred = pred$var1.pred - object$TGcorrection
     object$predictions = pred
     if ("MOK" %in% names(object$outputWhat) | "IWQSEL" %in% names(object$outputWhat))

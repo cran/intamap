@@ -6,7 +6,7 @@
 \description{ This function estimates geometric anisotropy parameters for 2-D scattered data using the 
 CTI method.}
 
-\usage{estimateAnisotropy(object,depVar)}
+\usage{estimateAnisotropy(object,depVar, formulaString)}
 
 \arguments{
 \item{object}{ (i) An Intamap type  object (see \code{\link{intamap-package}}) containing one 
@@ -15,7 +15,15 @@ CTI method.}
  \code{\link[sp:SpatialPixelsDataFrame]{SpatialPointsDataFrame}} which includes both coordinates and observations.}
 
 \item{depVar}{name of the dependent variable; this is  used only in case (ii).}
+\item{formulaString}{formula that defines the dependent variable as a linear model 
+      of independent variables, only used for case (ii); suppose the dependent variable has name \code{z}, 
+      for ordinary and simple kriging use the formula \code{z~1}; 
+      for universal kriging, suppose \code{z} is linearly dependent on 
+      \code{x} and \code{y}, use the formula \code{z~x+y}. The formulaString defaults
+      to \code{"value~1"} if \code{value} is a part of the data set. 
+      If not, the first column of the data set is used.}
 } 
+
 \details{
 Given the input object that defines  N  coordinate pairs (x,y) and observed values (z), 
 this method estimates of the geometric anisotropy parameters.  
@@ -46,6 +54,11 @@ The CTI method is described in detail in (Chorti and Hristopulos, 2008).
 
 Note that to be compatible with \code{gstat} the returned estimate of the anisotropy ratio is always
 greater than 1. 
+
+For observations assumed to have a trend, the trend is first subtracted from the data using
+universal kriging. This is an approximation, as the trend subtraction does not 
+take anisotropy into account.
+
 }
 \value{(i) If the input is an Intamap object, the value is a modification of the input object, 
 containing a list element \code{anisPar} with  the estimated anisotropy parameters.

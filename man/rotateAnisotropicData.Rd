@@ -52,18 +52,13 @@ Correlations in Spatially Distributed Data Sets, IEEE Transactions on Signal Pro
     coordinates(sic.val)=~x+y
     sic.val$value=sic.val$dayx
 
-    params=NULL
-    
-    obj<-list(
-        observations=sic.val
-        )
-    obj<-estimateAnisotropy(obj)
-    print(obj$anisPar)  
+    anisPar <- estimateAnisotropy(sic.val)
+    print(anisPar)  
 
-    obj$observations<-rotateAnisotropicData(obj$observations,obj$anisPar)
+    rotatedObs <- rotateAnisotropicData(sic.val,anisPar)
 
-    obj<-estimateAnisotropy(obj)
-    print(obj$anisPar)  
+    newAnisPar <- estimateAnisotropy(rotatedObs)
+    print(newAnisPar)  
 
 
 }

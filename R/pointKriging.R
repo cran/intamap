@@ -65,14 +65,45 @@ spatialPredict.automap = function(object, nsim = 0, ...) {
   
     if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
     
-    pred = krige(object$formulaString,object$observations, 
-           object$predictionLocations,object$variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
-    if (nsim >0) {
-      pred2 = krige(object$formulaString,object$observations, 
-           object$predictionLocations,object$variogramModel,nmax = nmax,debug.level = debug.level)
-      pred@data = cbind(pred2@data,pred@data)
-    }
+    nPred = nrow(coordinates(object$predictionLocations))
+    if (!"nclus" %in% names(dots) && "nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
+      nclus = object$params$nclus else nclus = 1
+    if (nclus > 1) {
+      if (!suppressMessages(suppressWarnings(require(doSNOW))))
+  	    stop("nclus is > 1, but package doSNOW is not available")    
 
+      clus <- c(rep("localhost", nclus))
+      cl <- makeCluster(clus, type = "SOCK")
+      registerDoSNOW(cl)
+      clusterEvalQ(cl, library(gstat))
+      formulaString = object$formulaString
+      observations = object$observations
+      predictionLocations = object$predictionLocations
+      variogramModel = object$variogramModel
+#      clusterExport(cl, list("formulaString", "observations", "predictionLocations",
+#           "variogramModel", "nmax", "nsim", "debug.level"))
+     # split prediction locations:
+      splt = sample(1:nclus, nPred, replace = TRUE)
+      splt = rep(1:nclus, each = ceiling(nPred/nclus), length.out = nPred)
+      newdlst = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
+      i = 1 # To avoid R CMD check complain about missing i
+      pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
+        krige(formulaString,observations, 
+           newdlst[[i]],variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
+      }
+#      pred = do.call("rbind", parLapply(cl, newdlst, function(lst) 
+#          krige(formulaString,observations, 
+#           predictionLocations,variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)))
+      stopCluster(cl)
+    } else {  
+      pred = krige(object$formulaString,object$observations, 
+           object$predictionLocations,object$variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
+      if (nsim >0) {
+        pred2 = krige(object$formulaString,object$observations, 
+           object$predictionLocations,object$variogramModel,nmax = nmax,debug.level = debug.level)
+        pred@data = cbind(pred2@data,pred@data)
+      }
+    }
     object$predictions = pred
     if ("MOK" %in% names(object$outputWhat) | "IWQSEL" %in% names(object$outputWhat))
       object$predictions = unbiasedKrige(object,debug.level = debug.level,...)$predictions

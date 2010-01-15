@@ -157,6 +157,13 @@ characteristics, it may have to extend these prescriptions by passing
 more information than described below, for example information about
 priors from \code{estimateParameters} to \code{spatialPredict}.
 
+The choice between methods is usually done based on the type of problem
+(extreme values present, computation time available etc.). The possibility
+for parallel processing of the prediction step is enabled for some of the main methods.
+To be able to take advantage of multiple CPUs on a computer, the package
+\code{doSNOW} must be downloaded, additionally the parameter nclus must be set to
+a value larger than 1.
+
 }
 
 \section{Input object components}{
@@ -199,6 +206,9 @@ prediction locations.}
                    block prediciton}
 \item{confProj = FALSE}{If set, the program will attempt conform projections in \code{\link{preProcess}},
                 calling the function \code{\link{conformProjections}}.}
+\item{nclus = 1}{The number of clusters to use, if applying to a method which can 
+   run processes in parallel. Currently implemented for methods \code{automap},
+   \code{copula} and \code{psgp}.}
 \item{debug.level = 0}{Used in some functions for giving additional output. See 
                 individual functions for more information. }
 \item{...}{Additional parameters that do not exist in the default parameter set,
