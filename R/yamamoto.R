@@ -56,7 +56,7 @@ yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
   if (is.null(dim(cNew))) cNew = as.data.frame(cNew)
 #  if (dim(cNew)[2] == 1) cNew = t(cNew)
   dvar = as.matrix(dist(cObs))
-  cmat = matrix(variogramLine(model,dist_vector = dvar)$gamma,ncol=dim(dvar)[1])
+  cmat = variogramLine(model, dist_vector = dvar)
   dl = dim(cmat)[1]
   cmat = rbind(cmat,rep(1,dl))
   cmat = cbind(cmat,rep(1,dl+1) )
@@ -107,8 +107,8 @@ condSimYama = function(Obs,newPoints,isim=1,model,depVar="value",nmax = 25) {
       dObs = sim
     }
     c0arr = variogramLine(model,dist_vector = c0dist)$gamma
-    rvar = as.matrix(dist(rObs))
-    cmat = matrix(variogramLine(model,dist_vector = rvar)$gamma,ncol=dim(rvar)[1])
+    rvar = as.vector(as.matrix(dist(rObs)))
+    cmat = variogramLine(model,dist_vector = rvar)
     dl = dim(cmat)[1]
     clen = dl
     cmat = rbind(cmat,rep(1,dl))
