@@ -1,0 +1,17 @@
+citHeader("To cite package intamap in publications use:")
+
+citEntry(entry="Article",
+	title = "INTAMAP: the design and implementation of an interoperable automated interpolation web service",
+	author = personList(as.person("E. Pebesma"), as.person("D. Cornford"),
+		as.person("G. Dubois"), as.person("G.B.M. Heuvelink"), 
+		as.person("D. Hristopoulos"), as.person("J. Pilz"), 
+		as.person("U. Stoehlker"), as.person("G. Morin"),
+		as.person("J.O. Skoien")),
+	journal = "Computers & Geosciences",
+	year	 = 2010,
+	volume = "?",
+	pages	= "?",
+	url = "http://dx.doi.org/10.1016/j.cageo.2010.03.019",
+	textVersion = 
+	paste("E. Pebesma, D. Cornford, G. Dubois, G.B.M. Heuvelink, D. Hristopoulos, J. Pilz, U. Stoehlker, G. Morin and J.O. Skoien, 2010. INTAMAP: the design and implementation of an interoperable automated interpolation web service. Computers & Geosciences, in press")
+)

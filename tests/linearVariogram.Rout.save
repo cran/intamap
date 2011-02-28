@@ -1,7 +1,8 @@
 
-R version 2.9.1 (2009-06-26)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.12.1 (2010-12-16)
+Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -20,10 +21,10 @@ Loading required package: sp
 Loading required package: gstat
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
-Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
+Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -33,10 +34,9 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
-
-	 qq 
+    qq
 
 > 
 > # set up data:
@@ -67,7 +67,7 @@ Attaching package: 'lattice'
 +       		cumdistr = 6.6,
 +       		cumdistr = 7.9)
 + )
-[1] "createIntamapProject: formulaString is missing, using:  value~1"
+[1] "createIntamapObject: formulaString is missing, using:  value~1"
 > class(obj) = "linearVariogram"
 > 
 > # check:
@@ -79,6 +79,9 @@ Checking object ... OK
 > obj = estimateParameters(obj)
 > obj = spatialPredict(obj)
 > obj = postProcess(obj)
+Warning message:
+In spTransform(object$predictions, CRS(object$targetCRS)) :
+  Grid warping not available, coercing to points
 > output = obj$predictions
 > 
 > # generate some output:

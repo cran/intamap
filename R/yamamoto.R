@@ -107,7 +107,7 @@ condSimYama = function(Obs,newPoints,isim=1,model,depVar="value",nmax = 25) {
       dObs = sim
     }
     c0arr = variogramLine(model,dist_vector = c0dist)$gamma
-    rvar = as.vector(as.matrix(dist(rObs)))
+    rvar = as.matrix(dist(rObs))
     cmat = variogramLine(model,dist_vector = rvar)
     dl = dim(cmat)[1]
     clen = dl

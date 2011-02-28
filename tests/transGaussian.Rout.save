@@ -1,7 +1,8 @@
 
-R version 2.9.1 (2009-06-26)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.12.1 (2010-12-16)
+Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,10 +22,10 @@ Loading required package: sp
 Loading required package: gstat
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
-Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
+Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -34,10 +35,9 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
-
-	 qq 
+    qq
 
 > data(meuse)
 > data(meuse.grid)
@@ -46,16 +46,15 @@ Attaching package: 'lattice'
 > 
 > meuse$value=meuse$zinc
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
-R 2009-09-16 14:06:29 interpolating 155 observations, 3103 prediction locations
+R 2011-02-28 17:22:38 interpolating 155 observations, 3103 prediction locations
 Checking object ... OK
-Warning messages:
-1: In predictTime("spatialPredict", nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
+Warning message:
+In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
   
  using standard model for estimating time. For better 
  platform spesific predictions, please run 
  timeModels <- generateTimeModels()
   and save the workspace
-2: closing unused connection 3 (D:\DOCUME~1\skoien\LOCALS~1\Temp\RtmpF7oXh5\file678418be) 
 > summary(t(output$outputTable))
        x                y               mean           variance     
  Min.   :178460   Min.   :329620   Min.   : 127.9   Min.   :  3316  
@@ -64,6 +63,8 @@ Warning messages:
  Mean   :179985   Mean   :331348   Mean   : 385.8   Mean   : 19133  
  3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 505.4   3rd Qu.: 22655  
  Max.   :181540   Max.   :333740   Max.   :1850.6   Max.   :105085  
+Warning message:
+closing unused connection 3 (C:\Users\skoiejo\AppData\Local\Temp\Rtmph7f4zb\file1f9c1f20) 
 > 
 > 
 > 

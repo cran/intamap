@@ -1,7 +1,8 @@
 
-R version 2.10.1 (2009-12-14)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.12.1 (2010-12-16)
+Copyright (C) 2010 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -20,10 +21,10 @@ Loading required package: sp
 Loading required package: gstat
 Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.3, released 2009/11/19
-Path to GDAL shared files: C:\Users\skoien\Documents/R/win-library/2.10/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: C:\Users\skoien\Documents/R/win-library/2.10/rgdal/proj
+Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
+Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
+Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -33,10 +34,9 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
-
-	 qq 
+    qq
 
 > 
 > set.seed(13131)
@@ -67,20 +67,23 @@ Checking object ... OK
 > # do interpolation steps:
 > idwObject = preProcess(idwObject)
 > idwObject = estimateParameters(idwObject, idpRange = seq(0.25,2.75,.25), nfold=3) # faster
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
+  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
 [1] "best idp value found is 2.5 rmse 265.924618013951"
 > idwObject = spatialPredict(idwObject)
 > idwObject = postProcess(idwObject)
+Warning message:
+In spTransform(object$predictions, CRS(object$targetCRS)) :
+  Grid warping not available, coercing to points
 > 
 > # generate some output:
 > summary(as.data.frame(idwObject$outputTable))
