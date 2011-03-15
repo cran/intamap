@@ -13,7 +13,7 @@ spatialPredict.copula <- function(object,...){
     predictions[[i]][is.na(predictions[[i]])] = 99999999
   }
   object$predictions = SpatialPointsDataFrame(coordinates(object$predictionLocations),
-     data=as.data.frame(predictions))
+     data=as.data.frame(predictions), match.ID = FALSE)
   if (gridded(object$predictionLocations)) gridded(object$predictions) = TRUE
   if (!is.na(proj4string(object$predictionLocations))) 
      proj4string(object$predictions) = proj4string(object$predictionLocations) 

@@ -239,8 +239,18 @@ if (length(obsChar) > 0 && !is.na(obsChar) && "psgp" %in% installed.packages()) 
     if (methodNames[i] == "copula") {
       dataObs = observations[[as.character(formulaString[[2]]) ]]
       test = isNonGauss(dataObs)
-      if (test) return(ifelse(!is.na(pTime) && pTime < maximumTime && 
-           !("nsim" %in% names(outputWhat)) ,"copula","transGaussian"))
+      if (test) {
+        if (!is.na(pTime) && pTime < maximumTime && !("nsim" %in% names(outputWhat))) {
+          return("copula")
+        } else if (min(dataObs) <=0) {
+          t1 = "Data are non-gaussian with zero-values and/or negative values"
+          t2 = "time not sufficient for copulas (predicted time:"
+          t3 = paste(round(pTime,2), "maximumTime:",maximumTime,").")
+          t4 = "Will use automap."
+          warning(paste(t1,t2,t3,t4))
+          return("automap")
+        } else return("transGaussian")
+      }
     }
     if (pTime < maximumTime) return(methodNames[i])
   }

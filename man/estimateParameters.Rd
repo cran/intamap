@@ -71,7 +71,8 @@ fitting is necessary for linear variogram kriging}
          parameters for the transformed variable. If \code{significant = TRUE}
          will \code{lambda} only be estimated
          if the data show some deviation from normality, i.e., that at least one
-         of the tests described under \code{\link{interpolate}} is TRUE. 
+         of the tests described under \code{\link{interpolate}} is TRUE. Note that
+         transGaussian kriging is only possible for data with strictly positive values.
          }
 
 \item{\code{yamamoto}}{a wrapper around \code{estimateParameters.automap}, only to assure that there is a method

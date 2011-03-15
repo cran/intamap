@@ -110,13 +110,16 @@ This is assumed to be the case if any of the tests below are TRUE:
       test[4] = g[71] < sort(g)[91]
 }
 where \code{\link{fivenum}} defines the Tukey five number statistic and 
-\code{\link{IQR}} finds the interquartile range of the data. 
+\code{\link{IQR}} finds the interquartile range of the data. If the minimum of 
+dataObs is <= 0, min(dataObs) + sdev(dataObs) is added to all values.
 At last, the function calls \code{\link{predictTime}} for an estimate of the 
 prediction time. If any of the tests above were true and the estimated prediction time
 for \code{copula} prediction is below \code{maximumTime}, the \code{copula}
  method is chosen. If any of the
 tests were TRUE and the estimated prediction time is too long, \code{transGaussian} 
-kriging is chosen.
+kriging is chosen, as long as all values are above zero. If any of 
+the tests are true for a set of observations with negative or zero-values, 
+\code{automap} is chosen, but a warning is issued.
 
 The element \code{methodParameters} in the object being returned is a string that makes it possible
 to regenerate the variogram model or the copula parameters in \code{\link{createIntamapObject}}.
