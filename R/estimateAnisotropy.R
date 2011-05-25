@@ -13,22 +13,25 @@
 #										& anisPar$(list(ratio=R,direction=theta.deg))		
 #										& (ii) Only the anisPar list element in case of Spatial
 #										& input.								
-#																		
 #######################################################################
-estimateAnisotropy<-function(object, depVar, formulaString){
-	
+estimateAnisotropy<-function(object, depVar,formulaString){
+pl=FALSE
   if (is(object,"Spatial")) {
     observations = object
   	if (missing(formulaString)) {
 	    if (!missing(depVar)) {
 	      formulaString = as.formula(paste(depVar,"~1"))
-      } else formulaString = as.formula("value~1")
-    }
-  } else {
+      }else{
+				 formulaString = as.formula("value~1")
+			}
+    }else{
+			formulaString=as.formula(formulaString)
+		}
+	}else {
     observations = object$observations
     formulaString = object$formulaString
 	}
-	
+		
 	depVar = as.character(formulaString[[2]])
 	if (!(formulaString[[3]] == 1)) {
   	m = autofitVariogram(formulaString,observations)$var_model
@@ -39,8 +42,25 @@ estimateAnisotropy<-function(object, depVar, formulaString){
 	
 	# params = object$params
 	xy<-as.matrix(coordinates(observations))
+#
+  anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,method="linear",pl=pl),TRUE)
+	if(inherits(anisPar,"try-error")){
+		warning("Slope tensors estimation error. Double size anisotropy estimation grid used instead.")
+		anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,len=2*length(xy),method="linear",pl=pl),TRUE)
+	}
+	if(inherits(anisPar,"try-error") && length(xy)<=400 ){
+			warning("Slope tensors estimation error. Anisotropy interpolation method was switched to  biharmonics spline.")
+		anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,len=2*length(xy),method="v4",pl=pl),TRUE)
+	}
+	if(inherits(anisPar,"try-error") && length(xy)>400 ){
+			warning("Slope tensors estimation error. Switch anisotropy interpolation to biharmonics spline method.")
+		anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,method="v4",pl=pl),TRUE)
+	}
+	if(inherits(anisPar,"try-error")){
+			warning("Slope tensors estimation error. Override anistropy estimation.")
+		anisPar<-list(R=1,theta.deg=0,Q=cbind(0,0,0),doRotation=FALSE)
+	}
 
-  anisPar<-estimateAnisotropySc(xy[,1],xy[,2],residual,method="linear",pl=FALSE)
   if (is(object,"Spatial")) {
     anisPar
   } else {
@@ -61,9 +81,6 @@ estimateAnisotropy<-function(object, depVar, formulaString){
 #
 #Output		:object		& with the transformed coordinates (intamap input) or
 #										& the transformed coordinates(spatial input)	
-#				
-#																		
-#																		
 #######################################################################
 rotateAnisotropicData<-function(object,anisPar){
   #if (inherits(object,"Spatial")) {
@@ -95,7 +112,8 @@ rotateAnisotropicData<-function(object,anisPar){
   coordinates(coords) = as.formula(paste("~",dataNames[1],"+",dataNames[2]))
 
   if ("data" %in% names(getSlots(class(locations)))) {
-    coords = SpatialDataFrame(coords, data = locations@data)
+	  
+    coords = SpatialPointsDataFrame(coords, data = locations@data)
   }
 	if (!is(locations,"Spatial")) {
     object$observations = coords
@@ -104,7 +122,7 @@ rotateAnisotropicData<-function(object,anisPar){
     coords
 }
 
-#old version that supports only Intamap Object.
+#old version that supports only the Intamap Object.
 rotateAnisotropicDataOld<-function(object){
 	if ("formulaString" %in% names(object)) {
     formulaString = object$formulaString 
@@ -130,11 +148,7 @@ rotateAnisotropicDataOld<-function(object){
 	return(object)
 }
 
-
-
-
 ######################### Internal functions ##########################
-#
 #######################################################################
 #Function	estimateAnisotropySc										
 #													
@@ -166,25 +180,27 @@ rotateAnisotropicDataOld<-function(object){
 #													
 #######################################################################
 estimateAnisotropySc<-function(x, y, r, len=length(x), method="linear", min.x=min(x), max.x=max(x), min.y=min(y), max.y=max(y),deb=FALSE,pl=FALSE,br){
-            
+    eps=.Machine$double.eps        
 	plot.borders=TRUE
 	if(missing(br))	{plot.borders=FALSE}
-  	if(len<50) return(list(ratio=1, direction=0,Q=c(1,1,1),doRotation=FALSE))       
+  	if(len<50) return(list(ratio=1, direction=0,Q=c(eps,0,0),doRotation=FALSE))       
 
 	#mesh creation
 	step=min(c(abs((max.x-min.x)/sqrt(len)),abs((max.y-min.y)/sqrt(len))))
 
 	xn<-seq(min.x,max.x,by=step)
 	yn<-seq(min.y,max.y,by=step)
+	
 
 
-  mesh<-meshgrid(xn,yn)
+	mesh<-meshgrid(xn,yn)
 
         #selection of interpolation method
         if (method=="cubic")   {
-ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
+	ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
 				 ri$z<-t(ri$z)		}	#akima package
-        if (method=="linear")  {  ri<-interp(x,y,r,xn,yn,linear=TRUE,duplicate="mean")	
+        if (method=="linear")  {
+ri<-interp(x,y,r,xn,yn,linear=TRUE,extrap=FALSE,duplicate="mean")	
 				 ri$z<-t(ri$z)	}				#akima package
         if  (method=="v4")     {  ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)}     
        		
@@ -198,10 +214,49 @@ ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
 		points(br,pch=".",xlim=(br[,1]),ylim=range(br[,2]))
 	}else if ((pl==T & plot.borders==FALSE)){
 		 image(mesh$x[1,],mesh$y[,1],t(ri$z),col=rainbow(20), #color.palette=rainbow,
-	        plot.title=title(main=method))
+	        plot.title=title(main=method),xlim=range(x),ylim=range(y))
 	}
 	
 	return(list(ratio=res$R, direction=res$theta.deg,Q=res$Q,doRotation=res$dump$doRotation))
+}
+
+
+estimateAnisotropySc_old<-function(x, y, r, len=length(x), method="linear", min.x=min(x), max.x=max(x), min.y=min(y), max.y=max(y),deb=FALSE,pl=FALSE,br){
+           eps=.Machine$double.eps    
+	plot.borders=TRUE
+	if(missing(br))	{plot.borders=FALSE}
+  	if(len<50) return(list(ratio=1, direction=0,Q=c( eps,0,0),doRotation=FALSE))       
+
+	#mesh creation
+	step=min(c(abs((max.x-min.x)/sqrt(len)),abs((max.y-min.y)/sqrt(len))))
+
+	xn<-seq(min.x,max.x,by=step)
+	yn<-seq(min.y,max.y,by=step)
+
+
+  		mesh<-meshgrid(xn,yn)
+
+        #selection of interpolation method
+        if (method=="cubic")   {	ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
+				 ri$z<-t(ri$z)		}	#akima package
+        if (method=="linear")  {  ri<-interp(x,y,r,xn,yn,linear=TRUE,duplicate="mean")	
+				 ri$z<-t(ri$z)	}				#akima package
+        if  (method=="v4")     {  ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)}     
+       		
+	#calculate anisotropy parameters over regular grid 
+	res=estimateAnisotropyGrid(mesh$x,mesh$y,ri$z)
+	
+		
+	if((pl==TRUE & plot.borders==TRUE)){
+	        image(mesh$x[1,],mesh$y[,1],t(ri$z),col=rainbow(20), #color.palette=rainbow,
+	        plot.title=title(main=method),xlim=range(br[,1]),ylim=range(br[,2]))
+					points(br,pch=".",xlim=(br[,1]),ylim=range(br[,2]))
+	}else if ((pl==T & plot.borders==FALSE)){
+		 image(mesh$x[1,],mesh$y[,1],t(ri$z),col=rainbow(20), #color.palette=rainbow,
+	        plot.title=title(main=method))
+	}
+	
+	return(list(ratio=res$R, direction=res$theta.deg,Q=res$Q,doRotation=res$dump$doRotation,ri=ri))
 }
 #######################################################################                              
 # function [R , theta_deg ]= estimateAnisotropyGrid(xi ,yi , ri)  		
@@ -215,26 +270,23 @@ estimateAnisotropyGrid<-function(xi,yi,ri){
 	#Gradient function
 	mgradient<-function(k,stx,sty){
 
-    		gg<-function(m,st){
+		gg<-function(m,st){
+			m<-as.matrix(m)
+				n=dim(m)[1]                     #rows
+				p=dim(m)[2]                     #columns
 
-     		m<-as.matrix(m)
-     		n=dim(m)[1]                     #rows
-   	  	p=dim(m)[2]                     #columns
-	
-  	    	g<-matrix(0,n,p)
- 	     	g[1,]<-(m[2,]- m[1,])/st        
- 	     	g[n,]<-(m[n,]-m[n-1,])/st       
-	      	g[2:(n-1),]=(m[3:n,]- m[1:(n-2),])/(2*st)                        
-	      	return (g)
-	    	}
-	
+				g<-matrix(0,n,p)
+				g[1,]<-(m[2,]- m[1,])/st        
+				g[n,]<-(m[n,]-m[n-1,])/st       
+				g[2:(n-1),]=(m[3:n,]- m[1:(n-2),])/(2*st)                        
+				return (g)
+		}
 
-	    y=gg(k,sty)                       
-	    x=t(gg(t(k),stx))                 
-	    return(list(x=x,y=y))             
+		y=gg(k,sty)                       
+		x=t(gg(t(k),stx))                 
+			return(list(x=x,y=y))             
 	}
-
-
+#################################
 
 
   stepx<-xi[1,2]-xi[1,1]
@@ -249,19 +301,21 @@ estimateAnisotropyGrid<-function(xi,yi,ri){
   Q11<-mean(divX2[is.na(divX2)==FALSE])
   Q22<-mean(divY2[is.na(divY2)==FALSE])
   Q12<-mean(divXY[is.na(divXY)==FALSE])
-	
-	if(Q11<10^-31 || is.na(Q11) ||is.na(Q12)||is.na(Q22)){
+	if(Q11<10^-31 ||	is.na(Q11)||is.na(Q12)||is.na(Q22)||(Q11*Q22)<(Q12^2)){
 		dump=NULL
 		dump$doRotation=FALSE
-	 return (list(R=1,theta.deg=0,Q=cbind(Q11,Q22,Q12),dump=dump))
+		e=simpleError("slope tensor error")
+		stop(e)	
+	 #return (list(R=1,theta.deg=0,Q=cbind(Q11,Q22,Q12),dump=dump))
 	}else{
 
   Zdiag<-Q22/Q11
   Zoff<-Q12/Q11
   theta<-0.5*atan(2*Zoff/(1-Zdiag))
 
-   R<-sqrt(1+((1-Zdiag)/(Zdiag-(1+Zdiag)*(cos(theta))^2)))
-
+  # R=ifelse(Zdiag-1<10*.Machine$double.eps,1,sqrt(1+((1-Zdiag)/(Zdiag-(1+Zdiag)*(cos(theta))^2))))
+	
+R=sqrt(1+((1-Zdiag)/(Zdiag-(1+Zdiag)*(cos(theta))^2)))
 
 	#Test for isotropy 
  	#dump<-jpdf(seq(0,3,by=0.01),seq(-90,90,by=1),R,theta*180/pi,length(xi))
@@ -276,16 +330,13 @@ estimateAnisotropyGrid<-function(xi,yi,ri){
    #Make sure that all results come in the same interval
 	if (R<1){
 		R=1/R
-	
-		if ((theta+pi/2>-pi/2) & (theta+pi/2)<(pi/2)){
-			theta=theta+pi/2
-		}else{
-			theta=theta-pi/2
-		}
-		
-
+			if ((theta+pi/2>-pi/2) & (theta+pi/2)<(pi/2)){
+				theta=theta+pi/2
+			}else{
+				theta=theta-pi/2
+			}
 	}
-   		theta.deg<-theta*180/pi
+	theta.deg<-theta*180/pi
 	}
   return (list(R=R,theta.deg=theta.deg,Q=cbind(Q11,Q22,Q12),dump=dump))
 
