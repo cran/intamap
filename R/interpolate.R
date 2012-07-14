@@ -4,8 +4,10 @@ interpolate = function(observations, predictionLocations,
               methodName = "automatic", maximumTime = 30, optList = list()) {
   startTime = Sys.time()
 #  save.image("debug.img")
+  npred = ifelse(is.numeric(predictionLocations), predictionLocations, 
+        nrow(coordinates(predictionLocations)))
   msg = paste("R", startTime, "interpolating", nrow(coordinates(observations)), "observations,",
-    nrow(coordinates(predictionLocations)), "prediction locations\n")
+    npred, "prediction locations\n")
   cat(msg)
   if ("formulaString" %in% names(optList)) {
     formulaString = as.formula(optList$formulaString) 
@@ -50,7 +52,7 @@ interpolate = function(observations, predictionLocations,
     params = getIntamapParams(localParams),
     class = methodName
     )
-	krigingObject$returnPlot = TRUE
+#	krigingObject$returnPlot = TRUE
 	# it is here that the cleverness of auto method selection should take place;
 	# as of now, there's only:
 	# in addition: anisotropy estimation
@@ -77,7 +79,7 @@ interpolate = function(observations, predictionLocations,
   krigingObject = postProcess(krigingObject)
 # Add plot if wanted
 	if (!is.null(krigingObject$returnPlot) && krigingObject$returnPlot)
-		krigingObject$processPlot = createPlot(krigingObject)
+		krigingObject$processPlot = ""#createPlot(krigingObject)
 	else 
 		krigingObject$processPlot = ""
 # Add to process description which method we used
@@ -92,7 +94,8 @@ interpolate = function(observations, predictionLocations,
   }
 # Create a table easier to handle for the WPS   
 	krigingObject$outputTable = toJava(krigingObject$outputTable)
-	return(krigingObject)
+	attr(krigingObject$outputTable, "transposed") = TRUE
+  return(krigingObject)
 }
 
 
@@ -189,8 +192,10 @@ interpolateBlock = function(observations, predictionLocations, outputWhat, block
   }
 # Create a table easier to handle for the WPS   
 	krigingObject$outputTable = toJava(krigingObject$outputTable)
-	return(krigingObject)
+	attr(krigingObject$outputTable, "transposed") = TRUE
+  return(krigingObject)
 }
+
    
    
 toJava = function(obj) {
@@ -222,18 +227,21 @@ createPlot = function(krigingObject) {
 
 
 
-chooseMethod = function(observations, predictionLocations, formulaString, obsChar, maximumTime,outputWhat) {
+chooseMethod = function(observations, predictionLocations, formulaString, 
+     obsChar, maximumTime,outputWhat) {
 methodNames = c("copula","automap")
-
-if (length(obsChar) > 0 && !is.na(obsChar) && "psgp" %in% installed.packages()) {
+ nPred = ifelse(is.numeric(predictionLocations), predictionLocations, 
+        nrow(coordinates(predictionLocations)))
+ 
+if (length(obsChar) > 0 && !is.na(obsChar) && require(psgp)) {
   pTime = predictTime(nObs= dim(observations)[1], 
-          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString,
+          nPred = nPred, formulaString = formulaString,
           class="psgp", outputWhat = outputWhat)
     if (pTime < maximumTime) return("psgp") else stop("no method is able to give predictions within the maximum time given")
 } else {
   for (i in 1:length(methodNames)) {
     pTime = predictTime(nObs= dim(observations)[1], 
-          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, 
+          nPred = nPred, formulaString = formulaString, 
           class = methodNames[i], outputWhat = outputWhat)
     print(paste("estimated time for ",methodNames[i],pTime))
     if (methodNames[i] == "copula") {

@@ -1,6 +1,5 @@
 data(intamap)
 require(rworldmap)
-coordinates(observations) = ~x+y
 countryBoundaries = getMap()
 proj4string(observations) = "+init=epsg:4236"
 observations$country = countryBoundaries$ISO3[overlay(observations, countryBoundaries)]

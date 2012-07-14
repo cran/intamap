@@ -1,7 +1,8 @@
 
-R version 2.9.1 (2009-06-26)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -18,12 +19,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
-Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -33,10 +38,9 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
-
-	 qq 
+    qq
 
 > set.seed(13531)
 > 
@@ -120,9 +124,9 @@ $doRotation
 > objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
 > vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
 > vario
-  model      psill    range
-1   Nug 0.01484620 0.000000
-2   Sph 0.62990427 0.634356
+  model     psill    range
+1   Nug 0.0148462 0.000000
+2   Sph 0.6299043 0.634356
 > vmod
   model psill range ang1 anis1
 1   Sph     1     1   90   0.5
@@ -201,8 +205,8 @@ $direction
 [1] -1.564169
 
 $Q
-          Q11      Q22      Q12
-[1,] 103.3680 161.6921 1.593826
+         Q11      Q22      Q12
+[1,] 103.368 161.6921 1.593826
 
 $doRotation
 [1] TRUE
@@ -269,6 +273,12 @@ $doRotation
 
 > obj = spatialPredict(obj)
 > obj = postProcess(obj)
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 > summary(as.data.frame(obj$outputTable))
        x                y               mean          variance    
  Min.   : -8351   Min.   :103106   Min.   :118.9   Min.   : 3333  
@@ -278,3 +288,6 @@ $doRotation
  3rd Qu.: 94458   3rd Qu.:210897   3rd Qu.:155.8   3rd Qu.:19281  
  Max.   :131632   Max.   :239246   Max.   :675.9   Max.   :19372  
 > 
+> proc.time()
+   user  system elapsed 
+   2.63    0.17    2.79 

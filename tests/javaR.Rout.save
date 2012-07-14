@@ -1,6 +1,6 @@
 
-R version 2.12.1 (2010-12-16)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -19,12 +19,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
-Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -68,6 +72,12 @@ The following object(s) are masked from 'package:evd':
 + 		quantile = .1), class = "automap"
 + 
 + )
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 > 
 > checkSetup(krigingObject)
 Checking object ... OK
@@ -77,19 +87,22 @@ Checking object ... OK
 > krigingObject = postProcess(krigingObject)
 > 
 > summary(krigingObject$outputTable)
-       x                 y                mean          variance     
- Min.   :4021158   Min.   :3102915   Min.   :4.805   Min.   :0.0979  
- 1st Qu.:4021733   1st Qu.:3103766   1st Qu.:5.485   1st Qu.:0.1435  
- Median :4022423   Median :3104617   Median :5.675   Median :0.3322  
- Mean   :4022423   Mean   :3104617   Mean   :5.965   Mean   :0.3952  
- 3rd Qu.:4023113   3rd Qu.:3105468   3rd Qu.:6.456   3rd Qu.:0.6420  
- Max.   :4023688   Max.   :3106318   Max.   :7.497   Max.   :0.7832  
+       x                 y                mean          variance      
+ Min.   :4021158   Min.   :3102915   Min.   :4.805   Min.   :0.09789  
+ 1st Qu.:4021733   1st Qu.:3103766   1st Qu.:5.485   1st Qu.:0.14345  
+ Median :4022423   Median :3104617   Median :5.675   Median :0.33215  
+ Mean   :4022423   Mean   :3104617   Mean   :5.965   Mean   :0.39523  
+ 3rd Qu.:4023113   3rd Qu.:3105468   3rd Qu.:6.456   3rd Qu.:0.64199  
+ Max.   :4023688   Max.   :3106318   Max.   :7.497   Max.   :0.78320  
    excprob5.9        cumdistr5.9         quantile0.1   
  Min.   :0.002019   Min.   :0.0001118   Min.   :4.317  
- 1st Qu.:0.136987   1st Qu.:0.2135847   1st Qu.:4.641  
+ 1st Qu.:0.136987   1st Qu.:0.2135848   1st Qu.:4.641  
  Median :0.384356   Median :0.6156440   Median :5.095  
  Mean   :0.487683   Mean   :0.5123174   Mean   :5.205  
  3rd Qu.:0.786415   3rd Qu.:0.8630135   3rd Qu.:5.711  
  Max.   :0.999888   Max.   :0.9979810   Max.   :6.943  
 > 
 > 
+> proc.time()
+   user  system elapsed 
+   1.13    0.23    1.35 

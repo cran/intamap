@@ -1,6 +1,5 @@
 import(sp)
 import(gstat)
-import(rgdal)
 import(automap)
 import(mvtnorm)
 import(MASS)

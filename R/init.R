@@ -125,11 +125,11 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
     object$params = getIntamapParams(params) 
   if (!missing(boundaries)) {
     objectboundaries = boundaries
-  } else if (!missing(boundFile)) {
+  } else if (!missing(boundFile) && require(rgdal)) {
   	# EJP:
     #if (require(maptools)) object$boundaries = readShapePoly(boundFile) else
     #  warning("maptools not installed, not able to read boundaries")
-	object$boundaries = readOGR(".", boundFile)
+	  object$boundaries = rgdal::readOGR(".", boundFile)
   }
   if (!missing(boundaryLines)) {
     object$boundaryLines = boundaryLines
@@ -222,39 +222,43 @@ conformProjections = function(object) {
   predictionLocations = object$predictionLocations
   obsCRS = proj4string(observations)
   predCRS = proj4string(predictionLocations)
-  if ("intCRS"%in% names(object)) {
-    intCRS = object$intCRS
-  } else if (CRSargs(CRS(obsCRS)) == CRSargs(CRS(predCRS)) && !length(grep("longlat",obsCRS)) >0) {
-    intCRS = CRSargs(CRS(obsCRS))
-  } else {
-    if ("targetCRS" %in% names(object) && !length(grep("longlat",CRSargs(CRS(object$targetCRS)))) > 0) {
-      targetCRS = object$targetCRS
-      intCRS = targetCRS
+  if (require(rgdal)) {
+    if ("intCRS"%in% names(object)) {
+      intCRS = object$intCRS
+    } else if (rgdal::CRSargs(CRS(obsCRS)) == rgdal::CRSargs(CRS(predCRS)) && !length(grep("longlat",obsCRS)) >0) {
+      intCRS = rgdal::CRSargs(CRS(obsCRS))
     } else {
-      targetCRS = predCRS
-      if (!length(grep("longlat",obsCRS)) > 0) {
-        intCRS = obsCRS
+      if ("targetCRS" %in% names(object) && !length(grep("longlat",rgdal::CRSargs(CRS(object$targetCRS)))) > 0) {
+        targetCRS = object$targetCRS
+        intCRS = targetCRS
       } else {
-        if (!length(grep("longlat",predCRS)) >0) {
-          intCRS = predCRS
-        } else {                
-#          intCRS = "+init=epsg:3035"
-          stop("Interpolation in longlat not possible, a projection is needed.")          
-        } 
+        targetCRS = predCRS
+        if (!length(grep("longlat",obsCRS)) > 0) {
+          intCRS = obsCRS
+        } else {
+          if (!length(grep("longlat",predCRS)) >0) {
+            intCRS = predCRS
+          } else {                
+  #          intCRS = "+init=epsg:3035"
+            stop("Interpolation in longlat not possible, a projection is needed.")          
+          } 
+        }
       }
     }
+    if (rgdal::CRSargs(CRS(obsCRS)) != rgdal::CRSargs(CRS(intCRS))) 
+       object$observations = rgdal::spTransform(observations,CRS(intCRS))
+    if (rgdal::CRSargs(CRS(predCRS)) != rgdal::CRSargs(CRS(intCRS))) 
+      object$predictionLocations = rgdal::spTransform(predictionLocations,CRS(intCRS))
+    if (!is.null(object$boundaries)) {
+    	boundaries = object$boundaries
+      boundCRS = proj4string(object$boundaries)
+    	if (rgdal::CRSargs(CRS(boundCRS)) != rgdal::CRSargs(CRS(intCRS))) 
+      	object$boundaries = rgdal::spTransform(boundaries,CRS(intCRS))
+    }
+    if (!intCRS %in% names(object)) object$intCRS = intCRS
+  } else {
+    warning("intamap: rgdal not installed, not able to transform coordinates, if necessary")
   }
-  if (CRSargs(CRS(obsCRS)) != CRSargs(CRS(intCRS))) 
-     object$observations = spTransform(observations,CRS(intCRS))
-  if (CRSargs(CRS(predCRS)) != CRSargs(CRS(intCRS))) 
-    object$predictionLocations = spTransform(predictionLocations,CRS(intCRS))
-  if (!is.null(object$boundaries)) {
-  	boundaries = object$boundaries
-    boundCRS = proj4string(object$boundaries)
-  	if (CRSargs(CRS(boundCRS)) != CRSargs(CRS(intCRS))) 
-    	object$boundaries = spTransform(boundaries,CRS(intCRS))
-  }
-  if (!intCRS %in% names(object)) object$intCRS = intCRS
 	return(object)
 }
 

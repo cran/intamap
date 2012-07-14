@@ -394,7 +394,7 @@ jpdf=function(N,R){
 jpdf_old<-function(Rf,thetaf,Rest,thetaEst,N){
     
     
-    erfc <- function(x){ 2 * pnorm(x * sqrt(2), lower = FALSE)}
+    erfc <- function(x){ 2 * pnorm(x * sqrt(2), lower.tail = FALSE)}
         
     RRest=Rest
     tthetaEst=thetaEst

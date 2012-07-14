@@ -66,7 +66,8 @@ library(intamap)
 }
 The command \code{library(intamap)} loads the R code of the \code{intamap}
 package to the current R session, along with the packages required for
-this (sp, rgdal, gstat, akima, automap, mvtnorm, evd, MASS). 
+this (sp, gstat, akima, automap, mvtnorm, evd, MASS). It is also recommended
+to install and load rgdal on those platforms where this package is available.
 All packages need to be available to the
 R session, which is possible after downloading them from 
 the Comprehensive R Network Archives (CRAN) (\url{http://cran.r-project.org})

@@ -1,7 +1,8 @@
 
-R version 2.9.1 (2009-06-26)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -18,12 +19,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.6.1, released 2009/05/11
-Path to GDAL shared files: c:/R/R-29~1.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.6.1, 21 August 2008
-Path to PROJ.4 shared files: c:/R/R-29~1.1/library/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -33,10 +38,9 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
+The following object(s) are masked from 'package:evd':
 
-	The following object(s) are masked from package:evd :
-
-	 qq 
+    qq
 
 > 
 > # observations = Something from Java...
@@ -95,24 +99,30 @@ Checking object ... OK
 [using ordinary kriging]
 [1] "performed ordinary block kriging"
 > krigingObject = postProcess(krigingObject)
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 > predictions = krigingObject$predictions
 > 
 > # Send predictions back to Java. Not sure how to deal with this spatial object though...?
 > summary(krigingObject$outputTable)
        x                y               mean          variance       
  Min.   :179019   Min.   :330013   Min.   :4.913   Min.   :0.005564  
- 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.481   1st Qu.:0.020854  
+ 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.481   1st Qu.:0.020855  
  Median :180183   Median :331644   Median :5.799   Median :0.134431  
  Mean   :180183   Mean   :331644   Mean   :5.964   Mean   :0.206540  
  3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388670  
  Max.   :181348   Max.   :333275   Max.   :7.189   Max.   :0.523013  
-   excprob5.9         cumdistr5.9         quantile0.1         fat7       
- Min.   :5.546e-11   Min.   :2.280e-09   Min.   :4.577   Min.   :0.0000  
- 1st Qu.:4.287e-02   1st Qu.:1.562e-01   1st Qu.:5.016   1st Qu.:0.0117  
- Median :3.835e-01   Median :6.165e-01   Median :5.419   Median :0.1067  
- Mean   :4.824e-01   Mean   :5.176e-01   Mean   :5.468   Mean   :0.1486  
- 3rd Qu.:8.438e-01   3rd Qu.:9.571e-01   3rd Qu.:5.854   3rd Qu.:0.2098  
- Max.   :1.000e+00   Max.   :1.000e+00   Max.   :6.907   Max.   :0.6902  
+   excprob5.9       cumdistr5.9      quantile0.1         fat7       
+ Min.   :0.00000   Min.   :0.0000   Min.   :4.577   Min.   :0.0000  
+ 1st Qu.:0.04287   1st Qu.:0.1562   1st Qu.:5.016   1st Qu.:0.0117  
+ Median :0.38354   Median :0.6165   Median :5.419   Median :0.1067  
+ Mean   :0.48239   Mean   :0.5176   Mean   :5.468   Mean   :0.1486  
+ 3rd Qu.:0.84382   3rd Qu.:0.9571   3rd Qu.:5.854   3rd Qu.:0.2098  
+ Max.   :1.00000   Max.   :1.0000   Max.   :6.907   Max.   :0.6902  
     fatVar7             blockMax      blockMaxVar         blockMin    
  Min.   :0.0000000   Min.   :6.094   Min.   :0.04212   Min.   :3.944  
  1st Qu.:0.0005133   1st Qu.:6.764   1st Qu.:0.08599   1st Qu.:4.464  
@@ -121,3 +131,6 @@ Checking object ... OK
  3rd Qu.:0.0481948   3rd Qu.:7.595   3rd Qu.:0.40690   3rd Qu.:5.094  
  Max.   :0.0945648   Max.   :8.351   Max.   :0.68391   Max.   :5.946  
 > 
+> proc.time()
+   user  system elapsed 
+  11.37    0.18   11.56 

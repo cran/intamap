@@ -1,6 +1,6 @@
 
-R version 2.12.1 (2010-12-16)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -19,12 +19,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
-Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -79,8 +83,14 @@ Checking object ... OK
 > obj = estimateParameters(obj)
 > obj = spatialPredict(obj)
 > obj = postProcess(obj)
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 Warning message:
-In spTransform(object$predictions, CRS(object$targetCRS)) :
+In rgdal::spTransform(object$predictions, CRS(object$targetCRS)) :
   Grid warping not available, coercing to points
 > output = obj$predictions
 > 
@@ -125,3 +135,6 @@ Data attributes:
  3rd Qu.:6.222   3rd Qu.:141.10  
  Max.   :7.483   Max.   :421.72  
 > 
+> proc.time()
+   user  system elapsed 
+   1.13    0.17    1.29 

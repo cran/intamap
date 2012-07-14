@@ -1,6 +1,6 @@
 
-R version 2.12.1 (2010-12-16)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -19,12 +19,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
-Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -75,12 +79,18 @@ Checking object ... OK
 > obj = estimateParameters(obj)
 > obj = spatialPredict(obj)
 > obj = postProcess(obj)
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 > summary(obj$predictions)
 Object of class SpatialPixelsDataFrame
 Coordinates:
      min    max
-x 178440 181560
-y 329600 333760
+x 178460 181540
+y 329620 333740
 Is projected: NA 
 proj4string : [NA]
 Number of points: 3103
@@ -98,3 +108,6 @@ Data attributes:
  Max.   :7.563   Max.   :460.035  
 > output = obj$outputTable
 > 
+> proc.time()
+   user  system elapsed 
+   1.45    0.14    1.57 

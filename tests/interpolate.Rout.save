@@ -1,6 +1,6 @@
 
-R version 2.12.1 (2010-12-16)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -20,12 +20,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
-Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -45,16 +49,21 @@ The following object(s) are masked from 'package:evd':
 > data(meuse.grid)
 > gridded(meuse.grid)=~x+y
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T, nsim = 5),methodName = "automap")
-R 2011-02-28 17:27:00 interpolating 155 observations, 3103 prediction locations
+R 2012-07-24 15:50:42 interpolating 155 observations, 3103 prediction locations
 Checking object ... OK
-Warning messages:
-1: In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
+Warning message:
+In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
   
  using standard model for estimating time. For better 
  platform spesific predictions, please run 
  timeModels <- generateTimeModels()
   and save the workspace
-2: closing unused connection 3 (C:\Users\skoiejo\AppData\Local\Temp\RtmphOg4zb\file2714278f) 
 > summary(t(output$outputTable))
        x                y               mean           variance     
  Min.   :178460   Min.   :329620   Min.   : 121.0   Min.   :  8357  
@@ -86,7 +95,7 @@ Warning messages:
 > data(meuse.grid)
 > gridded(meuse.grid)=~x+y
 > output = interpolate(meuse, meuse.grid, list(mean=TRUE),methodName = "idw")
-R 2011-02-28 17:27:16 interpolating 155 observations, 3103 prediction locations
+R 2012-07-24 15:50:51 interpolating 155 observations, 3103 prediction locations
 [Time models loaded...]
 Checking object ... OK
   |                                                                              |                                                                      |   0%  |                                                                              |==================                                                    |  25%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================================                  |  75%  |                                                                              |======================================================================| 100%
@@ -136,7 +145,7 @@ Checking object ... OK
 > coordinates(meuse.grid) = ~x+y
 > meuse$value=meuse$zinc
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
-R 2011-02-28 17:27:19 interpolating 155 observations, 3103 prediction locations
+R 2012-07-24 15:50:54 interpolating 155 observations, 3103 prediction locations
 [Time models loaded...]
 Checking object ... OK
 > summary(t(output$outputTable))
@@ -147,8 +156,6 @@ Checking object ... OK
  Mean   :179985   Mean   :331348   Mean   : 385.8   Mean   : 19133  
  3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 505.4   3rd Qu.: 22655  
  Max.   :181540   Max.   :333740   Max.   :1850.6   Max.   :105085  
-Warning message:
-closing unused connection 3 (C:\Users\skoiejo\AppData\Local\Temp\RtmphOg4zb\file3dce117c) 
 > 
 > 
 > 
@@ -161,14 +168,14 @@ closing unused connection 3 (C:\Users\skoiejo\AppData\Local\Temp\RtmphOg4zb\file
 > gridded(mgrid) = TRUE
 > output = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula")
-R 2011-02-28 17:27:21 interpolating 30 observations, 24 prediction locations
+R 2012-07-24 15:50:55 interpolating 30 observations, 24 prediction locations
 [Time models loaded...]
 Checking object ... OK
 There were 29 warnings (use warnings() to see them)
 > 
 > output2 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula",optList = list(methodParameters = output$methodParameters))
-R 2011-02-28 17:27:23 interpolating 30 observations, 24 prediction locations
+R 2012-07-24 15:50:57 interpolating 30 observations, 24 prediction locations
 [Time models loaded...]
 Checking object ... OK
 Warning messages:
@@ -187,19 +194,19 @@ Warning messages:
 > 
 > summary(t(output2$outputTable))
        x                y               mean              variance        
- Min.   :179283   Min.   :330139   Min.   :1.409e+02   Min.   :        0  
- 1st Qu.:179753   1st Qu.:330765   1st Qu.:2.314e+02   1st Qu.:     6007  
- Median :180222   Median :331704   Median :5.278e+02   Median :   655114  
- Mean   :180222   Mean   :331704   Mean   :1.667e+07   Mean   : 39155822  
- 3rd Qu.:180691   3rd Qu.:332642   3rd Qu.:4.838e+03   3rd Qu.:100000000  
- Max.   :181161   Max.   :333268   Max.   :1.000e+08   Max.   :100000000  
+ Min.   :179283   Min.   :330139   Min.   :      141   Min.   :        0  
+ 1st Qu.:179753   1st Qu.:330765   1st Qu.:      231   1st Qu.:     6007  
+ Median :180222   Median :331704   Median :      528   Median :   655114  
+ Mean   :180222   Mean   :331704   Mean   : 16670219   Mean   : 39155822  
+ 3rd Qu.:180691   3rd Qu.:332642   3rd Qu.:     4838   3rd Qu.:100000000  
+ Max.   :181161   Max.   :333268   Max.   :100000000   Max.   :100000000  
   excprob1000         quantile0.5    
- Min.   :4.021e-05   Min.   : 131.0  
- 1st Qu.:5.635e-03   1st Qu.: 167.9  
- Median :8.296e-02   Median : 253.7  
- Mean   :1.653e-01   Mean   : 439.5  
- 3rd Qu.:2.798e-01   3rd Qu.: 572.1  
- Max.   :6.134e-01   Max.   :1427.6  
+ Min.   :0.0000402   Min.   : 131.0  
+ 1st Qu.:0.0056347   1st Qu.: 167.9  
+ Median :0.0829580   Median : 253.7  
+ Mean   :0.1653267   Mean   : 439.5  
+ 3rd Qu.:0.2797628   3rd Qu.: 572.1  
+ Max.   :0.6133520   Max.   :1427.6  
 > 
 > output2$outputTable - output$outputTable
             [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
@@ -223,6 +230,11 @@ mean            0
 variance        0
 excprob1000     0
 quantile0.5     0
+attr(,"transposed")
+[1] TRUE
 > 
 > 
 > 
+> proc.time()
+   user  system elapsed 
+  16.56    0.20   16.77 

@@ -108,7 +108,10 @@ plotIntamap = function(object,zcol = "all", sp.layout = NULL, plotMat = c(2,2), 
   if (all(zcol %in% c(names(object$predictions),"mean","variance"))) {
     predictions = object$predictions
   } else if ("outputTable" %in% names(object)){
-    predictions = as.data.frame(t(object$outputTable))
+    predictions = object$outputTable  
+    transp = attr(predictions, "transposed")
+    if (!is.null(transp) && transp) predictions = t(predictions)
+    predictions = as.data.frame(predictions)
     coordinates(predictions) = ~x+y
   } else {
     predictions = NULL
@@ -159,12 +162,7 @@ plotIntamap = function(object,zcol = "all", sp.layout = NULL, plotMat = c(2,2), 
 }
 
 
-#plotIntamap(output)
 
-
-vplot = function() {
-
-}
 
 expandZcol = function(outputWhat) {
   zcol = c(1:length(outputWhat))

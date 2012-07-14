@@ -1,6 +1,6 @@
 
-R version 2.12.1 (2010-12-16)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: x86_64-pc-mingw32/x64 (64-bit)
 
@@ -20,12 +20,16 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.7.2, released 2010/04/23
-Path to GDAL shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009
-Path to PROJ.4 shared files: E:\skojejo\Documents/R/win-library/2.12/rgdal/proj
+Loading required package: spacetime
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following object(s) are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -71,6 +75,12 @@ drawing 100 GLS realisations of beta...
 [using conditional Gaussian simulation]
 [1] "Finished simulations"
 > krigingObject = postProcess(krigingObject)
+Loading required package: rgdal
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
+Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 > summary(krigingObject$outputTable)
        x                y               mean          variance      
  Min.   :178955   Min.   :329893   Min.   :4.802   Min.   :0.09422  
@@ -79,13 +89,13 @@ drawing 100 GLS realisations of beta...
  Mean   :180215   Mean   :331657   Mean   :5.982   Mean   :0.42215  
  3rd Qu.:180970   3rd Qu.:332538   3rd Qu.:6.390   3rd Qu.:0.68990  
  Max.   :181474   Max.   :333420   Max.   :7.511   Max.   :0.78230  
-      MOK7          IWQSEL7         excprob7        
- Min.   :5.050   Min.   :5.207   Min.   :9.661e-10  
- 1st Qu.:5.771   1st Qu.:6.101   1st Qu.:2.605e-03  
- Median :6.074   Median :6.665   Median :5.434e-02  
- Mean   :6.229   Mean   :6.483   Mean   :1.430e-01  
- 3rd Qu.:6.637   3rd Qu.:6.871   3rd Qu.:2.341e-01  
- Max.   :7.759   Max.   :7.604   Max.   :8.434e-01  
+      MOK7          IWQSEL7         excprob7       
+ Min.   :5.050   Min.   :5.207   Min.   :0.000000  
+ 1st Qu.:5.771   1st Qu.:6.101   1st Qu.:0.002605  
+ Median :6.074   Median :6.665   Median :0.054342  
+ Mean   :6.229   Mean   :6.483   Mean   :0.143007  
+ 3rd Qu.:6.637   3rd Qu.:6.871   3rd Qu.:0.234089  
+ Max.   :7.759   Max.   :7.604   Max.   :0.843378  
 > 
 > 
 > class(krigingObject) = c("yamamoto")
@@ -212,3 +222,6 @@ Conditional simulation  100
  3rd Qu.:6.912   3rd Qu.:6.893   3rd Qu.:1.566e-01  
  Max.   :7.230   Max.   :7.190   Max.   :2.979e-01  
 > 
+> proc.time()
+   user  system elapsed 
+  16.41    0.10   16.56 

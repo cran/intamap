@@ -87,7 +87,8 @@ proj4string(meuse.grid) = CRS("+init=epsg:28992")
 obj = createIntamapObject(
 	observations = meuse,
 	predictionLocations = meuse.grid,
-	targetCRS = "+init=epsg:3035",
+# Prediction for a different projection possible if rgdal is available
+	targetCRS = ifelse(require(rgdal), "+init=epsg:3035", "+init=epsg:28992"),
 	class = "automap"
 )
 

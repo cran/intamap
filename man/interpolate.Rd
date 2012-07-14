@@ -15,7 +15,7 @@ interpolateBlock(observations, predictionLocations, outputWhat,
 \item{observations}{observation data, object of class \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}}. 
                     The observation to be interpolated has to be identified through the 
                     column name \code{value}}
-\item{predictionLocations}{ prediction locations, object of class \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}}}
+\item{predictionLocations}{ prediction locations, object of class \code{\link[sp:SpatialPoints]{SpatialPoints}}*, \code{\link[sp:SpatialPixels]{SpatialPixels}}* or \code{\link[sp:SpatialGrid]{SpatialGrid}}*, or the number of predictionLocations to be sampled from the boundaries of the observations}
 \item{outputWhat}{ list with names what kind of output is expected, e.g.
                   \code{outputWhat = list(mean=TRUE,variance=TRUE, nsim = 5)}}
 \item{blockWhat}{List defining particular output for block predictions. See \code{\link{createIntamapObject}}}
@@ -53,7 +53,6 @@ but the list below shows the most typical:
  \item{formulaString}{the relationship between independent and dependent variables, 
        \code{value} or \code{obs} used if not given}
  \item{outputWhat}{a list of the prediction types to return}
- \item{returnPlot}{logical; if TRUE a diagnostic plot is returned}
  \item{anisPar}{the estimated anisotropy parameters}
 
  \item{variogramModel}{the estimated parameter for the method, can also be e.g. \code{copulaParams}
@@ -67,7 +66,6 @@ but the list below shows the most typical:
  \item{outputTable}{a matrix, organized in a convenient way for the calling WPS;
      first row: x-coordinates,  second row: y-coordinates; further rows: 
      output elements as specified by \code{outputWhat}}
- \item{processPlot}{a diagnostic plot from the interpolation}
  \item{processDescription}{some textual descriptions of the interpolation
         process, including warnings}
 

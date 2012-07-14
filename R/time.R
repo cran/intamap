@@ -15,21 +15,21 @@ estimateTimeModel<-function(FUN,class,formulaString,debug.level = 0,...){
 
 #function that gives the time estimation
 predictTime=function(nObs,nPred,class,formulaString,calibration=FALSE,outputWhat,FUN = "spatialPredict",...){
-	if(exists("timeModels")){ 
-		# get("timeModels")
+	if (exists("timeModels", envir = .GlobalEnv)){ 
 		cat("[Time models loaded...]\n")
-	}else{ 
+	} else { 
 #			rpath=system.file("models",package="intamap")
 #			timeModels=try(load(paste(rpath,"/timeModel.Rdata",sep="")))
 #			if(inherits(timeModels,"try-error")) 	timeModels=NULL
 #			else	
+#  	timeModels = list()
     data(timeModels)
-  	if(exists("timeModels")) get("timeModels")
     warning(paste("\n using standard model for estimating time. For better \n",
          "platform spesific predictions, please run \n",
          "timeModels <- generateTimeModels()\n ",
          "and save the workspace"))
 	}
+	timeModels = get("timeModels", envir = .GlobalEnv)
 	
 	#load dots in case of spatialPredict function
 	dots=list(...)
@@ -262,7 +262,8 @@ timeSampling<-function(FUN,class,formulaString, nSam = 1,...){
 	for (ii in 1:nSam) {
     for (i in 1:(length(obsInterv)-ifelse(class == "copula",2,0))){
   		ie = ie + 1
-      obj<-generateRandomObject(obsInterv[i],predInterv[1],FUN=FUN,formulaS=formulaString,class=class,...)
+      obj<-generateRandomObject(obsInterv[i],predInterv[1],FUN=FUN,
+          formulaString=formulaString,class=class,...)
       eTime=system.time(obj <- estimateParameters(obj))
       eTimes[ie,1] = obsInterv[i]
       eTimes[ie,2] = eTime[1]

@@ -39,7 +39,7 @@ See the individual interpolation methods for more information. }
 
 \details{
 The function \code{spatialPredict} is a wrapper around different
-spatial interpolation methods found within the \code{link{intamap-package}} or within other packages
+spatial interpolation methods found within the \code{\link{intamap-package}} or within other packages
 in \code{R}. It is for most of the
 methods necessary to have parameters of the correlation structure
 included in \code{object} to be able to carry out the spatial prediction.
