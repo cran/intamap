@@ -11,13 +11,11 @@ spatialPredict.block = function(object,...) {
   blockMethods = c("automap","idw")
 # Extract some of the parameters and variables from the object
 # - for easier access
-  params = object$params
+  params = getIntamapParams(object$params, ...)
   blockWhat = object$blockWhat
   dots = list(...)
   block = params$block
-  if ("block" %in% names(dots)) block = dots$block
   nmax = params$nmax
-
   observations = object$observations
   formul = object$formulaString
   predictionLocations = object$predictionLocations
@@ -63,18 +61,18 @@ spatialPredict.block = function(object,...) {
     ngrid = params$ngrid
     if (is(predictionLocations,"SpatialPolygons")) {
       pointObject$predictionLocations = findGrid(predictionLocations = predictionLocations,
-          n = ngrid, sampleSubregions=TRUE,...)
+          n = ngrid, sampleSubregions=TRUE, params = params)
     } else if (length(block) >0 ) {
       pointObject$predictionLocations = findGrid(predictionLocations = predictionLocations,
-          n = ngrid, sampleSubregions=TRUE, block = block,...)
+          n = ngrid, sampleSubregions=TRUE, block = block, params = params)
     } else {
       bb = bbox(observations)
       if ("cellsize" %in% names(dots)) {
         pointObject$predictionLocations = findGrid(predictionLocations = observations,
-            cellsize = dots$cellsize, sampleSubregions=FALSE,...)
+            cellsize = dots$cellsize, sampleSubregions=FALSE, params = params)
       } else {
         pointObject$predictionLocations = findGrid(predictionLocations = observations,
-          n = ngrid, sampleSubregions=FALSE,...)
+          n = ngrid, sampleSubregions=FALSE, params = params)
       }
     }
 
@@ -117,6 +115,9 @@ spatialAggregate = function(object) {
   thresh = params$thresh
   outputWhat = object$outputWhat
   blockWhat = object$blockWhat
+  if ("mean" %in% names(outputWhat)) {
+     if (blockWhat == "none") blockWhat = list(mean = TRUE) else blockWhat$mean = TRUE
+  }
   sims = pointPred[,grep("sim",names(pointPred))>0]
 
   predAggr = aggregate(sims,by=list(id=pointLocations$id),mean)
@@ -145,6 +146,13 @@ spatialAggregate = function(object) {
         vvar = apply(bmin[,-1],MARGIN=1,FUN=function(arr) var(arr))
         vname = "blockMin"
         vnamevar = "blockMinVar"
+      } else if (names(what) == "mean" && what[[1]]) {
+        bmean = aggregate(sims, by = list(id = ids), FUN = mean)
+        vmean = rowMeans(bmean[,-1])
+        vvar = apply(bmean[,-1],MARGIN=1,FUN=function(arr) var(arr))
+        vname = "blockMean"
+        vnamevar = "blockMeanVar"
+        
       }
       predictions@data[vname] = vmean        
       predictions@data[vnamevar] = vvar             
@@ -165,7 +173,7 @@ spatialAggregate = function(object) {
 
 
 findGrid = function(predictionLocations, cellsize, n=100, sampleSubregions=FALSE, 
-                    block, sMin = 4, ...) {
+                    block, params) {
 #  newdata needs to be SpatialPointsDataFrame.
 #  3 options:
 #  1) If sampleSubregions is false then sample the whole region of newdata
@@ -176,6 +184,7 @@ findGrid = function(predictionLocations, cellsize, n=100, sampleSubregions=FALSE
 #  will be done in subregions, where cellsize does not make sense
 #  If cellmin gives empty polygons, sMin gives a minimum number of samples from
 #  each polygon   
+sMin = params$sMin
 if (is(predictionLocations,"SpatialPolygons")) {
   if (sampleSubregions) {
     if (!missing(cellsize)) n = bbArea(bbox(predictionLocations))/(cellsize*cellsize)

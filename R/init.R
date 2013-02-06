@@ -55,11 +55,11 @@ getIntamapParams = function(oldPar, newPar,...){
 
 getIntamapDefaultParams = function(doAnisotropy = TRUE, 
   testMean = FALSE, removeBias = NA,  addBias = NA, biasRemovalMethod = "LM", 
-  nmax = 50, ngrid = 100, nsim = 100, block=numeric(0), processType="gaussian",
+  nmax = 50, ngrid = 100, nsim = 100, sMin = 4, block=numeric(0), processType="gaussian",
   confProj = FALSE, debug.level = 0, nclus = 1, ... ) {
 return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = removeBias, addBias = addBias,
   biasRemovalMethod = biasRemovalMethod, 
-  nmax = nmax, ngrid = ngrid, nsim = nsim, processType = processType,
+  nmax = nmax, ngrid = ngrid, nsim = nsim, sMin = 4, processType = processType,
   confProj = confProj, debug.level = debug.level, nclus = nclus, ... ))
 }
 
@@ -74,11 +74,17 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
   if ("targetCRS" %in% names(params) && missing(targetCRS)) {
     targetCRS = params$targetCRS
     params = params[-which(names(params) == "targetCRS")]
+    if (require(rgdal)) targetCRS = CRSargs(CRS(targetCRS))
   }
   if ("intCRS" %in% names(params) && missing(intCRS)) {
     intCRS = params$intCRS
     params = params[-which(names(params) == "intCRS")]
+    if (require(rgdal)) intCRS = CRSargs(CRS(intCRS))
   }
+  if (!is.na(proj4string(observations)) && require(rgdal)) 
+      observations@proj4string = CRS(proj4string(observations))
+  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations)) && require(rgdal)) 
+      predictionLocations@proj4string = CRS(proj4string(predictionLocations))
   if (!missing(observations) && !extends(class(observations),"Spatial")) 
   	stop("observations not object of class Spatial*")
   if (missing(observations)) 
@@ -171,7 +177,7 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
     if (length(grep(" rm",methodParameters)) >0) stop("Illegal attempt to call function rm through methodParameters")
     if (length(grep("scan",methodParameters)) >0) stop("Illegal attempt to call function scan through methodParameters")
     if (length(grep("sink",methodParameters)) >0) stop("Illegal attempt to call function sink through methodParameters")
-    if (length(grep("shell",methodParameters)) >0) stop("Illegal attempt to call function shell through methodParameters")
+    if (length(grep("shell",methodParameters)) >0) stop("Illegal attempt to call function shell through methodParameters")                                                                           
     if (length(grep("sprintf",methodParameters)) >0) stop("Illegal attempt to call function sprintf through methodParameters")
     if (length(grep("system",methodParameters)) >0) stop("Illegal attempt to call function system through methodParameters")
     if (length(grep("url",methodParameters)) >0) stop("methodParameters contain illegal string url")

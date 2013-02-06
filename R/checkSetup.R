@@ -45,11 +45,7 @@ checkSetup = function(object, quiet = FALSE) {
                                         < length(object$params$addBias))
     stop("Cannot add biases that have not been removed")
 
-	if (((is(object$predictionLocations,"SpatialPoints") || is(object$predictionLocations,"SpatialGrid")
-                    && dim(object$predictionLocations@coords)[1] > 2) ||
-	     (is(object$predictionLocations,"SpatialPolygons") && length(object$predictionLocations@polygons) > 2) ||
-	     (is(object$predictionLocations,"SpatialLines") && length(object$predictionLocations@lines) > 2) ||
-	     (is(object$predictionLocations,"SpatialGrid") && dim(object$predictionLocations@coords)[1] > 2)) &&
+	if (dim(coordinates(object$predictionLocations))[1] > 2  &&
      commonArea(object$observations,object$predictionLocations)[2] < 0.01)
 	  warning("Boundary boxes of predictionLocations and observations show small overlap, check projections if predictionLocations are not supposed to be concentrated")
 	if (!quiet)
