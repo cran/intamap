@@ -1,10 +1,13 @@
 
 
-estimateParameters.transGaussian = function(object, lambda, significant = TRUE, ...) {
+estimateParameters.transGaussian = function(object, ...) {
+  params = getIntamapParams(object$params, ...)
+  lambda = object$params$lambda
+  significant = object$params$significant = TRUE
   observations = object$observations
   formulaString = object$formulaString
   dataObs = observations[[as.character(formulaString[[2]]) ]]
-  if (missing(lambda)) {
+  if (is.null(lambda)) {
     test = isNonGauss(dataObs)
 #    if (min(dataObs <=0)) {
 #      pcor = sqrt(var(dataObs))/10000
@@ -36,7 +39,11 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
   if ("debug.level" %in% names(dots)) debug.level = dots$debug.level else
     debug.level = object$params$debug.level
   if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
-  if ("lambda" %in% names(object)) lambda = object$lambda else lambda = 1
+  if ("lambda" %in% names(object)) {
+    lambda = object$lambda 
+  } else if ("lambda" %in% names(dots)) {
+    lambda = dots$lambda
+  } else lambda = 1
   observations = object$observations
   formulaString = object$formulaString
   predictionLocations = object$predictionLocations

@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+Platform: x86_64-redhat-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,16 +19,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -52,7 +42,7 @@ The following object(s) are masked from 'package:evd':
 > obsNames = names(observations)
 > coordinates(observations) = as.formula(paste("~",obsNames[1], "+", obsNames[2]))
 > set.seed(13531)
-> predictionLocations = spsample(observations, 50, "regular")
+> predictionLocations = spsample(observations, 10, "regular")
 > gridded(predictionLocations) = TRUE
 > cellsize = predictionLocations@grid@cellsize
 > cs = predictionLocations@grid@cellsize[1]/2
@@ -98,39 +88,44 @@ Checking object ... OK
 > krigingObject = blockPredict(krigingObject)
 [using ordinary kriging]
 [1] "performed ordinary block kriging"
+Warning message:
+In if (blockWhat == "none") blockWhat = list(mean = TRUE) else blockWhat$mean = TRUE :
+  the condition has length > 1 and only the first element will be used
 > krigingObject = postProcess(krigingObject)
 Loading required package: rgdal
+rgdal: version: 0.8.1, (SVN revision 415)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
-Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
+Path to GDAL shared files: /usr/share/gdal
+GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
+Path to PROJ.4 shared files: (autodetected)
 > predictions = krigingObject$predictions
 > 
 > # Send predictions back to Java. Not sure how to deal with this spatial object though...?
 > summary(krigingObject$outputTable)
        x                y               mean          variance       
- Min.   :179019   Min.   :330013   Min.   :4.913   Min.   :0.005564  
- 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.481   1st Qu.:0.020855  
- Median :180183   Median :331644   Median :5.799   Median :0.134431  
- Mean   :180183   Mean   :331644   Mean   :5.964   Mean   :0.206540  
- 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388670  
- Max.   :181348   Max.   :333275   Max.   :7.189   Max.   :0.523013  
-   excprob5.9       cumdistr5.9      quantile0.1         fat7       
- Min.   :0.00000   Min.   :0.0000   Min.   :4.577   Min.   :0.0000  
- 1st Qu.:0.04287   1st Qu.:0.1562   1st Qu.:5.016   1st Qu.:0.0117  
- Median :0.38354   Median :0.6165   Median :5.419   Median :0.1067  
- Mean   :0.48239   Mean   :0.5176   Mean   :5.468   Mean   :0.1486  
- 3rd Qu.:0.84382   3rd Qu.:0.9571   3rd Qu.:5.854   3rd Qu.:0.2098  
- Max.   :1.00000   Max.   :1.0000   Max.   :6.907   Max.   :0.6902  
+ Min.   :179530   Min.   :330383   Min.   :5.116   Min.   :0.008892  
+ 1st Qu.:179530   1st Qu.:331165   1st Qu.:5.847   1st Qu.:0.012112  
+ Median :180051   Median :331946   Median :6.039   Median :0.063021  
+ Mean   :180051   Mean   :331946   Mean   :6.037   Mean   :0.103621  
+ 3rd Qu.:180572   3rd Qu.:332728   3rd Qu.:6.354   3rd Qu.:0.166748  
+ Max.   :180572   Max.   :333509   Max.   :6.725   Max.   :0.335321  
+   excprob5.9         cumdistr5.9       quantile0.1         fat7         
+ Min.   :0.0002662   Min.   :0.02232   Min.   :4.783   Min.   :0.009495  
+ 1st Qu.:0.4570313   1st Qu.:0.04086   1st Qu.:5.513   1st Qu.:0.077046  
+ Median :0.6906330   Median :0.30937   Median :5.729   Median :0.161162  
+ Mean   :0.6120414   Mean   :0.38796   Mean   :5.683   Mean   :0.167689  
+ 3rd Qu.:0.9591400   3rd Qu.:0.54297   3rd Qu.:5.994   3rd Qu.:0.246338  
+ Max.   :0.9776840   Max.   :0.99973   Max.   :6.199   Max.   :0.361818  
     fatVar7             blockMax      blockMaxVar         blockMin    
- Min.   :0.0000000   Min.   :6.094   Min.   :0.04212   Min.   :3.944  
- 1st Qu.:0.0005133   1st Qu.:6.764   1st Qu.:0.08599   1st Qu.:4.464  
- Median :0.0158717   Median :7.105   Median :0.22521   Median :4.768  
- Mean   :0.0264858   Mean   :7.222   Mean   :0.25696   Mean   :4.824  
- 3rd Qu.:0.0481948   3rd Qu.:7.595   3rd Qu.:0.40690   3rd Qu.:5.094  
- Max.   :0.0945648   Max.   :8.351   Max.   :0.68391   Max.   :5.946  
+ Min.   :0.0002863   Min.   :6.759   Min.   :0.08183   Min.   :3.984  
+ 1st Qu.:0.0031038   1st Qu.:7.456   1st Qu.:0.11867   1st Qu.:4.378  
+ Median :0.0046041   Median :7.804   Median :0.17128   Median :4.459  
+ Mean   :0.0142470   Mean   :7.698   Mean   :0.19312   Mean   :4.505  
+ 3rd Qu.:0.0295423   3rd Qu.:8.132   3rd Qu.:0.22888   3rd Qu.:4.696  
+ Max.   :0.0408475   Max.   :8.288   Max.   :0.41463   Max.   :4.924  
 > 
 > proc.time()
    user  system elapsed 
-  11.37    0.18   11.56 
+  5.651   0.068   5.734 

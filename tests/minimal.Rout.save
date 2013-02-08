@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+Platform: x86_64-redhat-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,16 +19,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -80,11 +70,13 @@ Checking object ... OK
 > obj = spatialPredict(obj)
 > obj = postProcess(obj)
 Loading required package: rgdal
+rgdal: version: 0.8.1, (SVN revision 415)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
-Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
+Path to GDAL shared files: /usr/share/gdal
+GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
+Path to PROJ.4 shared files: (autodetected)
 > summary(obj$predictions)
 Object of class SpatialPixelsDataFrame
 Coordinates:
@@ -110,4 +102,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-   1.45    0.14    1.57 
+  3.157   0.066   3.230 

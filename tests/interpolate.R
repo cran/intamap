@@ -1,36 +1,23 @@
 set.seed(15331)
 library(intamap)
-data(meuse)
-meuse$value=meuse$zinc
-coordinates(meuse) = ~x+y
-data(meuse.grid)
-gridded(meuse.grid)=~x+y
+loadMeuse()
+meuse$value = log(meuse$zinc)
+meuse.grid = meuse.grid[sample(1:dim(meuse.grid)[1], 100),]
+gridded(meuse.grid)=TRUE
 output = interpolate(meuse, meuse.grid, list(mean=T, variance=T, nsim = 5),methodName = "automap")
 summary(t(output$outputTable))
 
 
-library(intamap)
-data(meuse)
-meuse$value=meuse$zinc
-coordinates(meuse) = ~x+y
-data(meuse.grid)
-gridded(meuse.grid)=~x+y
-output = interpolate(meuse, meuse.grid, list(mean=TRUE),methodName = "idw")
+output = interpolate(meuse, meuse.grid,
+    optList = list(idpRange = seq(0.1, 2.9, 0.5), nfold = 3), 
+    outputWhat = list(mean=TRUE),methodName = "idw")
 summary(t(output$outputTable))
 
 
-library(intamap)
-data(meuse)
-data(meuse.grid)
-coordinates(meuse) = ~x+y
-coordinates(meuse.grid) = ~x+y
-meuse$value=meuse$zinc
 output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
 summary(t(output$outputTable))
 
 
-
-library(intamap)
 data(meuse)
 meuse = meuse[sample(dim(meuse)[1],30),]
 meuse$value=meuse$zinc

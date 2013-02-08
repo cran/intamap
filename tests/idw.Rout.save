@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+Platform: x86_64-redhat-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,16 +19,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -63,6 +53,14 @@ The following object(s) are masked from 'package:evd':
 + 	constantBias = 0,
 + 	classes = "idw"
 + )
+Loading required package: rgdal
+rgdal: version: 0.8.1, (SVN revision 415)
+Geospatial Data Abstraction Library extensions to R successfully loaded
+Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
+Path to GDAL shared files: /usr/share/gdal
+GDAL does not use iconv for recoding strings.
+Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
+Path to PROJ.4 shared files: (autodetected)
 > 
 > # run test:
 > checkSetup(idwObject)
@@ -70,27 +68,16 @@ Checking object ... OK
 > 
 > # do interpolation steps:
 > idwObject = preProcess(idwObject)
-> idwObject = estimateParameters(idwObject, idpRange = seq(0.25,2.75,.25), nfold=3) # faster
+> idwObject = estimateParameters(idwObject, idpRange = seq(0.25,2.75,.5), nfold=3) # faster
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-  |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
-[1] "best idp value found is 2.5 rmse 265.924618013951"
+[1] "best idp value found is 2.25 rmse 277.246436580228"
 > idwObject = spatialPredict(idwObject)
 > idwObject = postProcess(idwObject)
-Loading required package: rgdal
-Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
-Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
-Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
 Warning message:
 In rgdal::spTransform(object$predictions, CRS(object$targetCRS)) :
   Grid warping not available, coercing to points
@@ -98,13 +85,13 @@ In rgdal::spTransform(object$predictions, CRS(object$targetCRS)) :
 > # generate some output:
 > summary(as.data.frame(idwObject$outputTable))
        x                 y                mean       
- Min.   :4020608   Min.   :3102661   Min.   : 114.6  
- 1st Qu.:4021592   1st Qu.:3103493   1st Qu.: 239.4  
- Median :4022185   Median :3104228   Median : 331.8  
- Mean   :4022205   Mean   :3104338   Mean   : 409.1  
- 3rd Qu.:4022811   3rd Qu.:3105090   3rd Qu.: 519.4  
- Max.   :4023872   Max.   :3106651   Max.   :1833.9  
+ Min.   :4020608   Min.   :3102661   Min.   : 116.6  
+ 1st Qu.:4021592   1st Qu.:3103493   1st Qu.: 253.4  
+ Median :4022185   Median :3104228   Median : 344.4  
+ Mean   :4022205   Mean   :3104338   Mean   : 411.2  
+ 3rd Qu.:4022811   3rd Qu.:3105090   3rd Qu.: 511.9  
+ Max.   :4023872   Max.   :3106651   Max.   :1827.1  
 > 
 > proc.time()
    user  system elapsed 
-   1.87    0.10    1.98 
+  3.380   0.067   3.454 

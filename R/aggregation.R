@@ -20,16 +20,18 @@ spatialPredict.block = function(object,...) {
   formul = object$formulaString
   predictionLocations = object$predictionLocations
   outputWhat = object$outputWhat
-  if (!is(predictionLocations,"SpatialPolygons") &
-      !is(predictionLocations,"SpatialLinesDataFrame") &
+  if (!inherits(predictionLocations,"SpatialPolygons") &
+      !inherits(predictionLocations,"SpatialLines") &
+      !inherits(predictionLocations,"SpatialPixels") &
+      !inherits(predictionLocations,"SpatialGrid") &
       !length(block) >0 ) {
-      warning("prediction locations are not blocks, polygons or lines")
+      warning("prediction locations are not grid, blocks, polygons or lines")
       warning("calling point prediction")
       return(spatialPredict(object,...))
   }
   
   if (!("variogramModel" %in% names(object)) &
-      !inherits(object,"idw") & !inherits(object,"copula")) object = estimateParameters(object)
+      !inherits(object,"idw") & !inherits(object,"copula")) object = estimateParameters(object, ...)
   if (params$processType %in% c("gaussian","logNormal") &
       sum(class(object) %in% blockMethods) >= 1) {
 # Check if we might be able to use an analytical solution - 
@@ -58,23 +60,29 @@ spatialPredict.block = function(object,...) {
 # Create a new object for point simulation
     pointObject = object
 #   Create a grid
-    ngrid = params$ngrid
-    if (is(predictionLocations,"SpatialPolygons")) {
-      pointObject$predictionLocations = findGrid(predictionLocations = predictionLocations,
-          n = ngrid, sampleSubregions=TRUE, params = params)
-    } else if (length(block) >0 ) {
-      pointObject$predictionLocations = findGrid(predictionLocations = predictionLocations,
-          n = ngrid, sampleSubregions=TRUE, block = block, params = params)
-    } else {
-      bb = bbox(observations)
-      if ("cellsize" %in% names(dots)) {
-        pointObject$predictionLocations = findGrid(predictionLocations = observations,
-            cellsize = dots$cellsize, sampleSubregions=FALSE, params = params)
-      } else {
-        pointObject$predictionLocations = findGrid(predictionLocations = observations,
-          n = ngrid, sampleSubregions=FALSE, params = params)
-      }
-    }
+    if (!inherits(predictionLocations, "SpatialPolygons")) {
+      if (length(block) > 0) {
+        lbox = vector("list", length(predictionLocations))      
+        coords = coordinates(predictionLocations)
+        for (ii in 1:length(predictionLocations)) {
+          xy = coords[ii,]
+          xmin = xy[1]-block[1]/2
+          xmax = xy[1]+block[1]/2
+          ymin = xy[2]-block[ifelse(length(block) == 2, 2, 1)]/2
+          ymax = xy[2]+block[ifelse(length(block) == 2, 2, 1)]/2
+          Sr1 = Polygon(cbind(c(xmin,xmax,xmax,xmin,xmin),c(ymin,ymin,ymax,ymax,ymin)))
+          lbox[[ii]] = Polygons(list(Sr1), paste("i",ii,sep = ""))
+        }
+        SpP = SpatialPolygons(lbox, 1:length(predictionLocations), 
+              proj4string = CRS(proj4string(predictionLocations)))      
+      } else if (inherits(predictionLocations, "SpatialPixels") | 
+                 inherits(predictionLocations, "SpatialPixels")) {
+        SpP = as(predictionLocations, "SpatialPolygons")      
+      } else stop("predictionLocations are not SpatialPolygons or gridded and block size not given, block prediction not possible ")
+    } else SpP = predictionLocations
+
+    pointObject$predictionLocations = findGrid(predictionLocations = SpP,
+          params = params)
 
 # Do we need point predictions or simulations?
 # Prediction only if only need mean
@@ -82,11 +90,11 @@ spatialPredict.block = function(object,...) {
     nsim = ifelse(all(names(outputWhat)=="mean") & blockWhat == "none",0, params$nsim) 
     vmod = object$variogramModel
     nmax = ifelse(params$nmax == Inf & dim(coordinates(pointObject$predictionLocations))[1] > 200,20,params$nmax)
-    pointObject = spatialPredict(pointObject,nsim=params$nsim,nmax = nmax)
+    pointObject = spatialPredict(pointObject,nsim=params$nsim,nmax = nmax, ...)
     pointObject$predictions = pointObject$predictions[,grep("sim",names(pointObject$predictions))]
     object$pointPredictions = pointObject$predictions
     object$pointLocations = pointObject$predictionLocations
-    object = spatialAggregate(object)
+    object = spatialAggregate(object, SpP)
     if (object$params$debug.level < 2) object$pointPredictions = 
                   "pointPredictions deleted from object, debug.level < 2"
   }
@@ -96,21 +104,19 @@ spatialPredict.block = function(object,...) {
 
 
   
-spatialAggregate = function(object) {
+spatialAggregate = function(object, SpP) {
   predictionLocations = object$predictionLocations
   pointLocations = object$pointLocations  
-  ids = pointLocations$id
-  id = unique(ids)
-  if ("predictions"%in% names(object)) {
+  if ("predictions" %in% names(object)) {
     predictions = object$predictions
   } else {
     predictions = predictionLocations
-    if (!length(grep("DataFrame",class(predictions)))>0) 
-      predictions = SpatialDataFrame(predictions,data=data.frame(id = id))
   }
+    
   pointPredictions = object$pointPredictions
   coor = SpatialPoints(pointPredictions)
-  pointPred = pointPredictions@data
+  sims = pointPredictions[,grep("sim",names(pointPredictions))>0]
+  
   params = object$params
   thresh = params$thresh
   outputWhat = object$outputWhat
@@ -118,41 +124,39 @@ spatialAggregate = function(object) {
   if ("mean" %in% names(outputWhat)) {
      if (blockWhat == "none") blockWhat = list(mean = TRUE) else blockWhat$mean = TRUE
   }
-  sims = pointPred[,grep("sim",names(pointPred))>0]
-
-  predAggr = aggregate(sims,by=list(id=pointLocations$id),mean)
-  predictions@data = data.frame(predictions@data,predAggr)
-  
+  predAggr = aggregate(sims,by=SpP,mean)
+  if ("data" %in% names(getSlots(class(predictions)))) {
+    predictions@data = data.frame(predictions@data,predAggr@data)
+  } else predictions = SpatialDataFrame(predictions,predAggr@data)
   if (length(blockWhat) > 0 && blockWhat != "none") {
     for (ib in 1:length(blockWhat)) {
       what = blockWhat[ib]
       if (names(what) == "fat") {
         thresh = what[[1]]
         fatf = function(arr,thresh) sum(I(arr>thresh))/length(arr)  
-        fatx = aggregate(sims,by=list(id = ids),FUN = fatf,thresh=thresh)
+        fatx = aggregate(sims,SpP,FUN = fatf,thresh=thresh)@data
         vmean = rowMeans(fatx[,-1])
         vvar = apply(fatx[,-1],MARGIN=1,FUN=function(arr) var(arr))
         vname = paste("fat",what[[1]],sep="")
         vnamevar = paste("fatVar",what[[1]],sep="")
       } else if (names(what) == "blockMax" && what[[1]]) {
-        bmax = aggregate(sims,by=list(id=ids),FUN = max)
+        bmax = aggregate(sims,by=SpP,FUN = max)@data
         vmean = rowMeans(bmax[,-1])
         vvar = apply(bmax[,-1],MARGIN=1,FUN=function(arr) var(arr))
         vname = "blockMax"
         vnamevar = "blockMaxVar"
       } else if (names(what) == "blockMin" && what[[1]]) {
-        bmin = aggregate(sims,by=list(id=ids),FUN = min)
+        bmin = aggregate(sims,by=SpP,FUN = min)@data
         vmean = rowMeans(bmin[,-1])
         vvar = apply(bmin[,-1],MARGIN=1,FUN=function(arr) var(arr))
         vname = "blockMin"
         vnamevar = "blockMinVar"
       } else if (names(what) == "mean" && what[[1]]) {
-        bmean = aggregate(sims, by = list(id = ids), FUN = mean)
+        bmean = aggregate(sims, by = SpP, FUN = mean)@data
         vmean = rowMeans(bmean[,-1])
         vvar = apply(bmean[,-1],MARGIN=1,FUN=function(arr) var(arr))
         vname = "blockMean"
         vnamevar = "blockMeanVar"
-        
       }
       predictions@data[vname] = vmean        
       predictions@data[vnamevar] = vvar             
@@ -163,17 +167,8 @@ spatialAggregate = function(object) {
 }  
 
   
-  
-
-
-
-
-
-
-
-
-findGrid = function(predictionLocations, cellsize, n=100, sampleSubregions=FALSE, 
-                    block, params) {
+                  
+findGrid = function(predictionLocations, params) {
 #  newdata needs to be SpatialPointsDataFrame.
 #  3 options:
 #  1) If sampleSubregions is false then sample the whole region of newdata
@@ -185,10 +180,13 @@ findGrid = function(predictionLocations, cellsize, n=100, sampleSubregions=FALSE
 #  If cellmin gives empty polygons, sMin gives a minimum number of samples from
 #  each polygon   
 sMin = params$sMin
-if (is(predictionLocations,"SpatialPolygons")) {
-  if (sampleSubregions) {
-    if (!missing(cellsize)) n = bbArea(bbox(predictionLocations))/(cellsize*cellsize)
-    if (n < sMin) n = sMin
+ncell = params$ngrid
+cellsize = params$cellsize
+sampleSubregions = params$subSamp
+
+  if (!is.null(sampleSubregions) && sampleSubregions) {
+    if (!missing(cellsize)) ncell = bbArea(bbox(predictionLocations))/(cellsize*cellsize)
+    if (ncell < sMin) ncell = sMin
     ids = sapply(slot(predictionLocations, "polygons"), function(i) slot(i, "ID"))
     for (i in 1:length(predictionLocations@polygons)) {
       ldata = predictionLocations@polygons[i][[1]]
@@ -196,7 +194,7 @@ if (is(predictionLocations,"SpatialPolygons")) {
       cArea = 0
     # Summing up areas of all subpolygons in a polygon
       for (ip in 1:nl) cArea = cArea + ldata@Polygons[[ip]]@area
-      aR = spsample(ldata,type="regular", n=n)
+      aR = spsample(ldata,type="regular", n=ncell)
       naR = length(coordinates(aR)[,1])      
       if (is(predictionLocations,"SpatialPolygonsDataFrame")) {
         idl = ids[i]
@@ -214,35 +212,13 @@ if (is(predictionLocations,"SpatialPolygons")) {
       }
     }
   } else {  
-    if (!missing(cellsize)) predLoc = spsample(predictionLocations,type="regular",cellsize=cellsize) else 
-      predGrid = spsample(predictionLocations,n,type="regular")
-    predGrid = SpatialPointsDataFrame(predGrid,data = data.frame(id = overlay(predGrid,predictionLocations)))
-  }
-} else if (!missing(block)) {     
-  if (is.null(dim(block))) {
-		if (length(block) == 1)	block = rep(block,2)
-    block = expand.grid(x=c(-block[1]/2,block[1]/2),y=c(-block[2]/2,block[2]/2)) 
-    block = block[c(1,2,4,3),]
-    block[5,] = block[1,]
-  }
-  aR = coordinates(spsample(Polygon(block),n,"regular",offset=c(0.5,0.5)))
-  naR = dim(aR)[1]
-  coord = coordinates(predictionLocations)
-  for (i in 1:dim(coordinates(predictionLocations))[1]) {
-    coor = t(matrix(rep(coord[i,],naR),ncol=naR))
-    iaR = coor+aR
-    idNew=as.character(rep(i,naR))
-    predGridNew = SpatialPointsDataFrame(iaR,data=data.frame(id = idNew))
-    if (i == 1) {
-      id = idNew
-      predGrid = predGridNew
+    if (!is.null(cellsize)) {
+      predLoc = spsample(predictionLocations,type="regular",cellsize=cellsize) 
     } else {
-      id = c(id,idNew)
-      predGridNew = SpatialPointsDataFrame(iaR,data=data.frame(id = idNew))                     
-      predGrid = rbind(predGrid,predGridNew)
-    } 
+      predGrid = spsample(predictionLocations,ncell*length(predictionLocations),type="regular")
+    }
   }
-} else stop ("Polygons or block size not given")
+
 if (!is.na(proj4string(predictionLocations))) proj4string(predGrid) = proj4string(predictionLocations) 
 predGrid
 }

@@ -18,21 +18,26 @@ depend on the method used.
 \method{estimateParameters}{automap}(object, ... )
 \method{estimateParameters}{copula}(object, ... )
 \method{estimateParameters}{default}(object, ...)
-\method{estimateParameters}{idw}(object, ... , idpRange = seq(0.1, 2.9, 0.1), nfolds = 5)
+\method{estimateParameters}{idw}(object, ... )
 \method{estimateParameters}{linearVariogram}(object, ...)
 %\method{estimateParameters}{psgp}(object, ... )
-\method{estimateParameters}{transGaussian}(object, lambda, significant = TRUE, ... )
+\method{estimateParameters}{transGaussian}(object, ... )
 \method{estimateParameters}{yamamoto}(object, ... )
 }
 \arguments{
 \item{object}{ an intamap object of the type described in \code{\link{intamap-package}}}
 \item{...}{ other arguments that will be passed to the requested interpolation method. 
-See the individual methods for more information}
-\item{idpRange}{ range of idp (inverse distance weighting power) values over which to optimize mse }
-\item{nfolds}{ number of folds in n-fold cross validation }
-\item{lambda}{lambda parameter for \code{\link[MASS]{boxcox}}-transformation}
-\item{significant}{logical; if TRUE only transform if any of the four tests 
-            described under \code{\link{interpolate}} are TRUE.}
+See the individual methods for more information. Some parameters that are particular for some methods:
+\describe{
+\item{\code{idpRange}}{ range of idp (inverse distance weighting power) values 
+       over which to optimize mse (idw-method) }
+\item{\code{nfolds}}{ number of folds in n-fold cross validation (idw-method)}
+\item{\code{lambda}}{lambda parameter for \code{\link[MASS]{boxcox}}-transformation
+      (transGaussian method)}
+\item{\code{significant}}{logical; if TRUE only transform if any of the four tests 
+            described under \code{\link{interpolate}} are TRUE (transGaussian method)}
+}
+}
 } 
 
 

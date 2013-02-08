@@ -4,7 +4,13 @@ preProcess.idw = function(object, ...) {
 	NextMethod()
 }
 
-estimateParameters.idw = function(object, ..., idpRange = seq(0.1, 2.9, 0.1), nfold = 5) {
+estimateParameters.idw = function(object, ...) {
+
+  params = getIntamapParams(object$params, ...)
+  idpRange = params$idpRange
+  if (is.null(idpRange)) idpRange = seq(0.1, 2.9, 0.1)
+  nfold = params$nfold
+  if (is.null(nfold)) nfold = 5
 	# add parameter estimate
 	mse = rep(NA, length(idpRange))
   if ("formulaString" %in% names(object)) formulaString = object$formulaString else formulaString = as.formula("value ~ 1")

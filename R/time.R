@@ -17,19 +17,19 @@ estimateTimeModel<-function(FUN,class,formulaString,debug.level = 0,...){
 predictTime=function(nObs,nPred,class,formulaString,calibration=FALSE,outputWhat,FUN = "spatialPredict",...){
 	if (exists("timeModels", envir = .GlobalEnv)){ 
 		cat("[Time models loaded...]\n")
+  	timeModels = get("timeModels", envir = .GlobalEnv)
 	} else { 
 #			rpath=system.file("models",package="intamap")
 #			timeModels=try(load(paste(rpath,"/timeModel.Rdata",sep="")))
 #			if(inherits(timeModels,"try-error")) 	timeModels=NULL
 #			else	
 #  	timeModels = list()
-    data(timeModels)
+    data(timeModels, envir = environment())
     warning(paste("\n using standard model for estimating time. For better \n",
          "platform spesific predictions, please run \n",
          "timeModels <- generateTimeModels()\n ",
          "and save the workspace"))
 	}
-	timeModels = get("timeModels", envir = .GlobalEnv)
 	
 	#load dots in case of spatialPredict function
 	dots=list(...)

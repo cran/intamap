@@ -26,7 +26,7 @@ checkSetup(idwObject)
 
 # do interpolation steps:
 idwObject = preProcess(idwObject)
-idwObject = estimateParameters(idwObject, idpRange = seq(0.25,2.75,.25), nfold=3) # faster
+idwObject = estimateParameters(idwObject, idpRange = seq(0.25,2.75,.5), nfold=3) # faster
 idwObject = spatialPredict(idwObject)
 idwObject = postProcess(idwObject)
 

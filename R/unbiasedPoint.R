@@ -1,6 +1,7 @@
 
 
-unbiasedKrige = function(object,formulaString,observations,predictionLocations,model,outputWhat,nmax,nsim,yamamoto,debug.level,...) {
+unbiasedKrige = function(object,formulaString,observations,predictionLocations,model,
+     outputWhat,nmax,nsim,yamamoto,iwqmaxit = 500, iwqCpAddLim = 0.0001, debug.level,...) {
   dots = list(...)
   if (is(object,"Spatial")) {
     predictions = object
@@ -39,7 +40,6 @@ unbiasedKrige = function(object,formulaString,observations,predictionLocations,m
   if (length(iwqs) > 0) {
     if ("var1.pred" %in% names(predictions)) {
 #    Simulations necessary
-      dots = list(...)
       if (inherits(object,"yamamoto") | ("yamamoto" %in% names(dots) && dots$yamamoto)) { 
         zPred = yamamotoKrige (formulaString,observations,predictionLocations,
           nsim=nsim,nmax = nmax,model = model,...) 
@@ -55,7 +55,8 @@ unbiasedKrige = function(object,formulaString,observations,predictionLocations,m
       iwqThresh = iwqs[[iwq]]
       pThresh = acdfFind(acdf,iwqThresh,inv=TRUE)
       iname = paste("IWQSEL",iwqThresh,sep="")
-      iwqselRes = iwqsel(zPred@data,acdf,iwqThresh,pThresh,debug.level = debug.level)
+      iwqselRes = iwqsel(zPred@data,acdf,iwqThresh,pThresh,maxit = iwqmaxit, 
+          cpAddLim = iwqCpAddLim, debug.level = debug.level, ...)
       predictions[[iname]] = iwqselRes$zEst 
     }
   }

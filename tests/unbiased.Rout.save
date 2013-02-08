@@ -1,8 +1,8 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+R version 2.15.2 (2012-10-26) -- "Trick or Treat"
 Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-pc-mingw32/x64 (64-bit)
+Platform: x86_64-redhat-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -20,16 +20,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: spacetime
-Loading required package: zoo
-
-Attaching package: 'zoo'
-
-The following object(s) are masked from 'package:base':
-
-    as.Date, as.Date.numeric
-
-Loading required package: xts
 Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
@@ -54,7 +44,7 @@ The following object(s) are masked from 'package:evd':
 > set.seed(112233)
 > krigingObject = createIntamapObject(
 + 	observations = meuse,
-+ 	predictionLocations = spsample(meuse.grid,50,"regular"),
++ 	predictionLocations = spsample(meuse.grid,5,"regular"),
 + #	targetCRS = "+init=epsg:3035",
 + #	boundCRS = "+proj=laea +lat_0=48 +lon_0=9 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m",
 + #	boundCRS = boundCRS,
@@ -76,26 +66,28 @@ drawing 100 GLS realisations of beta...
 [1] "Finished simulations"
 > krigingObject = postProcess(krigingObject)
 Loading required package: rgdal
+rgdal: version: 0.8.1, (SVN revision 415)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.9.1, released 2012/05/15
-Path to GDAL shared files: C:/Program Files/R/R-2.15.1/library/rgdal/gdal
+Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
+Path to GDAL shared files: /usr/share/gdal
+GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.1/library/rgdal/proj
+Path to PROJ.4 shared files: (autodetected)
 > summary(krigingObject$outputTable)
-       x                y               mean          variance      
- Min.   :178955   Min.   :329893   Min.   :4.802   Min.   :0.09422  
- 1st Qu.:179459   1st Qu.:330775   1st Qu.:5.524   1st Qu.:0.16062  
- Median :180215   Median :331657   Median :5.826   Median :0.40595  
- Mean   :180215   Mean   :331657   Mean   :5.982   Mean   :0.42215  
- 3rd Qu.:180970   3rd Qu.:332538   3rd Qu.:6.390   3rd Qu.:0.68990  
- Max.   :181474   Max.   :333420   Max.   :7.511   Max.   :0.78230  
+       x                y               mean          variance     
+ Min.   :180026   Min.   :330484   Min.   :5.975   Min.   :0.1448  
+ 1st Qu.:180026   1st Qu.:331281   1st Qu.:6.094   1st Qu.:0.2003  
+ Median :180026   Median :332078   Median :6.213   Median :0.2557  
+ Mean   :180026   Mean   :332078   Mean   :6.205   Mean   :0.3937  
+ 3rd Qu.:180026   3rd Qu.:332874   3rd Qu.:6.320   3rd Qu.:0.5181  
+ Max.   :180026   Max.   :333671   Max.   :6.427   Max.   :0.7804  
       MOK7          IWQSEL7         excprob7       
- Min.   :5.050   Min.   :5.207   Min.   :0.000000  
- 1st Qu.:5.771   1st Qu.:6.101   1st Qu.:0.002605  
- Median :6.074   Median :6.665   Median :0.054342  
- Mean   :6.229   Mean   :6.483   Mean   :0.143007  
- 3rd Qu.:6.637   3rd Qu.:6.871   3rd Qu.:0.234089  
- Max.   :7.759   Max.   :7.604   Max.   :0.843378  
+ Min.   :6.594   Min.   :6.523   Min.   :0.003545  
+ 1st Qu.:6.713   1st Qu.:6.639   1st Qu.:0.031634  
+ Median :6.832   Median :6.755   Median :0.059723  
+ Mean   :6.824   Mean   :6.782   Mean   :0.107135  
+ 3rd Qu.:6.939   3rd Qu.:6.911   3rd Qu.:0.158931  
+ Max.   :7.046   Max.   :7.067   Max.   :0.258138  
 > 
 > 
 > class(krigingObject) = c("yamamoto")
@@ -208,20 +200,20 @@ Conditional simulation  100
 > krigingObject = postProcess(krigingObject)
 > summary(krigingObject$outputTable)
        x                y               mean          variance     
- Min.   :178955   Min.   :329893   Min.   :5.185   Min.   :0.1447  
- 1st Qu.:179459   1st Qu.:330775   1st Qu.:5.509   1st Qu.:0.3649  
- Median :180215   Median :331657   Median :5.742   Median :0.4812  
- Mean   :180215   Mean   :331657   Mean   :5.841   Mean   :0.4616  
- 3rd Qu.:180970   3rd Qu.:332538   3rd Qu.:6.257   3rd Qu.:0.5345  
- Max.   :181474   Max.   :333420   Max.   :6.575   Max.   :0.8321  
-      MOK7          IWQSEL7         excprob7        
- Min.   :5.840   Min.   :5.731   Min.   :2.170e-06  
- 1st Qu.:6.164   1st Qu.:6.361   1st Qu.:7.998e-03  
- Median :6.397   Median :6.667   Median :3.568e-02  
- Mean   :6.496   Mean   :6.611   Mean   :7.672e-02  
- 3rd Qu.:6.912   3rd Qu.:6.893   3rd Qu.:1.566e-01  
- Max.   :7.230   Max.   :7.190   Max.   :2.979e-01  
+ Min.   :180026   Min.   :330484   Min.   :5.849   Min.   :0.5727  
+ 1st Qu.:180026   1st Qu.:331281   1st Qu.:5.907   1st Qu.:0.5766  
+ Median :180026   Median :332078   Median :5.964   Median :0.5806  
+ Mean   :180026   Mean   :332078   Mean   :6.028   Mean   :0.6468  
+ 3rd Qu.:180026   3rd Qu.:332874   3rd Qu.:6.117   3rd Qu.:0.6839  
+ Max.   :180026   Max.   :333671   Max.   :6.270   Max.   :0.7872  
+      MOK7          IWQSEL7         excprob7      
+ Min.   :6.651   Min.   :6.754   Min.   :0.08558  
+ 1st Qu.:6.708   1st Qu.:6.859   1st Qu.:0.09143  
+ Median :6.766   Median :6.964   Median :0.09729  
+ Mean   :6.829   Mean   :6.910   Mean   :0.11732  
+ 3rd Qu.:6.919   3rd Qu.:6.987   3rd Qu.:0.13318  
+ Max.   :7.072   Max.   :7.011   Max.   :0.16908  
 > 
 > proc.time()
    user  system elapsed 
-  16.41    0.10   16.56 
+  5.485   0.065   5.556 

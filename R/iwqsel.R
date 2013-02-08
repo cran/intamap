@@ -29,7 +29,7 @@ wEs = function(zm,zMin,zInc,nacdf,acdf){
 
 #        iwqselRes = iwqsel(zPred@data,acdf,thresh,pThresh)
   
-iwqsel = function(zPred,acdf,thresh,pThresh,fbate,debug.level=0,...) {
+iwqsel = function(zPred,acdf,thresh,pThresh,fbate,maxit = 500, cpAddLim = 0.0001, debug.level=0,...) {
   nPred = dim(zPred)[1]
   if (!missing("fbate")) {
     itte = max(which(fbate$cP !=0))
@@ -52,7 +52,7 @@ iwqsel = function(zPred,acdf,thresh,pThresh,fbate,debug.level=0,...) {
   }
   if (debug.level != 1) cat(paste("\n after",itte,round(cP,4),round(cPadd,4),round(ate,4),round(late,4),
                   round(sate,4),as.integer(nPred/50)))
-  while ((itte < 500 | abs(ate) > (1/nPred+0.00001)) & abs(cPadd) > 0.0001) {
+  while ((itte < maxit | abs(ate) > (1/nPred+0.00001)) & abs(cPadd) > cpAddLim) {
     itte = itte + 1
     cPadd = ifelse(sign(ate) == sign(late),cPadd,-cPadd/2)
     cP = cP+cPadd

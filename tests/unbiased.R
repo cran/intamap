@@ -11,7 +11,7 @@ meuse$zinc = log(meuse$zinc)
 set.seed(112233)
 krigingObject = createIntamapObject(
 	observations = meuse,
-	predictionLocations = spsample(meuse.grid,50,"regular"),
+	predictionLocations = spsample(meuse.grid,5,"regular"),
 #	targetCRS = "+init=epsg:3035",
 #	boundCRS = "+proj=laea +lat_0=48 +lon_0=9 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m",
 #	boundCRS = boundCRS,

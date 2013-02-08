@@ -5,7 +5,8 @@
 to a prediction that can be assumed to be unbiased for a certain threshold.}
 \usage{
 unbiasedKrige(object, formulaString, observations, predictionLocations,
-              model, outputWhat, nmax, nsim, yamamoto, debug.level, ...)
+              model, outputWhat, nmax, nsim, yamamoto, iwqmaxit = 500,
+              iwqCpAddLim = 0.0001, debug.level, ...)
 }
 \arguments{
 \item{object}{either an object of the intamap type (see \code{\link{intamap-package}} 
@@ -31,6 +32,8 @@ Defaults to nmax = 10 when object is a Spatial*DataFrame.}
 Defaults to nsim = 100 when object is a \code{\link[sp:Spatial-class]{Spatial}}*DataFrame.}
 \item{yamamoto}{logical describing if the yamamoto approach )is to be used in simulations.
 Defaults to yamamoto = FALSE when object is a \code{\link[sp:Spatial-class]{Spatial}}*DataFrame.}
+\item{iwqmaxit}{maximum number of iterations in iwqsel}
+\item{iwqCpAddLim}{convergence criteria in iwqsel}
 \item{debug.level}{debug level, passed to subfunctions}
 \item{...}{ other arguments that will be passed to subfunctions}
 } 
@@ -69,15 +72,14 @@ data(meuse.grid)
 coordinates(meuse) = ~x+y
 gridded(meuse.grid) = ~x+y
 
-predictionLocations = coarsenGrid(meuse.grid,5,)
+predictionLocations = meuse.grid[sample(1:length(meuse.grid),50),]
 vmod = autofitVariogram(log(zinc)~1,meuse)$var_model
 prediction = krige(log(zinc)~1,meuse,predictionLocations,vmod)
 summary(prediction)
 
-prediction = unbiasedKrige(prediction,log(zinc)~1,
-  meuse,  model = vmod, outputWhat = list(MOK = 6.0, MOK = 7.0, IWQSEL=7.0))
+prediction <- unbiasedKrige(prediction,log(zinc)~1,
+  meuse,  model = vmod, outputWhat = list(MOK = 6.0, MOK = 7.0, IWQSEL=7.0), 
+  iwqmaxit = 100, iwqCpAddLim = 0.01)
 summary(prediction)
-
-
 }
 \keyword{spatial}

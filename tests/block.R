@@ -9,7 +9,7 @@ observations = data.frame(x = meuse$x,y = meuse$y,value = log(meuse$zinc))
 obsNames = names(observations)
 coordinates(observations) = as.formula(paste("~",obsNames[1], "+", obsNames[2]))
 set.seed(13531)
-predictionLocations = spsample(observations, 50, "regular")
+predictionLocations = spsample(observations, 10, "regular")
 gridded(predictionLocations) = TRUE
 cellsize = predictionLocations@grid@cellsize
 cs = predictionLocations@grid@cellsize[1]/2
