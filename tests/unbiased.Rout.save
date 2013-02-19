@@ -44,7 +44,7 @@ The following object(s) are masked from 'package:evd':
 > set.seed(112233)
 > krigingObject = createIntamapObject(
 + 	observations = meuse,
-+ 	predictionLocations = spsample(meuse.grid,5,"regular"),
++ 	predictionLocations = spsample(meuse.grid,10,"regular"),
 + #	targetCRS = "+init=epsg:3035",
 + #	boundCRS = "+proj=laea +lat_0=48 +lon_0=9 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m",
 + #	boundCRS = boundCRS,
@@ -75,19 +75,19 @@ Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
 Path to PROJ.4 shared files: (autodetected)
 > summary(krigingObject$outputTable)
        x                y               mean          variance     
- Min.   :180026   Min.   :330484   Min.   :5.975   Min.   :0.1448  
- 1st Qu.:180026   1st Qu.:331281   1st Qu.:6.094   1st Qu.:0.2003  
- Median :180026   Median :332078   Median :6.213   Median :0.2557  
- Mean   :180026   Mean   :332078   Mean   :6.205   Mean   :0.3937  
- 3rd Qu.:180026   3rd Qu.:332874   3rd Qu.:6.320   3rd Qu.:0.5181  
- Max.   :180026   Max.   :333671   Max.   :6.427   Max.   :0.7804  
+ Min.   :179568   Min.   :330231   Min.   :5.003   Min.   :0.1167  
+ 1st Qu.:179568   1st Qu.:331076   1st Qu.:5.432   1st Qu.:0.1328  
+ Median :180131   Median :331921   Median :5.924   Median :0.3182  
+ Mean   :180131   Mean   :331921   Mean   :5.948   Mean   :0.3583  
+ 3rd Qu.:180694   3rd Qu.:332766   3rd Qu.:6.417   3rd Qu.:0.5255  
+ Max.   :180694   Max.   :333611   Max.   :6.938   Max.   :0.7799  
       MOK7          IWQSEL7         excprob7       
- Min.   :6.594   Min.   :6.523   Min.   :0.003545  
- 1st Qu.:6.713   1st Qu.:6.639   1st Qu.:0.031634  
- Median :6.832   Median :6.755   Median :0.059723  
- Mean   :6.824   Mean   :6.782   Mean   :0.107135  
- 3rd Qu.:6.939   3rd Qu.:6.911   3rd Qu.:0.158931  
- Max.   :7.046   Max.   :7.067   Max.   :0.258138  
+ Min.   :5.098   Min.   :5.283   Min.   :0.000000  
+ 1st Qu.:5.526   1st Qu.:5.906   1st Qu.:0.001062  
+ Median :6.018   Median :6.162   Median :0.003592  
+ Mean   :6.042   Mean   :6.251   Mean   :0.140247  
+ 3rd Qu.:6.511   3rd Qu.:6.744   3rd Qu.:0.261224  
+ Max.   :7.033   Max.   :7.014   Max.   :0.466877  
 > 
 > 
 > class(krigingObject) = c("yamamoto")
@@ -200,20 +200,20 @@ Conditional simulation  100
 > krigingObject = postProcess(krigingObject)
 > summary(krigingObject$outputTable)
        x                y               mean          variance     
- Min.   :180026   Min.   :330484   Min.   :5.849   Min.   :0.5727  
- 1st Qu.:180026   1st Qu.:331281   1st Qu.:5.907   1st Qu.:0.5766  
- Median :180026   Median :332078   Median :5.964   Median :0.5806  
- Mean   :180026   Mean   :332078   Mean   :6.028   Mean   :0.6468  
- 3rd Qu.:180026   3rd Qu.:332874   3rd Qu.:6.117   3rd Qu.:0.6839  
- Max.   :180026   Max.   :333671   Max.   :6.270   Max.   :0.7872  
-      MOK7          IWQSEL7         excprob7      
- Min.   :6.651   Min.   :6.754   Min.   :0.08558  
- 1st Qu.:6.708   1st Qu.:6.859   1st Qu.:0.09143  
- Median :6.766   Median :6.964   Median :0.09729  
- Mean   :6.829   Mean   :6.910   Mean   :0.11732  
- 3rd Qu.:6.919   3rd Qu.:6.987   3rd Qu.:0.13318  
- Max.   :7.072   Max.   :7.011   Max.   :0.16908  
+ Min.   :179568   Min.   :330231   Min.   :5.347   Min.   :0.2517  
+ 1st Qu.:179568   1st Qu.:331076   1st Qu.:5.492   1st Qu.:0.2903  
+ Median :180131   Median :331921   Median :5.769   Median :0.4589  
+ Mean   :180131   Mean   :331921   Mean   :5.839   Mean   :0.4496  
+ 3rd Qu.:180694   3rd Qu.:332766   3rd Qu.:6.290   3rd Qu.:0.5866  
+ Max.   :180694   Max.   :333611   Max.   :6.323   Max.   :0.6719  
+      MOK7          IWQSEL7         excprob7       
+ Min.   :6.039   Min.   :6.325   Min.   :0.001641  
+ 1st Qu.:6.184   1st Qu.:6.419   1st Qu.:0.003325  
+ Median :6.461   Median :6.589   Median :0.024285  
+ Mean   :6.531   Mean   :6.653   Mean   :0.076312  
+ 3rd Qu.:6.982   3rd Qu.:6.919   3rd Qu.:0.173369  
+ Max.   :7.014   Max.   :7.032   Max.   :0.204275  
 > 
 > proc.time()
    user  system elapsed 
-  5.485   0.065   5.556 
+  7.747   0.085   7.851 

@@ -164,12 +164,12 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
   loc = as.data.frame(locations)
   names(loc) = names(locations)
   if (nclus > 1) {
-    if (!suppressMessages(suppressWarnings(require(doSNOW))))
-  	  stop("nclus is > 1, but package doSNOW is not available")
+    if (!suppressMessages(suppressWarnings(require(doParallel))))
+  	  stop("nclus is > 1, but package doParallel is not available")
     clus <- c(rep("localhost", nclus))
     cl <- makeCluster(clus, type = "SOCK")
 #    clusterEvalQ(cl, intamap:::pfunc)
-    registerDoSNOW(cl)
+    registerDoParallel(cl)
     i = 1 # just to avoid check warnings
     res <- foreach(i = 1:length(locations$x), .combine = rbind) %dopar% {
       intamap:::pfunc(data,loc[i,],debug.level,distribfunction, quantilefunction,densityfunction, newdata,

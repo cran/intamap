@@ -1,4 +1,4 @@
-5a5a13812e2cdbead11acfa61d2a233f *DESCRIPTION
+e96794ae2e25cdad90b6bcd19466ad6c *DESCRIPTION
 65d65c650081d775169bc341a1c8a5b1 *LICENCE
 1260480b3b544ac0866089681963e4ec *NAMESPACE
 acdea1a862bea0d80995c55d89fe1dc3 *R/aggregation.R
@@ -14,13 +14,13 @@ e84b6c9722bbdf7323dfc70a69fe1b60 *R/idw.R
 0d7e45bb60c194481173bd62f1e5884d *R/iwqsel.R
 78062edfd853a63f5d42ee5c9ee6be1e *R/linearVariogram.R
 5dfd063fe0f891161eb4fd77a50fef85 *R/methodParameters.r
-85648cd7cece33671a546474a82fb4d0 *R/pointKriging.R
+78084f7b1bc6ddc06a5879cb415f5458 *R/pointKriging.R
 597940984cec58a0e4733a5b67d9c2d5 *R/spCopCorrel.R
 7222654f5aa800dc2e12d8b4daa99e2a *R/spCopEstim.R
-5c804acb1392babe8efd216f4f8a98ee *R/spCopPred.R
+26e2199531224f0c61db39ae65b876ce *R/spCopPred.R
 e1304ce3f6e62257141232d22c42679e *R/summary.R
 dd2c5d97c94e0c7420430cf178c50d7e *R/time.R
-e39da655b44054b7ffeda75057429c71 *R/transGaussian.R
+98e011fcab83a315126a221c3990852c *R/transGaussian.R
 6f3daa275b8643140a8de35ff5a3c358 *R/unbiasedPoint.R
 9cb5d41b16008107105fadc8380cb60b *R/yamamoto.R
 8579157d6f51dad3dd0541d075383ab2 *R/zzz.R
@@ -39,7 +39,7 @@ d9edff9bf3a7875b28e3eeef7a0d4741 *man/coarsenGrid.Rd
 ec8ff30c5ce8f0be9478d72ea5ddbe12 *man/copulaEstimation.Rd
 3f3f3759988dfbe44fa5d097bfb78767 *man/createIntamapObject.Rd
 b4d9515be584b044cd786a589697d81e *man/estimateAnisotropy.Rd
-b91b58a251691f7e5a5c487897309175 *man/estimateParameters.Rd
+a6bebb0a5cf81c0fc8d507a9b014af08 *man/estimateParameters.Rd
 14337deae9c4d6a274af63fad28df3cc *man/estimateTimeModel.Rd
 87637a01de837a722660e9764e49b643 *man/generateTimeModels.Rd
 b2d7025010cb75704231c80220248ec9 *man/getIntamapParams.Rd
@@ -78,4 +78,4 @@ b26b2b1d28cdce01f162bf9d6c1deb99 *tests/javaR.Rout.save
 a132d674e59c5e58592f1ed92d2547a0 *tests/transGaussian.R
 e0eac24a0295495bd930b5176e9f1098 *tests/transGaussian.Rout.save
 8d7846311bfbed5a511817dec84bbc6c *tests/unbiased.R
-c23ab9891f909c757e2ea0e61dc2e16a *tests/unbiased.Rout.save
+d197fb10f7aec7d0d639ff247923e4a3 *tests/unbiased.Rout.save

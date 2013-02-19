@@ -33,11 +33,10 @@ estimateParameters.transGaussian = function(object, ...) {
 
 spatialPredict.transGaussian = function(object, nsim = 0, ...) {
   dots = list(...)
-  if ("nmax" %in% names(dots)) {
-    nmax = dots$nmax
-  } else nmax = object$params$nmax
-  if ("debug.level" %in% names(dots)) debug.level = dots$debug.level else
-    debug.level = object$params$debug.level
+  params = getIntamapParams(object$params, ...)
+  nmax = params$nmax
+  debug.level = params$debug.level
+  nclus = params$nclus
   if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
   if ("lambda" %in% names(object)) {
     lambda = object$lambda 
@@ -52,15 +51,15 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
 #             observations[[as.character(formulaString[[2]])]]+ object$TGcorrection
 
   nPred = nrow(coordinates(object$predictionLocations))
-  if (!"nclus" %in% names(dots) && "nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
-    nclus = object$params$nclus else nclus = 1
+  if ("nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
+    nclus = params$nclus else nclus = 1
   if (nclus > 1) {
-    if (!suppressMessages(suppressWarnings(require(doSNOW))))
-  	    stop("nclus is > 1, but package doSNOW is not available")    
+    if (!suppressMessages(suppressWarnings(require(doParallel))))
+  	    stop("nclus is > 1, but package doParallel is not available")    
 
     clus <- c(rep("localhost", nclus))
     cl <- makeCluster(clus, type = "SOCK")
-      registerDoSNOW(cl)
+      registerDoParallel(cl, nclus)
       clusterEvalQ(cl, library(gstat))
       variogramModel = object$variogramModel
       splt = rep(1:nclus, each = ceiling(nPred/nclus), length.out = nPred)

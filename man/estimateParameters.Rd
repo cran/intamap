@@ -13,7 +13,6 @@
 Function to estimate correlation structure parameters. The actual parameters
 depend on the method used.
 }
-\synopsis{ estimateParameters(object, ...) }
 \usage{
 \method{estimateParameters}{automap}(object, ... )
 \method{estimateParameters}{copula}(object, ... )
