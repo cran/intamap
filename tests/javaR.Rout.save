@@ -1,8 +1,8 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -63,13 +63,13 @@ The following object(s) are masked from 'package:evd':
 + 
 + )
 Loading required package: rgdal
-rgdal: version: 0.8.1, (SVN revision 415)
+rgdal: version: 0.8-5, (SVN revision 449)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
-Path to GDAL shared files: /usr/share/gdal
+Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: (autodetected)
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
 > 
 > checkSetup(krigingObject)
 Checking object ... OK
@@ -79,22 +79,22 @@ Checking object ... OK
 > krigingObject = postProcess(krigingObject)
 > 
 > summary(krigingObject$outputTable)
-       x                 y                mean          variance      
- Min.   :4021158   Min.   :3102915   Min.   :4.805   Min.   :0.09789  
- 1st Qu.:4021733   1st Qu.:3103766   1st Qu.:5.485   1st Qu.:0.14345  
- Median :4022423   Median :3104617   Median :5.675   Median :0.33215  
- Mean   :4022423   Mean   :3104617   Mean   :5.965   Mean   :0.39523  
- 3rd Qu.:4023113   3rd Qu.:3105468   3rd Qu.:6.456   3rd Qu.:0.64199  
- Max.   :4023688   Max.   :3106318   Max.   :7.497   Max.   :0.78320  
+       x                 y                mean          variance     
+ Min.   :4021158   Min.   :3102915   Min.   :4.805   Min.   :0.0989  
+ 1st Qu.:4021733   1st Qu.:3103766   1st Qu.:5.481   1st Qu.:0.1427  
+ Median :4022423   Median :3104617   Median :5.651   Median :0.3373  
+ Mean   :4022423   Mean   :3104617   Mean   :5.973   Mean   :0.3976  
+ 3rd Qu.:4023113   3rd Qu.:3105468   3rd Qu.:6.459   3rd Qu.:0.6491  
+ Max.   :4023688   Max.   :3106318   Max.   :7.524   Max.   :0.7891  
    excprob5.9        cumdistr5.9         quantile0.1   
- Min.   :0.002019   Min.   :0.0001118   Min.   :4.317  
- 1st Qu.:0.136987   1st Qu.:0.2135848   1st Qu.:4.641  
- Median :0.384356   Median :0.6156440   Median :5.095  
- Mean   :0.487683   Mean   :0.5123174   Mean   :5.205  
- 3rd Qu.:0.786415   3rd Qu.:0.8630135   3rd Qu.:5.711  
- Max.   :0.999888   Max.   :0.9979810   Max.   :6.943  
+ Min.   :0.002098   Min.   :0.0000835   Min.   :4.315  
+ 1st Qu.:0.137908   1st Qu.:0.2153535   1st Qu.:4.635  
+ Median :0.380798   Median :0.6192015   Median :5.105  
+ Mean   :0.490286   Mean   :0.5097140   Mean   :5.211  
+ 3rd Qu.:0.784647   3rd Qu.:0.8620915   3rd Qu.:5.700  
+ Max.   :0.999917   Max.   :0.9979020   Max.   :6.971  
 > 
 > 
 > proc.time()
    user  system elapsed 
-  2.823   0.072   2.899 
+   1.82    0.10    1.91 

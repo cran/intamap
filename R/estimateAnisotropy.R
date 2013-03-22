@@ -43,6 +43,8 @@ pl=FALSE
 	# params = object$params
 	xy<-as.matrix(coordinates(observations))
 #
+
+if (FALSE) {  # This is removed because of the akima licensing issue
   anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,method="linear",pl=pl),TRUE)
 	if(inherits(anisPar,"try-error")){
 		warning("Slope tensors estimation error. Double size anisotropy estimation grid used instead.")
@@ -60,6 +62,14 @@ pl=FALSE
 			warning("Slope tensors estimation error. Override anistropy estimation.")
 		anisPar<-list(R=1,theta.deg=0,Q=cbind(0,0,0),doRotation=FALSE)
 	}
+}
+  anisPar<-try(estimateAnisotropySc(xy[,1],xy[,2],residual,len = min(2*length(xy), 400),method="v4",pl=pl),TRUE)
+	if(inherits(anisPar,"try-error")){
+			warning("Slope tensors estimation error. Override anistropy estimation.")
+		anisPar<-list(R=1,theta.deg=0,Q=cbind(0,0,0),doRotation=FALSE)
+	}
+
+
 
   if (is(object,"Spatial")) {
     anisPar
@@ -186,24 +196,29 @@ estimateAnisotropySc<-function(x, y, r, len=length(x), method="linear", min.x=mi
   	if(len<50) return(list(ratio=1, direction=0,Q=c(eps,0,0),doRotation=FALSE))       
 
 	#mesh creation
-	step=min(c(abs((max.x-min.x)/sqrt(len)),abs((max.y-min.y)/sqrt(len))))
-
-	xn<-seq(min.x,max.x,by=step)
-	yn<-seq(min.y,max.y,by=step)
-	
-
-
-	mesh<-meshgrid(xn,yn)
 
         #selection of interpolation method
-        if (method=="cubic")   {
-	ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
-				 ri$z<-t(ri$z)		}	#akima package
-        if (method=="linear")  {
-ri<-interp(x,y,r,xn,yn,linear=TRUE,extrap=FALSE,duplicate="mean")	
-				 ri$z<-t(ri$z)	}				#akima package
-        if  (method=="v4")     {  ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)}     
-       		
+#        if (method=="cubic")   {
+#	ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
+#				 ri$z<-t(ri$z)		}	#akima package
+#        if (method=="linear")  {
+#ri<-interp(x,y,r,xn,yn,linear=TRUE,extrap=FALSE,duplicate="mean")	
+#				 ri$z<-t(ri$z)	}				#akima package
+#        if  (method=="v4")     {  
+  	step=min(c(abs((max.x-min.x)/sqrt(len)),abs((max.y-min.y)/sqrt(len))))
+   	xn<-seq(min.x,max.x,by=step)
+	  yn<-seq(min.y,max.y,by=step)
+  if (length(x) < 1500) {
+	  mesh<-meshgrid(xn,yn)
+    ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)     
+  } else if (FALSE) {
+    dat = data.frame(x = x, y = y, z = r)
+#    require(MBA)
+    ri <- mba.surf(dat, length(xn), length(yn))$xyz.est
+    rri <- mba.surf(dat, max(length(xn),length(yn)), max(length(xn),length(yn)))$xyz.est
+    mesh = meshgrid(ri$x, ri$y)
+  } else  warning("There is currently no method implemented for anisotropy detection in large data sets")
+    		
 	#calculate anisotropy parameters over regular grid 
 	res=estimateAnisotropyGrid(mesh$x,mesh$y,ri$z)
 	
@@ -221,43 +236,6 @@ ri<-interp(x,y,r,xn,yn,linear=TRUE,extrap=FALSE,duplicate="mean")
 }
 
 
-estimateAnisotropySc_old<-function(x, y, r, len=length(x), method="linear", min.x=min(x), max.x=max(x), min.y=min(y), max.y=max(y),deb=FALSE,pl=FALSE,br){
-           eps=.Machine$double.eps    
-	plot.borders=TRUE
-	if(missing(br))	{plot.borders=FALSE}
-  	if(len<50) return(list(ratio=1, direction=0,Q=c( eps,0,0),doRotation=FALSE))       
-
-	#mesh creation
-	step=min(c(abs((max.x-min.x)/sqrt(len)),abs((max.y-min.y)/sqrt(len))))
-
-	xn<-seq(min.x,max.x,by=step)
-	yn<-seq(min.y,max.y,by=step)
-
-
-  		mesh<-meshgrid(xn,yn)
-
-        #selection of interpolation method
-        if (method=="cubic")   {	ri<-interp(x,y,r,xn,yn,linear=FALSE,extrap=FALSE,duplicate="mean")
-				 ri$z<-t(ri$z)		}	#akima package
-        if (method=="linear")  {  ri<-interp(x,y,r,xn,yn,linear=TRUE,duplicate="mean")	
-				 ri$z<-t(ri$z)	}				#akima package
-        if  (method=="v4")     {  ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)}     
-       		
-	#calculate anisotropy parameters over regular grid 
-	res=estimateAnisotropyGrid(mesh$x,mesh$y,ri$z)
-	
-		
-	if((pl==TRUE & plot.borders==TRUE)){
-	        image(mesh$x[1,],mesh$y[,1],t(ri$z),col=rainbow(20), #color.palette=rainbow,
-	        plot.title=title(main=method),xlim=range(br[,1]),ylim=range(br[,2]))
-					points(br,pch=".",xlim=(br[,1]),ylim=range(br[,2]))
-	}else if ((pl==T & plot.borders==FALSE)){
-		 image(mesh$x[1,],mesh$y[,1],t(ri$z),col=rainbow(20), #color.palette=rainbow,
-	        plot.title=title(main=method))
-	}
-	
-	return(list(ratio=res$R, direction=res$theta.deg,Q=res$Q,doRotation=res$dump$doRotation,ri=ri))
-}
 #######################################################################                              
 # function [R , theta_deg ]= estimateAnisotropyGrid(xi ,yi , ri)  		
 #     theta_deg , R :variables to b calculated              			
@@ -556,7 +534,7 @@ if(extrap==FALSE){
 	interpolationGrid=expand.grid(x=xi[1,],y=yi[,1])
 	coordinates(interpolationGrid)=c("x","y")
 	
-	index=which(is.na(overlay(cvhPolygon,interpolationGrid)))
+	index=which(is.na(over(interpolationGrid, cvhPolygon)))
 	temp=as.vector(t(zi))
 	temp[index]=NA
 	zi=t(matrix(temp,n,m)	)

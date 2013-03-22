@@ -1,8 +1,8 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -62,13 +62,13 @@ The following object(s) are masked from 'package:evd':
 +       		cumdistr = 7.9)
 + )
 Loading required package: rgdal
-rgdal: version: 0.8.1, (SVN revision 415)
+rgdal: version: 0.8-5, (SVN revision 449)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
-Path to GDAL shared files: /usr/share/gdal
+Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: (autodetected)
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
 [1] "createIntamapObject: formulaString is missing, using:  value~1"
 > class(obj) = "linearVariogram"
 > 
@@ -129,4 +129,4 @@ Data attributes:
 > 
 > proc.time()
    user  system elapsed 
-  2.763   0.056   2.825 
+   1.65    0.21    1.87 

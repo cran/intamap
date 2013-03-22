@@ -1,8 +1,8 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -45,18 +45,18 @@ The following object(s) are masked from 'package:evd':
 > 
 > outputWhat = list(mean=TRUE,variance=TRUE,quantile=0.025,quantile=0.0975)
 > res1 = interpolateBlock(meuse,predictionLocations,outputWhat,methodName = "automap")$outputTable
-R 2013-02-07 15:29:32 interpolating 155 observations, 48 prediction locations
+R 2013-03-21 17:42:47 interpolating 155 observations, 48 prediction locations
 Checking object ... OK
 [using ordinary kriging]
 [1] "performed ordinary block kriging"
 Loading required package: rgdal
-rgdal: version: 0.8.1, (SVN revision 415)
+rgdal: version: 0.8-5, (SVN revision 449)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
-Path to GDAL shared files: /usr/share/gdal
+Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: (autodetected)
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
   
@@ -66,19 +66,19 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
   and save the workspace
 > summary(t(res1))
        x                y               mean          variance       
- Min.   :179019   Min.   :330013   Min.   :4.916   Min.   :0.007477  
- 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.482   1st Qu.:0.022377  
- Median :180183   Median :331644   Median :5.797   Median :0.133184  
- Mean   :180183   Mean   :331644   Mean   :5.963   Mean   :0.207104  
- 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388234  
- Max.   :181348   Max.   :333275   Max.   :7.185   Max.   :0.521745  
+ Min.   :179019   Min.   :330013   Min.   :4.920   Min.   :0.007617  
+ 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.478   1st Qu.:0.022547  
+ Median :180183   Median :331644   Median :5.798   Median :0.135379  
+ Mean   :180183   Mean   :331644   Mean   :5.970   Mean   :0.209191  
+ 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.477   3rd Qu.:0.395163  
+ Max.   :181348   Max.   :333275   Max.   :7.207   Max.   :0.527129  
  quantile0.025   quantile0.0975 
- Min.   :4.139   Min.   :4.574  
- 1st Qu.:4.731   1st Qu.:5.012  
- Median :5.133   Median :5.410  
- Mean   :5.198   Mean   :5.457  
- 3rd Qu.:5.652   3rd Qu.:5.839  
- Max.   :6.741   Max.   :6.891  
+ Min.   :4.161   Min.   :4.583  
+ 1st Qu.:4.720   1st Qu.:4.971  
+ Median :5.133   Median :5.422  
+ Mean   :5.201   Mean   :5.461  
+ 3rd Qu.:5.660   3rd Qu.:5.828  
+ Max.   :6.767   Max.   :6.916  
 > 
 > Srl = list()
 > for (i in 1:dim(coordinates(predictionLocations))[1]) {
@@ -96,7 +96,7 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > predictionLocations = SpatialPolygons(Srl)
 > 
 > res2 = interpolateBlock(meuse,predictionLocations,outputWhat,methodName="automap")$outputTable
-R 2013-02-07 15:29:33 interpolating 155 observations, 48 prediction locations
+R 2013-03-21 17:42:48 interpolating 155 observations, 48 prediction locations
 Checking object ... OK
 [using ordinary kriging]
 [1] "performed ordinary block kriging"
@@ -109,24 +109,24 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
   and save the workspace
 > summary(t(res2))
        x                y               mean          variance       
- Min.   :179019   Min.   :330013   Min.   :4.913   Min.   :0.005564  
- 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.481   1st Qu.:0.020855  
- Median :180183   Median :331644   Median :5.799   Median :0.134431  
- Mean   :180183   Mean   :331644   Mean   :5.964   Mean   :0.206540  
- 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.425   3rd Qu.:0.388670  
- Max.   :181348   Max.   :333275   Max.   :7.189   Max.   :0.523013  
+ Min.   :179019   Min.   :330013   Min.   :4.917   Min.   :0.005616  
+ 1st Qu.:179485   1st Qu.:330829   1st Qu.:5.479   1st Qu.:0.020985  
+ Median :180183   Median :331644   Median :5.800   Median :0.136722  
+ Mean   :180183   Mean   :331644   Mean   :5.970   Mean   :0.208581  
+ 3rd Qu.:180882   3rd Qu.:332459   3rd Qu.:6.480   3rd Qu.:0.397064  
+ Max.   :181348   Max.   :333275   Max.   :7.212   Max.   :0.528380  
  quantile0.025   quantile0.0975 
- Min.   :4.136   Min.   :4.570  
- 1st Qu.:4.733   1st Qu.:5.013  
- Median :5.132   Median :5.409  
- Mean   :5.205   Mean   :5.462  
- 3rd Qu.:5.656   3rd Qu.:5.852  
- Max.   :6.758   Max.   :6.904  
+ Min.   :4.158   Min.   :4.579  
+ 1st Qu.:4.723   1st Qu.:4.976  
+ Median :5.132   Median :5.420  
+ Mean   :5.208   Mean   :5.466  
+ 3rd Qu.:5.665   3rd Qu.:5.840  
+ Max.   :6.785   Max.   :6.930  
 > 
 > max((res2-res1)/res1)
-[1] 0.0162806
+[1] 0.01724326
 > 
 > 
 > proc.time()
    user  system elapsed 
-  4.839   0.058   4.904 
+   3.07    0.15    3.21 

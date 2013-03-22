@@ -1,8 +1,8 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -40,16 +40,16 @@ The following object(s) are masked from 'package:evd':
 > 
 > meuse$value=meuse$zinc
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
-R 2013-02-07 13:58:17 interpolating 155 observations, 3103 prediction locations
+R 2013-03-21 17:42:58 interpolating 155 observations, 3103 prediction locations
 Checking object ... OK
 Loading required package: rgdal
-rgdal: version: 0.8.1, (SVN revision 415)
+rgdal: version: 0.8-5, (SVN revision 449)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
-Path to GDAL shared files: /usr/share/gdal
+Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: (autodetected)
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
   
@@ -59,15 +59,15 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
   and save the workspace
 > summary(t(output$outputTable))
        x                y               mean           variance     
- Min.   :178460   Min.   :329620   Min.   : 127.9   Min.   :  3316  
- 1st Qu.:179420   1st Qu.:330460   1st Qu.: 214.9   1st Qu.: 10760  
- Median :179980   Median :331220   Median : 282.5   Median : 15977  
- Mean   :179985   Mean   :331348   Mean   : 385.8   Mean   : 19133  
- 3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 505.4   3rd Qu.: 22655  
- Max.   :181540   Max.   :333740   Max.   :1850.6   Max.   :105085  
+ Min.   :178460   Min.   :329620   Min.   : 129.4   Min.   :  3562  
+ 1st Qu.:179420   1st Qu.:330460   1st Qu.: 215.1   1st Qu.: 11294  
+ Median :179980   Median :331220   Median : 283.2   Median : 16731  
+ Mean   :179985   Mean   :331348   Mean   : 385.8   Mean   : 19829  
+ 3rd Qu.:180580   3rd Qu.:332140   3rd Qu.: 506.1   3rd Qu.: 23481  
+ Max.   :181540   Max.   :333740   Max.   :1854.2   Max.   :110883  
 > 
 > 
 > 
 > proc.time()
    user  system elapsed 
-  4.742   0.071   4.817 
+   3.08    0.18    3.30 

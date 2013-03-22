@@ -1,8 +1,8 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
+R version 2.15.3 (2013-03-01) -- "Security Blanket"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
-Platform: x86_64-redhat-linux-gnu (64-bit)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -33,20 +33,29 @@ The following object(s) are masked from 'package:evd':
 
     qq
 
-> loadMeuse()
+> #loadMeuse()
+> 
+> crs = CRS("+init=epsg:28992 +proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs")
+> data("meuse")
+> coordinates(meuse) <- ~x+y
+> proj4string(meuse) <- crs
+> data("meuse.grid")
+> coordinates(meuse.grid) <- ~x+y
+> gridded(meuse.grid) <- TRUE
+> proj4string(meuse.grid) <- crs
+> 
 > meuse$value = log(meuse$zinc)
 > meuse.grid = meuse.grid[sample(1:dim(meuse.grid)[1], 100),]
-> gridded(meuse.grid)=TRUE
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T, nsim = 5),methodName = "automap")
-R 2013-02-07 16:07:36 interpolating 155 observations, 100 prediction locations
+R 2013-03-21 17:42:39 interpolating 155 observations, 100 prediction locations
 Loading required package: rgdal
-rgdal: version: 0.8.1, (SVN revision 415)
+rgdal: version: 0.8-5, (SVN revision 449)
 Geospatial Data Abstraction Library extensions to R successfully loaded
-Loaded GDAL runtime: GDAL 1.8.1, released 2011/07/09
-Path to GDAL shared files: /usr/share/gdal
+Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: (autodetected)
+Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
 Checking object ... OK
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -56,33 +65,32 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
  timeModels <- generateTimeModels()
   and save the workspace
 > summary(t(output$outputTable))
-       x                y               mean          variance      
- Min.   :178500   Min.   :329620   Min.   :4.804   Min.   :0.07901  
- 1st Qu.:179290   1st Qu.:330220   1st Qu.:5.211   1st Qu.:0.12503  
- Median :179820   Median :330780   Median :5.493   Median :0.14301  
- Mean   :179850   Mean   :331028   Mean   :5.670   Mean   :0.16672  
- 3rd Qu.:180280   3rd Qu.:331780   3rd Qu.:6.132   3rd Qu.:0.18805  
- Max.   :181460   Max.   :333620   Max.   :7.314   Max.   :0.41087  
+       x                y               mean          variance     
+ Min.   :178500   Min.   :329620   Min.   :4.804   Min.   :0.0778  
+ 1st Qu.:179290   1st Qu.:330220   1st Qu.:5.202   1st Qu.:0.1243  
+ Median :179820   Median :330780   Median :5.485   Median :0.1445  
+ Mean   :179850   Mean   :331028   Mean   :5.670   Mean   :0.1677  
+ 3rd Qu.:180280   3rd Qu.:331780   3rd Qu.:6.138   3rd Qu.:0.1917  
+ Max.   :181460   Max.   :333620   Max.   :7.321   Max.   :0.4220  
       sim1            sim2            sim3            sim4      
- Min.   :4.468   Min.   :4.150   Min.   :4.317   Min.   :4.008  
- 1st Qu.:5.241   1st Qu.:5.105   1st Qu.:5.089   1st Qu.:5.326  
- Median :5.608   Median :5.580   Median :5.662   Median :5.762  
- Mean   :5.741   Mean   :5.645   Mean   :5.645   Mean   :5.771  
- 3rd Qu.:6.254   3rd Qu.:6.098   3rd Qu.:6.169   3rd Qu.:6.135  
- Max.   :7.467   Max.   :7.342   Max.   :7.749   Max.   :7.620  
+ Min.   :4.464   Min.   :4.149   Min.   :4.287   Min.   :4.008  
+ 1st Qu.:5.240   1st Qu.:5.115   1st Qu.:5.089   1st Qu.:5.320  
+ Median :5.639   Median :5.575   Median :5.663   Median :5.756  
+ Mean   :5.742   Mean   :5.645   Mean   :5.644   Mean   :5.771  
+ 3rd Qu.:6.257   3rd Qu.:6.099   3rd Qu.:6.162   3rd Qu.:6.124  
+ Max.   :7.462   Max.   :7.346   Max.   :7.753   Max.   :7.625  
       sim5      
- Min.   :3.885  
- 1st Qu.:5.300  
- Median :5.832  
+ Min.   :3.866  
+ 1st Qu.:5.283  
+ Median :5.840  
  Mean   :5.817  
  3rd Qu.:6.255  
- Max.   :8.013  
-> 
+ Max.   :8.018  
 > 
 > output = interpolate(meuse, meuse.grid,
 +     optList = list(idpRange = seq(0.1, 2.9, 0.5), nfold = 3), 
 +     outputWhat = list(mean=TRUE),methodName = "idw")
-R 2013-02-07 16:07:37 interpolating 155 observations, 100 prediction locations
+R 2013-03-21 17:42:40 interpolating 155 observations, 100 prediction locations
 Checking object ... OK
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
@@ -109,7 +117,7 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > 
 > 
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
-R 2013-02-07 16:07:38 interpolating 155 observations, 100 prediction locations
+R 2013-03-21 17:42:40 interpolating 155 observations, 100 prediction locations
 Checking object ... OK
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -120,12 +128,12 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
   and save the workspace
 > summary(t(output$outputTable))
        x                y               mean          variance      
- Min.   :178500   Min.   :329620   Min.   :4.804   Min.   :0.05976  
- 1st Qu.:179290   1st Qu.:330220   1st Qu.:5.224   1st Qu.:0.10397  
- Median :179820   Median :330780   Median :5.497   Median :0.12502  
- Mean   :179850   Mean   :331028   Mean   :5.659   Mean   :0.14611  
- 3rd Qu.:180280   3rd Qu.:331780   3rd Qu.:6.113   3rd Qu.:0.17768  
- Max.   :181460   Max.   :333620   Max.   :7.369   Max.   :0.33186  
+ Min.   :178500   Min.   :329620   Min.   :4.811   Min.   :0.06307  
+ 1st Qu.:179290   1st Qu.:330220   1st Qu.:5.217   1st Qu.:0.10706  
+ Median :179820   Median :330780   Median :5.493   Median :0.12808  
+ Mean   :179850   Mean   :331028   Mean   :5.660   Mean   :0.14978  
+ 3rd Qu.:180280   3rd Qu.:331780   3rd Qu.:6.113   3rd Qu.:0.17678  
+ Max.   :181460   Max.   :333620   Max.   :7.376   Max.   :0.34441  
 > 
 > 
 > data(meuse)
@@ -136,13 +144,13 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > gridded(mgrid) = TRUE
 > output = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula")
-R 2013-02-07 16:07:38 interpolating 30 observations, 24 prediction locations
+R 2013-03-21 17:42:40 interpolating 30 observations, 24 prediction locations
 Checking object ... OK
 There were 32 warnings (use warnings() to see them)
 > 
 > output2 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula",optList = list(methodParameters = output$methodParameters))
-R 2013-02-07 16:07:41 interpolating 30 observations, 24 prediction locations
+R 2013-03-21 17:42:44 interpolating 30 observations, 24 prediction locations
 Checking object ... OK
 Warning messages:
 1: In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -165,20 +173,20 @@ Warning messages:
   reciprocal condition number  0
 > 
 > summary(t(output2$outputTable))
-       x                y               mean          variance        
- Min.   :179037   Min.   :330314   Min.   :225.7   Min.   :     5673  
- 1st Qu.:179485   1st Qu.:330911   1st Qu.:361.7   1st Qu.:  2441091  
- Median :179932   Median :331806   Median :483.5   Median :100000000  
- Mean   :179932   Mean   :331806   Mean   :451.4   Mean   : 70977355  
- 3rd Qu.:180380   3rd Qu.:332701   3rd Qu.:489.1   3rd Qu.:100000000  
- Max.   :180827   Max.   :333298   Max.   :801.3   Max.   :100000000  
-  excprob1000         quantile0.5   
- Min.   :0.0001253   Min.   :187.7  
- 1st Qu.:0.0360937   1st Qu.:254.3  
- Median :0.0685695   Median :269.4  
- Mean   :0.0601413   Mean   :274.3  
- 3rd Qu.:0.0698828   3rd Qu.:271.0  
- Max.   :0.1884280   Max.   :500.2  
+       x                y               mean           variance        
+ Min.   :179037   Min.   :330314   Min.   : 203.9   Min.   :     5741  
+ 1st Qu.:179485   1st Qu.:330911   1st Qu.: 290.6   1st Qu.:    24420  
+ Median :179932   Median :331806   Median : 536.2   Median : 51941780  
+ Mean   :179932   Mean   :331806   Mean   : 731.0   Mean   : 50271919  
+ 3rd Qu.:180380   3rd Qu.:332701   3rd Qu.:1177.4   3rd Qu.:100000000  
+ Max.   :180827   Max.   :333298   Max.   :1584.7   Max.   :100000000  
+  excprob1000        quantile0.5   
+ Min.   :0.000230   Min.   :186.2  
+ 1st Qu.:0.006538   1st Qu.:237.6  
+ Median :0.087995   Median :339.6  
+ Mean   :0.127678   Mean   :384.6  
+ 3rd Qu.:0.214219   3rd Qu.:479.0  
+ Max.   :0.414578   Max.   :855.8  
 > 
 > output2$outputTable - output$outputTable
             [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
@@ -209,4 +217,4 @@ attr(,"transposed")
 > 
 > proc.time()
    user  system elapsed 
-  8.090   0.081   8.189 
+   7.09    0.23    7.36 
