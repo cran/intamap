@@ -56,8 +56,8 @@ postProcess.default = function(object, ...) {
 # Tranform output to requested target projection
   if (require(rgdal)) {
     if ("targetCRS" %in% names(object) && 
-        (rgdal::CRSargs(CRS(proj4string(object$predictions))) != rgdal::CRSargs(CRS(object$targetCRS)))){
-      object$predictions = rgdal::spTransform(object$predictions,CRS(object$targetCRS))
+        (CRSargs(CRS(proj4string(object$predictions))) != CRSargs(CRS(object$targetCRS)))){
+      object$predictions = spTransform(object$predictions,CRS(object$targetCRS))
     }
   }
 # find out what to output

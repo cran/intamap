@@ -1,7 +1,6 @@
 
-R version 2.15.3 (2013-03-01) -- "Security Blanket"
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
 Copyright (C) 2013 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,7 +19,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -29,7 +27,7 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
-The following object(s) are masked from 'package:evd':
+The following object is masked from 'package:evd':
 
     qq
 
@@ -66,13 +64,13 @@ drawing 100 GLS realisations of beta...
 [1] "Finished simulations"
 > krigingObject = postProcess(krigingObject)
 Loading required package: rgdal
-rgdal: version: 0.8-5, (SVN revision 449)
+rgdal: version: 0.8-6, (SVN revision Unversioned directory)
 Geospatial Data Abstraction Library extensions to R successfully loaded
 Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
-Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
+Path to GDAL shared files: C:/Program Files/R/R-3.0.0/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
+Path to PROJ.4 shared files: C:/Program Files/R/R-3.0.0/library/rgdal/proj
 > summary(krigingObject$outputTable)
        x                y               mean          variance     
  Min.   :180026   Min.   :330484   Min.   :5.991   Min.   :0.1473  
@@ -216,4 +214,4 @@ Conditional simulation  100
 > 
 > proc.time()
    user  system elapsed 
-   3.41    0.31    3.71 
+   3.21    0.15    3.40 

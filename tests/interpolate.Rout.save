@@ -1,7 +1,6 @@
 
-R version 2.15.3 (2013-03-01) -- "Security Blanket"
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
 Copyright (C) 2013 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -20,7 +19,6 @@ Type 'q()' to quit R.
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: akima
 Loading required package: automap
 Loading required package: mvtnorm
 Loading required package: MASS
@@ -29,7 +27,7 @@ Loading required package: lattice
 
 Attaching package: 'lattice'
 
-The following object(s) are masked from 'package:evd':
+The following object is masked from 'package:evd':
 
     qq
 
@@ -47,15 +45,15 @@ The following object(s) are masked from 'package:evd':
 > meuse$value = log(meuse$zinc)
 > meuse.grid = meuse.grid[sample(1:dim(meuse.grid)[1], 100),]
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T, nsim = 5),methodName = "automap")
-R 2013-03-21 17:42:39 interpolating 155 observations, 100 prediction locations
+R 2013-04-22 14:54:17 interpolating 155 observations, 100 prediction locations
 Loading required package: rgdal
-rgdal: version: 0.8-5, (SVN revision 449)
+rgdal: version: 0.8-6, (SVN revision Unversioned directory)
 Geospatial Data Abstraction Library extensions to R successfully loaded
 Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
-Path to GDAL shared files: C:/Program Files/R/R-2.15.3/library/rgdal/gdal
+Path to GDAL shared files: C:/Program Files/R/R-3.0.0/library/rgdal/gdal
 GDAL does not use iconv for recoding strings.
 Loaded PROJ.4 runtime: Rel. 4.7.1, 23 September 2009, [PJ_VERSION: 470]
-Path to PROJ.4 shared files: C:/Program Files/R/R-2.15.3/library/rgdal/proj
+Path to PROJ.4 shared files: C:/Program Files/R/R-3.0.0/library/rgdal/proj
 Checking object ... OK
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -90,7 +88,7 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > output = interpolate(meuse, meuse.grid,
 +     optList = list(idpRange = seq(0.1, 2.9, 0.5), nfold = 3), 
 +     outputWhat = list(mean=TRUE),methodName = "idw")
-R 2013-03-21 17:42:40 interpolating 155 observations, 100 prediction locations
+R 2013-04-22 14:54:17 interpolating 155 observations, 100 prediction locations
 Checking object ... OK
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
   |                                                                              |                                                                      |   0%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================================================| 100%
@@ -117,7 +115,7 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > 
 > 
 > output = interpolate(meuse, meuse.grid, list(mean=T, variance=T),methodName = "transGaussian")
-R 2013-03-21 17:42:40 interpolating 155 observations, 100 prediction locations
+R 2013-04-22 14:54:18 interpolating 155 observations, 100 prediction locations
 Checking object ... OK
 Warning message:
 In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -144,13 +142,13 @@ In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLo
 > gridded(mgrid) = TRUE
 > output = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula")
-R 2013-03-21 17:42:40 interpolating 30 observations, 24 prediction locations
+R 2013-04-22 14:54:18 interpolating 30 observations, 24 prediction locations
 Checking object ... OK
 There were 32 warnings (use warnings() to see them)
 > 
 > output2 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
 +                      methodName = "copula",optList = list(methodParameters = output$methodParameters))
-R 2013-03-21 17:42:44 interpolating 30 observations, 24 prediction locations
+R 2013-04-22 14:54:22 interpolating 30 observations, 24 prediction locations
 Checking object ... OK
 Warning messages:
 1: In predictTime(nObs = dim(observations)[1], nPred = dim(coordinates(predictionLocations))[1],  :
@@ -159,34 +157,34 @@ Warning messages:
  platform spesific predictions, please run 
  timeModels <- generateTimeModels()
   and save the workspace
-2: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+2: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   pseudoinverse used at 30
-3: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+3: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   neighborhood radius 30
-4: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+4: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   reciprocal condition number  0
-5: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+5: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   pseudoinverse used at 30
-6: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+6: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   neighborhood radius 30
-7: In predLoess(object$y, object$x, newx, object$s, object$weights,  :
+7: In predLoess(y, x, newx, s, weights, pars$robust, pars$span, pars$degree,  :
   reciprocal condition number  0
 > 
 > summary(t(output2$outputTable))
        x                y               mean           variance        
- Min.   :179037   Min.   :330314   Min.   : 203.9   Min.   :     5741  
- 1st Qu.:179485   1st Qu.:330911   1st Qu.: 290.6   1st Qu.:    24420  
- Median :179932   Median :331806   Median : 536.2   Median : 51941780  
- Mean   :179932   Mean   :331806   Mean   : 731.0   Mean   : 50271919  
- 3rd Qu.:180380   3rd Qu.:332701   3rd Qu.:1177.4   3rd Qu.:100000000  
- Max.   :180827   Max.   :333298   Max.   :1584.7   Max.   :100000000  
-  excprob1000        quantile0.5   
- Min.   :0.000230   Min.   :186.2  
- 1st Qu.:0.006538   1st Qu.:237.6  
- Median :0.087995   Median :339.6  
- Mean   :0.127678   Mean   :384.6  
- 3rd Qu.:0.214219   3rd Qu.:479.0  
- Max.   :0.414578   Max.   :855.8  
+ Min.   :179037   Min.   :330314   Min.   : 203.9   Min.   :     5723  
+ 1st Qu.:179485   1st Qu.:330911   1st Qu.: 290.7   1st Qu.:    24184  
+ Median :179932   Median :331806   Median : 536.9   Median : 51920840  
+ Mean   :179932   Mean   :331806   Mean   : 737.8   Mean   : 50269442  
+ 3rd Qu.:180380   3rd Qu.:332701   3rd Qu.:1197.2   3rd Qu.:100000000  
+ Max.   :180827   Max.   :333298   Max.   :1609.5   Max.   :100000000  
+  excprob1000         quantile0.5   
+ Min.   :0.0002259   Min.   :186.3  
+ 1st Qu.:0.0064258   1st Qu.:237.7  
+ Median :0.0882520   Median :340.5  
+ Mean   :0.1286777   Mean   :386.1  
+ 3rd Qu.:0.2171650   3rd Qu.:481.7  
+ Max.   :0.4152390   Max.   :857.0  
 > 
 > output2$outputTable - output$outputTable
             [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
@@ -217,4 +215,4 @@ attr(,"transposed")
 > 
 > proc.time()
    user  system elapsed 
-   7.09    0.23    7.36 
+   6.83    0.15    7.00 
