@@ -166,16 +166,28 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
   if (nclus > 1) {
     if (!suppressMessages(suppressWarnings(require(doParallel))))
   	  stop("nclus is > 1, but package doParallel is not available")
-    clus <- c(rep("localhost", nclus))
-    cl <- makeCluster(clus, type = "SOCK")
-#    clusterEvalQ(cl, intamap:::pfunc)
-    registerDoParallel(cl)
-    i = 1 # just to avoid check warnings
-    res <- foreach(i = 1:length(locations$x), .combine = rbind) %dopar% {
-      intamap:::pfunc(data,loc[i,],debug.level,distribfunction, quantilefunction,densityfunction, newdata,
-          copula, search, correlation, h, estimates, calc, margin, numquantiles, exceedanceprob,
-          quantiles, multeps)
-    } # end of foreach loop
+
+    locs = vector("list", dim(loc)[1])
+    for (i in 1:length(locs)) locs[[i]] = loc[i,]
+    cl <- makeCluster(nclus)
+    res <- clusterApply(cl, locs, fun = pfunc, data = data, debug.level = debug.level,
+      distribfunction = distribfunction, quantilefunction = quantilefunction, 
+        densityfunction = densityfunction, newdata = newdata,
+          copula = copula, search = search, correlation = correlation, h = h, 
+          estimates = estimates, calc = calc, margin = margin, numquantiles = numquantiles, 
+          exceedanceprob = exceedanceprob, quantiles = quantiles, multeps = multeps)
+    res = matrix(unlist(res), ncol = length(res[[1]]), byrow = TRUE)
+
+ #   if (FALSE) {
+#      clusterEvalQ(cl, intamap:::pfunc)
+#      registerDoParallel(cl, nclus)
+#      i = 1 # just to avoid check warnings
+#      res <- foreach(i = 1:length(locations$x), .combine = rbind) %dopar% {
+#        intamap:::pfunc(data,loc[i,],debug.level,distribfunction, quantilefunction,densityfunction, newdata,
+#            copula, search, correlation, h, estimates, calc, margin, numquantiles, exceedanceprob,
+#          quantiles, multeps)
+#     } # end of foreach loop
+#    }
     stopCluster(cl)
   } else {
     for (i in 1:length(locations$x)) {

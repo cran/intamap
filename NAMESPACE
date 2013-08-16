@@ -3,7 +3,7 @@ import(gstat)
 import(automap)
 import(mvtnorm)
 import(MASS)
-import(lattice)
+import(evd)
 
 export(
   bayesCopula,

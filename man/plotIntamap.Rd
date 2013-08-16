@@ -61,7 +61,10 @@ meuse$value = log(meuse$zinc)
 data(meuse.grid)
 coordinates(meuse) = ~x+y
 coordinates(meuse.grid) = ~x+y
-object = interpolate(meuse,meuse.grid,outputWhat = list(mean = TRUE, variance = TRUE, excprob = 7, excprob = 8, quantile = 0.9, quantile = 0.95),methodName = "automap")
+object = interpolate(meuse, meuse.grid, 
+                     outputWhat = list(mean = TRUE, variance = TRUE, 
+                     excprob = 7, excprob = 8, quantile = 0.9, quantile = 0.95),
+                     methodName = "automap")
 plot(object)
 }
 

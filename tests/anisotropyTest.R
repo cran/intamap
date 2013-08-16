@@ -1,8 +1,8 @@
 library(intamap)
+library(automap)
 set.seed(13531)
 
 plotFigs = FALSE
-library(gstat)
 npts = 1000
 pts=SpatialPoints(cbind(runif(npts),runif(npts)))
 d = SpatialPointsDataFrame(cbind(0,0),data.frame(z=1))
@@ -27,37 +27,37 @@ class(krigingObject) = c("automap")
 
 checkSetup(krigingObject)
 object = preProcess(krigingObject)
-objTemp=estimateAnisotropy(object)
+objTemp = estimateAnisotropy(object)
 #rotate Data
-objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
+objTemp$observations = rotateAnisotropicData(objTemp$observations, objTemp$anisPar)
 #Estimate Variogram Model
-vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+vario = autofitVariogram(objTemp$formulaString, objTemp$observations, model = "Sph")$var_model
 objTemp$anisPar
 if (plotFigs) {
-  spplot(object$observations,"sim1",col.regions=bpy.colors())
-  spplot(objTemp$observations,"sim1",col.regions=bpy.colors())
-  plot(variogram(sim1~1,object$observations,alpha=c(0,90)),vario)
+  spplot(object$observations, "sim1", col.regions=bpy.colors())
+  spplot(objTemp$observations, "sim1", col.regions=bpy.colors())
+  plot(variogram(sim1~1, object$observations, alpha=c(0, 90)), vario)
 }
 vario
 
 
-vmod = vgm(1,"Sph",1,anis=c(90,0.5))
-krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=50,beta=0)
+vmod = vgm(1, "Sph", 1, anis = c(90, 0.5))
+krigingObject$observations = krige(z~1, d, pts, vmod, nsim = 1, nmax = 50, beta = 0)
 object = preProcess(krigingObject)
-objTemp=estimateAnisotropy(object)
+objTemp = estimateAnisotropy(object)
 objTemp$anisPar
-objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
-vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+objTemp$observations = rotateAnisotropicData(objTemp$observations, objTemp$anisPar)
+vario = autofitVariogram(objTemp$formulaString, objTemp$observations, model="Sph")$var_model
 vario
 vmod
 
-vmod = vgm(1,"Sph",2,anis=c(45,0.2))
-krigingObject$observations = krige(z~1,d,pts,vmod,nsim=1,nmax=50,beta=0)
+vmod = vgm(1, "Sph", 2, anis=c(45, 0.2))
+krigingObject$observations = krige(z~1, d, pts, vmod, nsim = 1, nmax = 50, beta = 0)
 object = preProcess(krigingObject)
-objTemp=estimateAnisotropy(object)
+objTemp = estimateAnisotropy(object)
 objTemp$anisPar
-objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
-vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
+objTemp$observations = rotateAnisotropicData(objTemp$observations, objTemp$anisPar)
+vario = autofitVariogram(objTemp$formulaString, objTemp$observations, model = "Sph")$var_model
 vario
 vmod
 

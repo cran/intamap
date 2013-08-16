@@ -9,8 +9,8 @@ citEntry(entry="Article",
 		as.person("J.O. Skoien")),
 	journal = "Computers & Geosciences",
 	year	 = 2010,
-	volume = "?",
-	pages	= "?",
+	volume = "37",
+	pages	= "343-352",
 	url = "http://dx.doi.org/10.1016/j.cageo.2010.03.019",
 	textVersion = 
 	paste("E. Pebesma, D. Cornford, G. Dubois, G.B.M. Heuvelink, D. Hristopoulos, J. Pilz, U. Stoehlker, G. Morin and J.O. Skoien, 2010. INTAMAP: the design and implementation of an interoperable automated interpolation web service. Computers & Geosciences, in press")

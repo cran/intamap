@@ -128,8 +128,6 @@ object according to this class.
 \references{ \url{http://www.intamap.org/} }
 \author{ Jon Olav Skoien }
 \examples{
-library(intamap)
-
 # set up data:
 data(meuse)
 coordinates(meuse) = ~x+y

@@ -46,7 +46,6 @@ Also \emph{psgp} uses this variogram model.
 \author{ Jon Olav Skoien}
 
 \examples{
-library(intamap)
 data(meuse)
 coordinates(meuse) = ~x+y
 meuse$value = log(meuse$zinc)

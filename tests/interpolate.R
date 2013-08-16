@@ -38,8 +38,16 @@ output = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quant
 output2 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
                      methodName = "copula",optList = list(methodParameters = output$methodParameters))
 
+output3 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
+                     methodName = "copula",optList = list(methodParameters = output$methodParameters, nclus = 5))
+
+output4 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
+                     methodName = "automap",optList = list(methodParameters = output$methodParameters, nclus = 5))
+
+
 summary(t(output2$outputTable))
 
 output2$outputTable - output$outputTable
+output3$outputTable - output$outputTable
 
 

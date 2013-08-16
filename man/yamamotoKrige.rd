@@ -67,7 +67,8 @@ kriging estimates. Mathematical Geology, 32 (4), 489-509.
 
 \author{Jon Olav Skoien}
 \examples{
-library(intamap)
+library(gstat)
+library(automap)
 data(sic2004)
 coordinates(sic.val) = ~x+y
 coordinates(sic.test) = ~x+y

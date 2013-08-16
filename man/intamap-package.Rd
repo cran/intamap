@@ -162,7 +162,7 @@ The choice between methods is usually done based on the type of problem
 (extreme values present, computation time available etc.). The possibility
 for parallel processing of the prediction step is enabled for some of the main methods.
 To be able to take advantage of multiple CPUs on a computer, the package
-\code{doSNOW} must be downloaded, additionally the parameter nclus must be set to
+\code{doParallel} must be installed, additionally the parameter nclus must be set to
 a value larger than 1.
 
 }

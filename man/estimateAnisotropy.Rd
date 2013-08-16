@@ -106,7 +106,7 @@ function.
 
 }
 \examples{
-    library(intamap)
+    library(gstat)
     data(sic2004)
     coordinates(sic.val)=~x+y
     sic.val$value=sic.val$dayx

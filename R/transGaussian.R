@@ -57,16 +57,15 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
     if (!suppressMessages(suppressWarnings(require(doParallel))))
   	    stop("nclus is > 1, but package doParallel is not available")    
 
-    clus <- c(rep("localhost", nclus))
-    cl <- makeCluster(clus, type = "SOCK")
+    cl <- makeCluster(nclus)
       registerDoParallel(cl, nclus)
-      clusterEvalQ(cl, library(gstat))
+      clusterEvalQ(cl, gstat::krigeTg)
       variogramModel = object$variogramModel
       splt = rep(1:nclus, each = ceiling(nPred/nclus), length.out = nPred)
       newPredLoc = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
       i = 1 # To avoid R CMD check complain about missing i
       pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
-        krigeTg(formulaString,observations,
+        gstat::krigeTg(formulaString,observations,
            newPredLoc[[i]],variogramModel,nmax = nmax,
            debug.level = debug.level, lambda = lambda)
       }

@@ -69,10 +69,11 @@ spatialPredict.automap = function(object, nsim = 0, ...) {
       if (!suppressMessages(suppressWarnings(require(doParallel))))
   	    stop("nclus is > 1, but package doParallel is not available")    
 
-      clus <- c(rep("localhost", nclus))
-      cl <- makeCluster(clus, type = "SOCK")
+    #  clus <- c(rep("localhost", nclus))
+      cl <- makeCluster(nclus)
       registerDoParallel(cl, nclus)
-      clusterEvalQ(cl, library(gstat))
+#      clusterEvalQ(cl, library(gstat))
+      clusterEvalQ(cl, gstat::krige)
       formulaString = object$formulaString
       observations = object$observations
       predictionLocations = object$predictionLocations
@@ -85,7 +86,7 @@ spatialPredict.automap = function(object, nsim = 0, ...) {
       newdlst = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
       i = 1 # To avoid R CMD check complain about missing i
       pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
-        krige(formulaString,observations, 
+        gstat::krige(formulaString,observations, 
            newdlst[[i]],variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
       }
 #      pred = do.call("rbind", parLapply(cl, newdlst, function(lst) 

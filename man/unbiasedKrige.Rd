@@ -66,7 +66,7 @@ Gecamin, Santiago, Chile,  pp. 831-840.
 \author{ Jon Olav Skoien}
 
 \examples{
-library(intamap)
+library(automap)
 data(meuse)
 data(meuse.grid)
 coordinates(meuse) = ~x+y

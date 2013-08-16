@@ -34,7 +34,7 @@ the predictive means have no reasonable values, the median is automatically calc
 The copula prediction method is computationally demanding.
 There is a possibility of running it as a parallel process by setting the parameter
 \code{nclus > 1} for the interpolation process. This requires a previous installation
-of the package \code{doSNOW}.
+of the package \code{doParallel}.
 }
 \value{
   List with the following elements:
@@ -52,14 +52,16 @@ Kazianka, H. and Pilz, J. (2009), Spatial Interpolation Using Copula-Based Geost
 \dontrun{
 data(intamapExampleObject)
 ## estimate parameters for the copula model
-copula<-list(method="norm")
-anisotropy<-list(lower=c(0,1),upper=c(pi,Inf),params=c(pi/3,2))
-correlation<-list(model="Ste",lower=c(0.01,0.01,0.01),upper=c(0.99,Inf,20),params=c(0.05,4,3))
-margin<-list(name="gev",lower=c(0.01,-Inf),upper=c(Inf,Inf),params=c(30,0.5))
-trend<-list(F=as.matrix(rep(1,196)),lower=-Inf,upper=Inf,params=40)
-estimates<-copulaEstimation(intamapExampleObject,margin,trend,correlation,anisotropy,copula)
+copula <- list(method="norm")
+anisotropy <- list(lower = c(0,1), upper = c(pi, Inf), params = c(pi/3, 2))
+correlation <- list(model = "Ste", lower=c(0.01, 0.01, 0.01), upper = c(0.99, Inf, 20),
+                    params = c(0.05, 4, 3))
+margin <- list(name = "gev", lower = c(0.01, -Inf), upper = c(Inf, Inf), params = c(30, 0.5))
+trend <- list(F = as.matrix(rep(1, 196)), lower = -Inf, upper = Inf, params = 40)
+estimates <- copulaEstimation(intamapExampleObject, margin, trend, correlation, anisotropy, copula)
 ## make predictions at unobserved locations
-predictions<-bayesCopula(intamapExampleObject,estimates,search=25,calc=list(mean=TRUE,variance=TRUE,excprob=40,quantile=0.95))
+predictions<-bayesCopula(intamapExampleObject, estimates, search = 25,
+    calc = list(mean = TRUE, variance = TRUE, excprob = 40, quantile = 0.95))
 }
 }
 \keyword{spatial}

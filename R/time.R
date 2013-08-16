@@ -96,8 +96,6 @@ timeCalibration = function(save=FALSE,original=TRUE){
 	nIter=100
 	n=50
 
-
-  require(gstat)
   grd=expand.grid(x=seq(1,n),y=seq(1,n))
   z=rnorm(1:n^2)
   dataSim=data.frame(x=grd$x,y=grd$y,z)

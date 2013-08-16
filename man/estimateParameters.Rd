@@ -106,8 +106,6 @@ a list object similar to \code{object}, but extended with correlation parameters
 }
 \author{ Jon Olav Skoien}
 \examples{
-library(intamap)
-
 set.seed(13131)
 
 # set up data:
