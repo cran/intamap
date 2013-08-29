@@ -1,4 +1,4 @@
-af1bbd4e2295dc003414e819d9a42d20 *DESCRIPTION
+f9c44b4d7e1e2f3e6c48073de5223c75 *DESCRIPTION
 cf9da65a08061a2ba3901e419bcea232 *NAMESPACE
 acdea1a862bea0d80995c55d89fe1dc3 *R/aggregation.R
 d773a0d93d4b461bf6ba2ecdff1fa8b4 *R/checkSetup.R
@@ -17,7 +17,7 @@ b21a0bb1f2acfd15de1787cbec26ef77 *R/init.R
 597940984cec58a0e4733a5b67d9c2d5 *R/spCopCorrel.R
 7222654f5aa800dc2e12d8b4daa99e2a *R/spCopEstim.R
 0239330b273e304e503192dfab971504 *R/spCopPred.R
-e1304ce3f6e62257141232d22c42679e *R/summary.R
+117a27a91a0fc2e5cf1e890c8c53d3aa *R/summary.R
 0257114ce54c9f81e8ab205d452dc6d7 *R/time.R
 ac8dd73c796c9435f0ce8bfb310e0ef7 *R/transGaussian.R
 6f3daa275b8643140a8de35ff5a3c358 *R/unbiasedPoint.R
@@ -56,9 +56,9 @@ f06dfdc6dee69f3947dfb41bfe0416e3 *man/predictTime.Rd
 0fc95de74879f8561e1e21ec04861c9f *man/spatialPredict.Rd
 4d2c9fd632339640fd226fcaf1895b0b *man/summaryIntamap.rd
 e698fab7e8883122bc3f1528afea33ce *man/timeModels.Rd
-19c63abb703f66317157d766af732fcd *man/unbiasedKrige.Rd
+d4e2fe62bf9b8379597bc5ab90f44aa2 *man/unbiasedKrige.Rd
 9667bea8df76c2ca0e0f36a6a95cc520 *man/yamamotoKrige.rd
-df8aea45da4c000ca44fe634ad7476e7 *tests/anisotropyTest.R
+b747b36a513f7b31b2612d48dc13a3cf *tests/anisotropyTest.R
 f4327dd467a1fdb23b3d41be19a3a18b *tests/block.R
 b7ac5dde4f1e6b682e4de90e536b7ebe *tests/idw.R
 636942ebd82b08418f500d3b9418e749 *tests/interpolate.R

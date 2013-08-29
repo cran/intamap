@@ -1,5 +1,6 @@
 library(intamap)
 library(automap)
+library(gstat)
 set.seed(13531)
 
 plotFigs = FALSE

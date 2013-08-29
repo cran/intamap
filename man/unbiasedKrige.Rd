@@ -67,6 +67,7 @@ Gecamin, Santiago, Chile,  pp. 831-840.
 
 \examples{
 library(automap)
+library(gstat)
 data(meuse)
 data(meuse.grid)
 coordinates(meuse) = ~x+y

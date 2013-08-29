@@ -82,27 +82,16 @@ plot.transGaussian = function(x, ...) {
 }
 
 
+
 plotIntamap = function(object,zcol = "all", sp.layout = NULL, plotMat = c(2,2), ...) {
   shift = 0.03
   plots = list()
   pl = 0
   if ("variogramModel" %in% names(object) && "sampleVariogram" %in% names(object)) {
     pl = pl+1
-    if (require(lattice)) {
-      labels = as.character(object$sampleVariogram$np)
-      plots[[pl]] = xyplot(gamma ~ dist, data = object$sampleVariogram, panel = automap:::autokrige.vgm.panel,
-        labels = labels, shift = shift, model = object$variogramModel,
-        direction = c(object$sampleVariogram$dir.hor[1], object$sampleVariogram$dir.ver[1]),
-        ylim = c(min(0, 1.04 * min(object$sampleVariogram$gamma)), 1.04 *
-            max(object$sampleVariogram$gamma)), xlim = c(0, 1.04 * max(object$sampleVariogram$dist)),
-        xlab = "Distance", ylab = "Semi-variance", main = "Experimental variogram and fitted variogram model",
-        mode = "direct", ...)
-    } else {
-      plots[[pl]] = plot(object$sampleVariogram,object$variogramModel,
-         xlab = "Distance", ylab = "Semi-variance", 
-         main = "Experimental variogram and fitted variogram model", ...)
-    }
-
+    x = list(exp_var = object$sampleVariogram, var_model = object$variogramModel)
+    class(x) = "autofitVariogram"
+    plots[[pl]] = plot(x)
   }
   if (zcol == "all") zcol = expandZcol(object$outputWhat)
   if (all(zcol %in% c(names(object$predictions),"mean","variance"))) {
