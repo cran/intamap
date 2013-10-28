@@ -42,7 +42,9 @@ This is a help function for creating an object (see \code{\link{intamap-package}
                      given or will be created from \code{boundaries} if not.}
 \item{intCRS}{a particular projection requested for the interpolation}
 \item{params}{parameters for the interpolation, given as exceptions to the 
-              default parameters set in the function \code{\link{getIntamapParams}} }
+              default parameters set in the function \code{\link{getIntamapParams}}. It is also possible to pass
+              a \code{methodParameters} from an earlier call, as defined from the function
+              \code{\link{methodParameters}}. }
 \item{boundFile}{Filename where boundaries can be found, e.g. a shapefile }
 \item{lineFile}{Filename where paired points on boundaries can be found}
 \item{class}{setting the class(es) of the object, see \code{\link{intamap-package}}}

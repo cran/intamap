@@ -8,7 +8,14 @@ estimateParameters.automap = function(object,...) {
     debug.level = object$params$debug.level
   observations = object$observations
   depVar = as.character(object$formulaString[[2]])
-
+  if ("model" %in% names(dots)) {
+    model = dots$model
+  } else if ("model" %in% names(object$params)) {
+    model = object$params$model
+  } else {
+    if (dim(coordinates(object$predictionLocations))[1] > 100000) 
+            model = c("Sph", "Exp", "Gau") else model = c("Sph", "Exp", "Gau", "Ste")
+  }
     
 #estimate Anisotropy
   if (object$params$doAnisotropy) {
@@ -18,15 +25,13 @@ estimateParameters.automap = function(object,...) {
 				objTemp = object
         objTemp$observations=rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
 				#Estimate Variogram Model
-        if ("model" %in% names(dots)) {
-    			 afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
-                   verbose = (debug.level >=2), ...)
-        } else {
-          if (dim(coordinates(object$predictionLocations))[1] > 100000) 
-            model = c("Sph", "Exp", "Gau") else model = c("Sph", "Exp", "Gau", "Ste")
+ #       if ("model" %in% names(dots)) {
+ #   			 afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
+ #                  verbose = (debug.level >=2), ...)
+ #       } else {
 			    afv = autofitVariogram(objTemp$formulaString, objTemp$observations,
                    verbose = (debug.level >=2), model = model, ...)
-			  }
+#			  }
         vario = afv$var_model				
 				ovar = var(observations[,depVar]@data)
       	if ((vario$model[2]  == "Gau" | (vario$model[2] == "Ste" && vario$kappa[2] > 2)) 

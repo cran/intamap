@@ -1,4 +1,4 @@
-f9c44b4d7e1e2f3e6c48073de5223c75 *DESCRIPTION
+5867732ed4f3492c5a9ac0339215f8d3 *DESCRIPTION
 cf9da65a08061a2ba3901e419bcea232 *NAMESPACE
 acdea1a862bea0d80995c55d89fe1dc3 *R/aggregation.R
 d773a0d93d4b461bf6ba2ecdff1fa8b4 *R/checkSetup.R
@@ -13,7 +13,7 @@ b21a0bb1f2acfd15de1787cbec26ef77 *R/init.R
 0d7e45bb60c194481173bd62f1e5884d *R/iwqsel.R
 78062edfd853a63f5d42ee5c9ee6be1e *R/linearVariogram.R
 5dfd063fe0f891161eb4fd77a50fef85 *R/methodParameters.r
-5055ecab91c78242af4cdd22756c2ce5 *R/pointKriging.R
+8be210ab069d82de2609223835968670 *R/pointKriging.R
 597940984cec58a0e4733a5b67d9c2d5 *R/spCopCorrel.R
 7222654f5aa800dc2e12d8b4daa99e2a *R/spCopEstim.R
 0239330b273e304e503192dfab971504 *R/spCopPred.R
@@ -36,7 +36,7 @@ d8e0bf3caf18fe0aa2abb06020b99931 *man/checkSetup.Rd
 d9edff9bf3a7875b28e3eeef7a0d4741 *man/coarsenGrid.Rd
 10da932225663b133c1c1568f35a31d0 *man/conformProjections.Rd
 705886864c6cdab903d79d0aeea13220 *man/copulaEstimation.Rd
-7d9a98fc4c9395b7a85a73562f30bf3e *man/createIntamapObject.Rd
+d61431f4ac13b5a120de6668c4fe0b4e *man/createIntamapObject.Rd
 22917dbb71b420ab778b9f29a782763d *man/estimateAnisotropy.Rd
 e2d59a05968288cab3db4779ec4bdd46 *man/estimateParameters.Rd
 14337deae9c4d6a274af63fad28df3cc *man/estimateTimeModel.Rd
@@ -46,7 +46,7 @@ e2d59a05968288cab3db4779ec4bdd46 *man/estimateParameters.Rd
 dd7b072c82d286984212f6c3c5d9438f *man/intObs.Rd
 8a357972cf161e41b4ee927c64503a91 *man/intamap-package.Rd
 ce1670a1ed28391eb92d34d7a85ada2f *man/intamapExampleObject.Rd
-512284021c2aab0114b76bb67079cf5d *man/interpolate.Rd
+caa1834af60a870e04267adc40d4e7cb *man/interpolate.Rd
 e5c4676fa0e0d0d936995263ef70a5d5 *man/methodParameters.Rd
 a4ab613278b2493a1e85d192f1930a15 *man/plotIntamap.Rd
 fbbcb2d7279109a5c6cf6cc8dd69c84f *man/postProcess.Rd
@@ -61,7 +61,7 @@ d4e2fe62bf9b8379597bc5ab90f44aa2 *man/unbiasedKrige.Rd
 b747b36a513f7b31b2612d48dc13a3cf *tests/anisotropyTest.R
 f4327dd467a1fdb23b3d41be19a3a18b *tests/block.R
 b7ac5dde4f1e6b682e4de90e536b7ebe *tests/idw.R
-636942ebd82b08418f500d3b9418e749 *tests/interpolate.R
+2639fd15c302b8250aab7c9f307f79c1 *tests/interpolate.R
 0dc6d6047ec938a2712489edda2e5ac1 *tests/interpolateBlock.R
 1f4d2775506c2de6beb3a955c1d9d3c8 *tests/javaR.R
 2a975e084e77fae5503633148377690f *tests/linearVariogram.R

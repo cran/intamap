@@ -44,10 +44,14 @@ output3 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quan
 output4 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
                      methodName = "automap",optList = list(methodParameters = output$methodParameters, nclus = 5))
 
+output5 = interpolate(meuse, mgrid, list(mean=T, variance=T, excprob = 1000,quantile = 0.5),
+                     methodName = "automap",optList = list(model = "Sph", nclus = 5))
 
 summary(t(output2$outputTable))
 
 output2$outputTable - output$outputTable
 output3$outputTable - output$outputTable
+output4$outputTable - output$outputTable
+output5$outputTable - output$outputTable
 
 

@@ -37,6 +37,8 @@ interpolateBlock(observations, predictionLocations, outputWhat,
                        \item{set.seed}{the possibility to pass a seed value to 
                             \code{interpolate}, to assure reproducible results also
                             for methods relying on random numbers}
+                       \item{methodParameters}{methodParameters from an earlier run, see also \code{\link{methodParameters}}}
+                       \item{model}{defining which variogram model(s) to fit when \code{methodName = "automap"}}
                      }                  
                }
 } 
