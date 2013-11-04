@@ -53,7 +53,8 @@ Below are some details about and/or links to the different methods currently imp
   \code{\link[automap]{autofitVariogram}} will be called. 
   If \code{object} already includes a variogram model when 
   \code{\link{spatialPredict}} is called, 
-  \code{\link[gstat]{krige}} in the \code{gstat}-package will be called directly.}
+  \code{\link[gstat]{krige}} in the \code{gstat}-package will be called directly.
+  The user can submit an argument \code{model} with the model(s) to be fitted.  }
 
 \item{\code{copula}}{finding the best copula parameters using \code{\link{copulaEstimation}}}
 

@@ -163,7 +163,7 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
   if (is.null(nclus)) nclus = 1
   loc = as.data.frame(locations)
   names(loc) = names(locations)
-  if (nclus > 1) {
+  if (nclus > 1 & dim(loc)[1] > 3) {
     if (!suppressMessages(suppressWarnings(require(doParallel))))
   	  stop("nclus is > 1, but package doParallel is not available")
 
@@ -196,7 +196,9 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
           quantiles, multeps)
       if (i ==1) res = res0 else res = rbind(res,res0)
     }
+    if (length(locations$x) == 1) res = matrix(res, nrow = 1)
   }   
+
   numexcprob = length(calc$excprob)
   if (numexcprob > 0) excprob = as.matrix(res[,3:(2+numexcprob)]) else excprob = NULL
   if (numquantiles > 0) quantiles = as.matrix(res[,(3+numexcprob):(2+numexcprob+numquantiles)]) else quantiles = NULL

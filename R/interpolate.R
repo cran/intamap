@@ -1,13 +1,14 @@
 
 interpolate = function(observations, predictionLocations, 
               outputWhat = list(mean = TRUE, variance = TRUE), obsChar = NA, 
-              methodName = "automatic", maximumTime = 30, optList = list()) {
+              methodName = "automatic", maximumTime = 30, optList = list(), cv = FALSE) {
   startTime = Sys.time()
 #  save.image("debug.img")
   npred = ifelse(is.numeric(predictionLocations), predictionLocations, 
         nrow(coordinates(predictionLocations)))
   msg = paste("R", startTime, "interpolating", nrow(coordinates(observations)), "observations,",
     npred, "prediction locations\n")
+#    npred, "prediction locations", ifelse(cv, ", crossvalidating", " "), "\n")
   cat(msg)
   if ("formulaString" %in% names(optList)) {
     formulaString = as.formula(optList$formulaString) 
@@ -74,8 +75,26 @@ interpolate = function(observations, predictionLocations,
   nsim = ifelse("nsim" %in% names(outputWhat), outputWhat$nsim, 0)
   
 # Methods able to create simulations  
-  krigingObject = spatialPredict(krigingObject, nsim = nsim)
-  
+  if (cv) {
+    kObj = krigingObject
+    predictions = krigingObject$observations
+    depVar = as.character(krigingObject$formulaString[[2]])
+    predictions@data = data.frame(var1.pred = NA, var1.var = NA, 
+         observed = observations@data[,depVar], residual = NA, zscore = NA)
+    for (i in 1:dim(krigingObject$observations)[1]) {
+      kObj$predictionLocations = krigingObject$observations[i,]
+      kObj$observations = krigingObject$observations[-i,]
+      if (debug.level == 0) {
+        tmp = capture.output(kObj <- spatialPredict(kObj))
+      } else kObj <- spatialPredict(kObj)
+      if ("var1.pred" %in% names(kObj$predictions) & "var1.var" %in% names(kObj$predictions)) {
+        predictions@data[i,1:2] = kObj$predictions@data[,c("var1.pred", "var1.var")]
+      } else predictions@data[i,1:2] = kObj$predictions@data[,c("mean", "variance")]
+    }
+    predictions$residual = predictions$observed - predictions$var1.pred
+    predictions$zscore = predictions$residual/sqrt(predictions$var1.var)
+    krigingObject$predictions = predictions
+  } else krigingObject = spatialPredict(krigingObject, nsim = nsim)
   krigingObject = postProcess(krigingObject)
 # Add plot if wanted
 	if (!is.null(krigingObject$returnPlot) && krigingObject$returnPlot)
@@ -101,7 +120,7 @@ interpolate = function(observations, predictionLocations,
 
 
 
-interpolateBlock = function(observations, predictionLocations, outputWhat, blockWhat = "none", 
+interpolateBlock = function(observations, predictionLocations, outputWhat,  blockWhat = "none", 
      obsChar = NA, methodName = "automatic", maximumTime = 30, optList = list()) {
   startTime = Sys.time()
   msg = paste("R", startTime, "interpolating", nrow(coordinates(observations)), "observations,",
