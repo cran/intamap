@@ -1,4 +1,4 @@
-3de7f00a7ffc45b3b280490f94ead2a8 *DESCRIPTION
+4671b45b332285e0d2358c80fc041171 *DESCRIPTION
 cf9da65a08061a2ba3901e419bcea232 *NAMESPACE
 acdea1a862bea0d80995c55d89fe1dc3 *R/aggregation.R
 d773a0d93d4b461bf6ba2ecdff1fa8b4 *R/checkSetup.R
@@ -7,7 +7,7 @@ ae7312e72c9cc5979ba0d728231b5cd9 *R/default.R
 0f7e756620c180c564983ae6e262f193 *R/estimateAnisotropy.R
 a40aad832cdb64fd40ab930c71263fc6 *R/getInterpolationMethodNames.R
 805a7af254c1771eee70c8a8c0f982c2 *R/getOutputTable.R
-e84b6c9722bbdf7323dfc70a69fe1b60 *R/idw.R
+5f508a2c118983e40a7b066b8440eb1a *R/idw.R
 b21a0bb1f2acfd15de1787cbec26ef77 *R/init.R
 ab2912e830cca3af791c372abc9baea7 *R/interpolate.R
 0d7e45bb60c194481173bd62f1e5884d *R/iwqsel.R

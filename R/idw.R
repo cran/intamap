@@ -20,7 +20,7 @@ estimateParameters.idw = function(object, ...) {
   } else nmax = object$params$nmax
  	for (i in seq(along = idpRange)) {
   	mse[i] = mean(krige.cv(formulaString, object$observations, nfold = nfold, 
-  	nmax = nmax, set = list(idp = idpRange[i]))$residual ** 2)	
+  	nmax = nmax, set = list(idp = idpRange[i]), verbose = params$debug.level)$residual ** 2)	
 	}
   best = which(mse == min(mse))[1]
 	object$inverseDistancePower = idpRange[best]
