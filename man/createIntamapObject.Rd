@@ -110,7 +110,7 @@ the interpolation methods do not work optimal with lat-long data.
 
 The ...-argument can be used for arguments necessary for new methods not being 
 a part of the \code{\link{intamap-package}}.  It is also a method for reusing previously calculated
-elements that can be assumed to be unchanged for the second interpolation. 
+elements that can be assumed to be unchanged for the second interpolation.  
 %One example of such elements could be biases estimated in 
 %\code{biasCorr} in the separate \code{intamapInteractive}-package.
 }
@@ -127,7 +127,10 @@ object according to this class.
 \code{\link{intamap-package}} and \code{\link{getIntamapParams}}
 }
 
-\references{ \url{http://www.intamap.org/} }
+\references{ 
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+}
+
 \author{ Jon Olav Skoien }
 \examples{
 # set up data:

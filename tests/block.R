@@ -56,4 +56,4 @@ krigingObject = postProcess(krigingObject)
 predictions = krigingObject$predictions
 
 # Send predictions back to Java. Not sure how to deal with this spatial object though...?
-summary(krigingObject$outputTable)
+summary(krigingObject$outputTable, digits = 4)

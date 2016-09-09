@@ -26,7 +26,8 @@ interpolate = function(observations, predictionLocations,
     sink(debugOut,split=TRUE)
   }
   
-  if (methodName == "automatic") {
+  if (methodName == "automatic" & !(sum(names(optList) %in% 
+                    c("methodParameters", "variogramModel", "copulaParams"))) >= 1) {
     methodName = chooseMethod(observations, predictionLocations,formulaString,
         obsChar, maximumTime, outputWhat = outputWhat)
   } else if (is.finite(maximumTime)) {
@@ -252,7 +253,7 @@ methodNames = c("copula","automap")
  nPred = ifelse(is.numeric(predictionLocations), predictionLocations, 
         nrow(coordinates(predictionLocations)))
  
-if (length(obsChar) > 0 && !is.na(obsChar) && require(psgp)) {
+if (length(obsChar) > 0 && !is.na(obsChar) ) { #} && requireNamespace("psgp")) {
   pTime = predictTime(nObs= dim(observations)[1], 
           nPred = nPred, formulaString = formulaString,
           class="psgp", outputWhat = outputWhat)

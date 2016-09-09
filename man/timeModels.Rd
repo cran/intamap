@@ -21,6 +21,9 @@ if \code{timeModels} if the object is not already existing in the workspace.
 data(timeModels)
 }
 \author{Jon Olav Skoien}
+
 \references{ 
-\url{http://www.intamap.org/}
+
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+
 }

@@ -5,11 +5,9 @@
 pre-processing, parameter estimation, spatial prediction and post processing }
 
 \description{
-This package provides S3 methods for the R processing to be done in the INTAMAP
-project (\url{http://www.intamap.org}). In addition to the methods available
-through a web-based interface, the package includes several other options
-for automatic interpolation and pre- and post-processing of observations
-from monitoring networks.
+This package provides functionality for automatic interpolation of spatial data. 
+The package was originally developed as the computational back-end of the intamap web service, but 
+is now a stand-alone package as maintenance of the web service has ended. 
 }
 
 \section{ General setup }{
@@ -70,7 +68,7 @@ this (sp, gstat, akima, automap, mvtnorm, evd, MASS). It is also recommended
 to install and load rgdal on those platforms where this package is available.
 All packages need to be available to the
 R session, which is possible after downloading them from 
-the Comprehensive R Network Archives (CRAN) (\url{http://cran.r-project.org})
+the Comprehensive R Network Archives (CRAN) (\url{https://cran.r-project.org})
 
 \preformatted{
 # set up intamap object:
@@ -217,5 +215,10 @@ prediction locations.}
            package}
 }
 }
+}
+\references{ 
+
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+
 }
 \keyword{spatial}

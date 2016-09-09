@@ -7,7 +7,7 @@ xs = sort(xss)[(xi-1)*coarse+offset[1]+1]
 yi = c(1:(length(yss)/coarse))
 ys = sort(yss)[(yi-1)*coarse+offset[2]+1]
 sel = coordinates(objCor)[,1] %in% xs & coordinates(objCor)[,2] %in% ys
-newPoints = objCor[sel,]
+newPoints = objCor[sel,, drop = FALSE]
 if ("data" %in% names(getSlots(class(object)))) newPoints = SpatialPointsDataFrame(newPoints,data = object@data[sel,])
 #  newPointDataFrame = as(object,"SpatialPointsDataFrame")[sel,]
 gridded(newPoints) = TRUE

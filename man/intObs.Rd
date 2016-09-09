@@ -17,5 +17,8 @@ have been randomized through addition of a random value.
 
 }
 
+\references{ 
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+}
 
 \keyword{datasets}

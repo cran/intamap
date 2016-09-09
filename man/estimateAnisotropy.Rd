@@ -79,7 +79,7 @@ If doRotation==FALSE no action is taken.
 }
 }
 \references{
-[1] http://www.intamap.org, 
+[1] Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
 
 [2] A. Chorti and D. T. Hristopulos (2008). Non-parametric Identification of 
 Anisotropic (Elliptic) Correlations in Spatially Distributed Data Sets, 

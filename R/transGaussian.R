@@ -54,12 +54,12 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
   if ("nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
     nclus = params$nclus else nclus = 1
   if (nclus > 1) {
-    if (!suppressMessages(suppressWarnings(require(doParallel))))
+    if (!suppressMessages(suppressWarnings(requireNamespace("doParallel"))))
   	    stop("nclus is > 1, but package doParallel is not available")    
 
     cl <- makeCluster(nclus)
       registerDoParallel(cl, nclus)
-      clusterEvalQ(cl, gstat::krigeTg)
+#      clusterEvalQ(cl, gstat::krigeTg)
       variogramModel = object$variogramModel
       splt = rep(1:nclus, each = ceiling(nPred/nclus), length.out = nPred)
       newPredLoc = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])

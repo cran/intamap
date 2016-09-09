@@ -54,7 +54,7 @@ postProcess.default = function(object, ...) {
 #		object = spatialAggregate(object)
 
 # Tranform output to requested target projection
-  if (require(rgdal)) {
+  if (requireNamespace("rgdal")) {
     if ("targetCRS" %in% names(object) && 
         (CRSargs(CRS(proj4string(object$predictions))) != CRSargs(CRS(object$targetCRS)))){
       object$predictions = spTransform(object$predictions,CRS(object$targetCRS))

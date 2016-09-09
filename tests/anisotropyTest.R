@@ -39,7 +39,7 @@ if (plotFigs) {
   spplot(objTemp$observations, "sim1", col.regions=bpy.colors())
   plot(variogram(sim1~1, object$observations, alpha=c(0, 90)), vario)
 }
-vario
+print(vario, digits = 3)
 
 
 vmod = vgm(1, "Sph", 1, anis = c(90, 0.5))
@@ -49,7 +49,7 @@ objTemp = estimateAnisotropy(object)
 objTemp$anisPar
 objTemp$observations = rotateAnisotropicData(objTemp$observations, objTemp$anisPar)
 vario = autofitVariogram(objTemp$formulaString, objTemp$observations, model="Sph")$var_model
-vario
+print(vario, digits = 3)
 vmod
 
 vmod = vgm(1, "Sph", 2, anis=c(45, 0.2))
@@ -59,7 +59,7 @@ objTemp = estimateAnisotropy(object)
 objTemp$anisPar
 objTemp$observations = rotateAnisotropicData(objTemp$observations, objTemp$anisPar)
 vario = autofitVariogram(objTemp$formulaString, objTemp$observations, model = "Sph")$var_model
-vario
+print(vario, digits = 3)
 vmod
 
 
@@ -70,7 +70,7 @@ objTemp=estimateAnisotropy(object)
 objTemp$anisPar
 objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
 vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
-vario
+print(vario, digits = 3)
 vmod
 
 
@@ -82,7 +82,7 @@ objTemp=estimateAnisotropy(object)
 objTemp$anisPar
 objTemp$observations=intamap:::rotateAnisotropicData(objTemp$observations,objTemp$anisPar)
 vario = autofitVariogram(objTemp$formulaString,objTemp$observations,model="Sph")$var_model
-vario
+print(vario, digits = 3)
 vmod
 if (plotFigs) {
   p1 = plot(variogram(sim1~1,object$observations,alpha=c(0,90)),vmod,ylim = c(0,1.2),xlim=c(0,0.6),main="orig,orig")
@@ -124,4 +124,4 @@ obj = estimateParameters(obj)
 obj$anisPar
 obj = spatialPredict(obj)
 obj = postProcess(obj)
-summary(as.data.frame(obj$outputTable))
+summary(as.data.frame(obj$outputTable), digits = 3)

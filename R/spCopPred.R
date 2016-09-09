@@ -147,24 +147,12 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
 
   correlation<-estimates$correlation
 
-  
-#  clusterExport(cl,list("data","debug.level","distribfunction", "quantilefunction","densityfunction, newdata,
-#        copula, search, correlation, h, estimates, calc, margin, numquantiles, exceedanceprob,
-#        quantiles, multeps))
-#  splt = sample(1:nclus, nrow(coordinates(locations)), replace = TRUE)
-#  newdlst = lapply(as.list(1:nclus), function(w) locations[splt == w,])
-
-#  res <- do.call("rbind", parLapply(cl, newdlst, function(lst) 
-#    intamap:::pfunc(data,locations[i,],debug.level,distribfunction, quantilefunction,densityfunction, newdata,
-#        copula, search, correlation, h, estimates, calc, margin, numquantiles, exceedanceprob,
-#        quantiles, multeps)))
-
 
   if (is.null(nclus)) nclus = 1
   loc = as.data.frame(locations)
   names(loc) = names(locations)
   if (nclus > 1 & dim(loc)[1] > 3) {
-    if (!suppressMessages(suppressWarnings(require(doParallel))))
+    if (!suppressMessages(suppressWarnings(requireNamespace("doParallel"))))
   	  stop("nclus is > 1, but package doParallel is not available")
 
     locs = vector("list", dim(loc)[1])
@@ -178,16 +166,6 @@ bayesCopula <- function(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRU
           exceedanceprob = exceedanceprob, quantiles = quantiles, multeps = multeps)
     res = matrix(unlist(res), ncol = length(res[[1]]), byrow = TRUE)
 
- #   if (FALSE) {
-#      clusterEvalQ(cl, intamap:::pfunc)
-#      registerDoParallel(cl, nclus)
-#      i = 1 # just to avoid check warnings
-#      res <- foreach(i = 1:length(locations$x), .combine = rbind) %dopar% {
-#        intamap:::pfunc(data,loc[i,],debug.level,distribfunction, quantilefunction,densityfunction, newdata,
-#            copula, search, correlation, h, estimates, calc, margin, numquantiles, exceedanceprob,
-#          quantiles, multeps)
-#     } # end of foreach loop
-#    }
     stopCluster(cl)
   } else {
     for (i in 1:length(locations$x)) {

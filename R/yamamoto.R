@@ -36,15 +36,15 @@ yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
   depVar=as.character(formula[[2]])
  
   if (nsim >0) {
-    mSim = newPoints
+  #  mSim = newPoints
     for (i in 1:nsim) {
       cat(paste("Conditional simulation ",i,"\n"))
 #  cSim = condSim(Obs,newPoints,isim=i,...)
       cSim = condSimYama(Obs,newPoints,isim=i,model = model,depVar=depVar,nmax = nmax)
-      if (i ==1) mSim = cSim  else   mSim = cbind(mSim,cSim@data)
+      if (i ==1) mSim = cSim  else   mSim@data = cbind(mSim@data,cSim@data)
     } 
-    names(mSim)[-(1:2)] = mapply(FUN = function(i) paste("sim",i,sep=""),seq(1:nsim))
-    coordinates(mSim) = as.formula(paste("~",names(mSim)[1],"+",names(mSim)[2]))
+    names(mSim) = mapply(FUN = function(i) paste("sim",i,sep=""),seq(1:nsim))
+#    coordinates(mSim) = as.formula(paste("~",names(mSim)[1],"+",names(mSim)[2]))
     return(mSim)
   }
   cObs = coordinates(Obs)

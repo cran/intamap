@@ -75,16 +75,16 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
   if ("targetCRS" %in% names(params) && missing(targetCRS)) {
     targetCRS = params$targetCRS
     params = params[-which(names(params) == "targetCRS")]
-    if (require(rgdal)) targetCRS = CRSargs(CRS(targetCRS))
+    if (requireNamespace("rgdal")) targetCRS = CRSargs(CRS(targetCRS))
   }
   if ("intCRS" %in% names(params) && missing(intCRS)) {
     intCRS = params$intCRS
     params = params[-which(names(params) == "intCRS")]
-    if (require(rgdal)) intCRS = CRSargs(CRS(intCRS))
+    if (requireNamespace("rgdal")) intCRS = CRSargs(CRS(intCRS))
   }
-  if (!is.na(proj4string(observations)) && require(rgdal)) 
+  if (!is.na(proj4string(observations)) && requireNamespace("rgdal")) 
       observations@proj4string = CRS(proj4string(observations))
-  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations)) && require(rgdal)) 
+  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations)) && requireNamespace("rgdal")) 
       predictionLocations@proj4string = CRS(proj4string(predictionLocations))
   if (!missing(observations) && !extends(class(observations),"Spatial")) 
   	stop("observations not object of class Spatial*")
@@ -132,7 +132,7 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
     object$params = getIntamapParams(params) 
   if (!missing(boundaries)) {
     objectboundaries = boundaries
-  } else if (!missing(boundFile) && require(rgdal)) {
+  } else if (!missing(boundFile) && requireNamespace("rgdal")) {
   	# EJP:
     #if (require(maptools)) object$boundaries = readShapePoly(boundFile) else
     #  warning("maptools not installed, not able to read boundaries")
@@ -157,6 +157,10 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
   if (object$params$confProj) object = conformProjections(object)
 
   class(object) = class
+  
+  if (sum(names(params) %in% c("methodParameters", "variogramModel", "copulaParams")) > 1) 
+    stop("you can only give one out of methodParameters, variogramModel and copulaParams")
+  
   if ("methodParameters" %in% names(params)) {
     methodParameters = params$methodParameters
     if (length(grep("assign",methodParameters)) >0) stop("Illegal attempt to call function assign through methodParameters")
@@ -186,6 +190,14 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
    
     params = params[-which(names(params) == "methodParameters")]
     eval(parse(text = methodParameters))
+  }
+  if ("variogramModel" %in% names(params)) {
+    object$variogramModel = params$variogramModel
+    if (class == "idw" | class == "automatic") class(object) = "automap"
+  }
+  if ("copulaParams" %in% names(params)) {
+    object$copulaParams = params$copulaParams
+    class(object) = "copula"
   }
   if (!is.null(object$params$set.seed)) set.seed(object$params$set.seed)
   return(object)
@@ -229,13 +241,13 @@ conformProjections = function(object) {
   predictionLocations = object$predictionLocations
   obsCRS = proj4string(observations)
   predCRS = proj4string(predictionLocations)
-  if (require(rgdal)) {
+  if (requireNamespace("rgdal")) {
     if ("intCRS"%in% names(object)) {
       intCRS = object$intCRS
     } else if (CRSargs(CRS(obsCRS)) == CRSargs(CRS(predCRS)) && !length(grep("longlat",obsCRS)) >0) {
       intCRS = CRSargs(CRS(obsCRS))
     } else {
-      if ("targetCRS" %in% names(object) && !length(grep("longlat",CRSargs(CRS(object$targetCRS)))) > 0) {
+      if ("targetCRS" %in% names(object) && !length(grep("longlat", CRSargs(CRS(object$targetCRS)))) > 0) {
         targetCRS = object$targetCRS
         intCRS = targetCRS
       } else {

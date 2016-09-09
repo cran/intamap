@@ -30,3 +30,7 @@ number of observations and predictionLocations}
 \note{RUN FIRST generateTimeModels() or estimateTimeModel() in order to save time Models to workspace. It might take some time!}
 
 \value{An integer or an array of integers with the predicted times.}
+
+\references{ 
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+}

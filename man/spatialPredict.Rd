@@ -71,7 +71,7 @@ about particular interpolation methods
 \item{\code{yamamoto}}{spatial prediction using \code{\link{yamamotoKrige}}}
 
 It is also possible to add to the above methods with functionality from
-other packages, if wanted. See description on \url{http://www.intamap.org/newMethods.php}
+other packages, if wanted. 
 You can also check which methods are available from other packages by calling 
 \preformatted{
 >methods(spatialPredict)
@@ -88,9 +88,10 @@ a the set of locations defined \code{object}.
 
 \references{ 
 
-\url{http://www.intamap.org/}
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
 
 }
+
 \author{ Jon Olav Skoien}
 \seealso{
 \code{\link[gstat]{gstat}},\code{\link[automap]{autoKrige}}, 

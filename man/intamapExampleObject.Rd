@@ -63,6 +63,11 @@ a realization of a random field generated using a Gaussian copula and generalize
 Furthermore, there is geometric anisotropy with direction=pi/3 and ratio=2. 
 }
 \seealso{\code{\link{spatialPredict.copula}}, \code{\link{estimateParameters.copula}}}
+
+\references{ 
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+}
+
 \examples{
 \dontrun{
 data(intamapExampleObject)

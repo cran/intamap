@@ -30,10 +30,10 @@ method is the \code{outputTable}, a matrix, organized in a convenient way for th
 The function can easily be replaced by more specific methods relevant for a 
 certain data set, doing more data specific things in addition to what is done in the default method.
 }
+
 \references{ 
-
-\url{http://www.intamap.org/}
-
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
 }
+
 \author{ Edzer J. Pebesma }
 \keyword{spatial}

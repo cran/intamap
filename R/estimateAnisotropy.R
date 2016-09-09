@@ -214,6 +214,10 @@ estimateAnisotropySc<-function(x, y, r, len=length(x), method="linear", min.x=mi
   } else if (FALSE) {
     dat = data.frame(x = x, y = y, z = r)
 #    require(MBA)
+    yex = max(y) - min(y)
+    xex = max.x - min.x
+    emax = max(yex, xex)
+    bb = matrix(c(min.x, min(y), min.x + emax, min(y) + emax))
     ri <- mba.surf(dat, length(xn), length(yn))$xyz.est
     rri <- mba.surf(dat, max(length(xn),length(yn)), max(length(xn),length(yn)))$xyz.est
     mesh = meshgrid(ri$x, ri$y)

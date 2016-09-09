@@ -85,7 +85,7 @@ fitting is necessary for linear variogram kriging}
 
 }
 It is also possible to add to the above methods with functionality from
-other packages, if wanted. See description on \url{http://www.intamap.org/newMethods.php}
+other packages, if wanted.
 You can also check which methods are available from other packages by calling 
 \preformatted{
 >methods(estimateParameters)
@@ -96,9 +96,10 @@ You can also check which methods are available from other packages by calling
 a list object similar to \code{object}, but extended with correlation parameters.
 }
 
+
 \references{ 
 
-\url{http://www.intamap.org/}
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
 
 }
 

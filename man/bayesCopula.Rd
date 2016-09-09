@@ -44,8 +44,12 @@ of the package \code{doParallel}.
   \item{excprob}{Probabilities for the predictive distribution to exceed predefined thresholds. NULL if not calculated.}
 }
 \references{
-Kazianka, H. and Pilz, J. (2009), Spatial Interpolation Using Copula-Based Geostatistical Models. GeoENV2008 - Geostatistics for Environmental Application (P. Atkinson, C. Lloyd, eds.), Springer, New York 
+[1] Kazianka, H. and Pilz, J. (2009), Spatial Interpolation Using Copula-Based Geostatistical Models. GeoENV2008 - Geostatistics for Environmental Application (P. Atkinson, C. Lloyd, eds.), Springer, New York 
+
+[2] Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+
 }
+
 \author{Hannes Kazianka}
 \seealso{\code{\link{copulaEstimation}}, \code{\link{spatialPredict}}, \code{\link{estimateParameters}}}
 \examples{

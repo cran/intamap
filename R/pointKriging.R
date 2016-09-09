@@ -71,14 +71,14 @@ spatialPredict.automap = function(object, nsim = 0, ...) {
     if ("nclus" %in% names(params) && nsim == 0 && nPred >= 5000 ) 
       nclus = params$nclus else nclus = 1
     if (nclus > 1) {
-      if (!suppressMessages(suppressWarnings(require(doParallel))))
+      if (!suppressMessages(suppressWarnings(requireNamespace("doParallel"))))
   	    stop("nclus is > 1, but package doParallel is not available")    
 
     #  clus <- c(rep("localhost", nclus))
       cl <- makeCluster(nclus)
       registerDoParallel(cl, nclus)
 #      clusterEvalQ(cl, library(gstat))
-      clusterEvalQ(cl, gstat::krige)
+#      clusterEvalQ(cl, gstat::krige)
       formulaString = object$formulaString
       observations = object$observations
       predictionLocations = object$predictionLocations

@@ -61,7 +61,8 @@ Unbiased block predictions and exceedance probabilities for environmental thresh
 In: J. Ortiz C. and X. Emery (eds). Proceedings of the eight international geostatistics congress. 
 Gecamin, Santiago, Chile,  pp. 831-840.
 
-\url{http://www.intamap.org/}
+Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz, J., Stohlker, U., Morin, G., Skoien, J.O. INTAMAP: The design and implementation f an interoperable automated interpolation Web Service. Computers and Geosciences 37 (3), 2011. 
+
 }
 \author{ Jon Olav Skoien}
 

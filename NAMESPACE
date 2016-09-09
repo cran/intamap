@@ -4,7 +4,22 @@ import(automap)
 import(mvtnorm)
 import(MASS)
 import(evd)
-
+import(doParallel)
+import(parallel)
+import(foreach)
+import("rgdal")
+  importFrom("grDevices", "boxplot.stats", "chull", "dev.off", "pdf",
+             "rainbow")
+  importFrom("graphics", "image", "par", "points", "title")
+  importFrom("methods", "as", "extends", "getSlots", "is", "slot")
+  importFrom("stats", "IQR", "aggregate", "as.formula", "cor", "dchisq",
+             "delete.response", "dist", "dnorm", "fivenum", "integrate",
+             "ks.test", "loess", "lsfit", "median", "model.matrix",
+             "optim", "pgamma", "plogis", "pnorm", "predict", "pt",
+             "qchisq", "qnorm", "quantile", "rnorm", "runif", "sd",
+             "terms", "uniroot", "var")
+  importFrom("utils", "capture.output", "data", "modifyList",
+             "write.table")
 export(
   bayesCopula,
   blockPredict,
