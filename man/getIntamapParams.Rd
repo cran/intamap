@@ -31,6 +31,8 @@ to be included in the object described in \code{\link{intamap-package}}}
             should be used for a kriging prediction or simulation, where
             nearest is defined in terms of the space of the spatial locations.
             By default, 50 observations are used. }
+\item{\code{maxdist = Inf}}{for local kriging: Maximum distance to neighbouring locations to be used in kriging
+                or simulations}
 \item{\code{ngrid = 100}}{The number of grid points to be used if an Averaged Cumulative
              Distribution Function (ACDF) needs to be computed for unbiased kriging}
 \item{\code{nsim=100}}{Number of simulations when needed}

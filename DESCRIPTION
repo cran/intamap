@@ -1,6 +1,6 @@
 Package: intamap
-Version: 1.4-1
-Date: 2016-09-09
+Version: 1.4-9
+Date: 2018-05-02
 Title: Procedures for Automated Interpolation
 Author: Edzer Pebesma <edzer.pebesma@uni-muenster.de>, Jon Olav Skoien
     <jon.skoien@gmail.com> with contributions from Olivier Baume, A.Chorti, D.T.
@@ -15,6 +15,6 @@ Description: Provides classes and methods for automated
     spatial interpolation.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2016-09-09 16:09:06 UTC; skoiejo
+Packaged: 2018-05-02 12:43:57 UTC; skoiejo
 Repository: CRAN
-Date/Publication: 2016-09-09 19:54:11
+Date/Publication: 2018-05-02 13:38:35 UTC

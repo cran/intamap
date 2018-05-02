@@ -5,7 +5,7 @@
 to a prediction that can be assumed to be unbiased for a certain threshold.}
 \usage{
 unbiasedKrige(object, formulaString, observations, predictionLocations,
-              model, outputWhat, nmax, nsim, yamamoto, iwqmaxit = 500,
+              model, outputWhat, yamamoto, iwqmaxit = 500,
               iwqCpAddLim = 0.0001, debug.level, ...)
 }
 \arguments{
@@ -25,17 +25,21 @@ from the intamap procedure spatialPredict, the remaining arguments are not neces
 \item{model}{variogram model of dependent variable (or its residuals), defined 
               by a call to \code{\link[gstat]{vgm}} or \code{\link[automap]{autofitVariogram}} }
 \item{outputWhat}{Argument with type of unbiasedness method ("MOK" or "IWQSEL") and the thresholds.}
-\item{nmax}{for local kriging: the number of nearest observations that 
-should be used in simulations for the "IWQSEL" method in terms of the space of the spatial locations. 
-Defaults to nmax = 10 when object is a Spatial*DataFrame.}
-\item{nsim}{number of simulations necessary if the method is "IWQSEL".
-Defaults to nsim = 100 when object is a \code{\link[sp:Spatial-class]{Spatial}}*DataFrame.}
 \item{yamamoto}{logical describing if the yamamoto approach )is to be used in simulations.
 Defaults to yamamoto = FALSE when object is a \code{\link[sp:Spatial-class]{Spatial}}*DataFrame.}
 \item{iwqmaxit}{maximum number of iterations in iwqsel}
 \item{iwqCpAddLim}{convergence criteria in iwqsel}
 \item{debug.level}{debug level, passed to subfunctions}
-\item{...}{ other arguments that will be passed to subfunctions}
+\item{...}{ other arguments that will be passed to subfunctions. These include 
+\describe{
+\item{\code{nsim}}{number of simulations necessary if the method is "IWQSEL".
+Defaults to nsim = 100 when object is a \code{\link[sp:Spatial-class]{Spatial}}*DataFrame.}
+\item{\code{maxdist}}{maximum number of neighbours to use in local kriging, defaults to Inf}
+\item{\code{nmax}}{for local kriging: the number of nearest observations that 
+should be used in simulations for the "IWQSEL" method in terms of the space of the spatial locations. 
+Defaults to nmax = 10 when object is a Spatial*DataFrame.}
+}
+}
 } 
 
 \details{

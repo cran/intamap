@@ -32,11 +32,11 @@
 ########################################
 
 
-getIntamapParams = function(oldPar, newPar,...){
+getIntamapParams2 = function(oldPar, newPar,...){
   dots = list(...)
   twoLists = FALSE
   if (!missing(oldPar) && !inherits(oldPar,"IntamapParams")) {
-    if (!missing(newPar)) {
+    if (!missing(newPar) && !is.null(dots)) {
       newPar2 = newPar 
       newPar = oldPar 
       twoLists = TRUE
@@ -52,15 +52,27 @@ getIntamapParams = function(oldPar, newPar,...){
   return(oldPar)
 }
 
+getIntamapParams = function(oldPar, newPar,...){
+
+  params = getIntamapDefaultParams()
+  if (!missing(oldPar) && !is.null(oldPar)) params = modifyList(params, oldPar)  
+  if (!missing(newPar) && !is.null(newPar)) params = modifyList(params, newPar) 
+  dots = list(...)
+  if (!is.null(dots)) params = modifyList(params, dots)
+  class(params) = "IntamapParams"
+  return(params)
+}
+
+
 
 getIntamapDefaultParams = function(doAnisotropy = TRUE, 
   testMean = FALSE, removeBias = NA,  addBias = NA, biasRemovalMethod = "LM", 
-  nmax = 50, ngrid = 100, nsim = 100, sMin = 4, block=numeric(0),  
+  nmax = 50, nmin = 0, omax = 0, beta = NULL, maxdist = Inf, ngrid = 100, nsim = 100, sMin = 4, block=numeric(0),  
   processType="gaussian",
   confProj = FALSE, debug.level = 0, nclus = 1, ... ) {
 return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = removeBias, addBias = addBias,
   biasRemovalMethod = biasRemovalMethod, 
-  nmax = nmax, ngrid = ngrid, nsim = nsim, sMin = 4, block = block, processType = processType,
+  nmax = nmax, nmin = nmin, omax = omax, beta = beta, maxdist = maxdist, ngrid = ngrid, nsim = nsim, sMin = 4, block = block, processType = processType,
   confProj = confProj, debug.level = debug.level, nclus = nclus, ... ))
 }
 

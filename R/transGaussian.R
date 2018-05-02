@@ -2,7 +2,7 @@
 
 estimateParameters.transGaussian = function(object, ...) {
   params = getIntamapParams(object$params, ...)
-  lambda = object$params$lambda
+  lambda = params$lambda
   significant = object$params$significant = TRUE
   observations = object$observations
   formulaString = object$formulaString
@@ -35,6 +35,8 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
   dots = list(...)
   params = getIntamapParams(object$params, ...)
   nmax = params$nmax
+  maxdist = params$maxdist
+  if (is.null(maxdist)) maxdist = Inf
   debug.level = params$debug.level
   nclus = params$nclus
   if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
@@ -51,7 +53,7 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
 #             observations[[as.character(formulaString[[2]])]]+ object$TGcorrection
 
   nPred = nrow(coordinates(object$predictionLocations))
-  if ("nclus" %in% names(object$params) && nsim == 0 && nPred >= 5000 ) 
+  if ("nclus" %in% names(params) && nsim == 0 && nPred >= 5000 ) 
     nclus = params$nclus else nclus = 1
   if (nclus > 1) {
     if (!suppressMessages(suppressWarnings(requireNamespace("doParallel"))))
@@ -65,24 +67,24 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
       newPredLoc = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
       i = 1 # To avoid R CMD check complain about missing i
       pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
-        gstat::krigeTg(formulaString,observations,
-           newPredLoc[[i]],variogramModel,nmax = nmax,
+        gstat::krigeTg(formulaString, observations,
+           newPredLoc[[i]], variogramModel, nmax = nmax, maxdist = maxdist, 
            debug.level = debug.level, lambda = lambda)
       }
       pred = pred[c("var1TG.pred","var1TG.var")]
       names(pred) = c("var1.pred","var1.var")
       stopCluster(cl)
     } else {  
-      pred = krigeTg(formulaString,observations,
-           object$predictionLocations,object$variogramModel,nmax = nmax,
+      pred = krigeTg(formulaString, observations,
+           object$predictionLocations, object$variogramModel, nmax = nmax,
            debug.level = debug.level, lambda = lambda)
       pred = pred[c("var1TG.pred","var1TG.var")]
       names(pred) = c("var1.pred","var1.var")
       if (nsim >0) {
-        pred2 = krigeTg(formulaString,observations,
-           object$predictionLocations,object$variogramModel,nmax = nmax,
+        pred2 = krigeTg(formulaString, observations,
+           object$predictionLocations, object$variogramModel, nmax = nmax, maxdist = maxdist,
            debug.level = debug.level, nsim = nsim, lambda = lambda)
-        pred@data = cbind(pred@data,pred2@data)
+        pred@data = cbind(pred@data, pred2@data)
       }
     }
 
@@ -91,7 +93,7 @@ spatialPredict.transGaussian = function(object, nsim = 0, ...) {
 #    if (!is.null(object$TGcorrection)) pred$var1.pred = pred$var1.pred - object$TGcorrection
     object$predictions = pred
     if ("MOK" %in% names(object$outputWhat) | "IWQSEL" %in% names(object$outputWhat))
-      object$predictions = unbiasedKrige(object,debug.level = debug.level,...)$predictions
+      object$predictions = unbiasedKrige(object, debug.level = debug.level, ...)$predictions
   object
 }
 

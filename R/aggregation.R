@@ -13,9 +13,16 @@ spatialPredict.block = function(object,...) {
 # - for easier access
   params = getIntamapParams(object$params, ...)
   blockWhat = object$blockWhat
-  dots = list(...)
   block = params$block
+
   nmax = params$nmax
+  nmin = params$nmin
+  omax = params$omax
+  beta = params$beta
+  maxdist = params$maxdist
+  debug.level = params$debug.level
+  
+  if (is.null(maxdist)) maxdist = Inf
   observations = object$observations
   formul = object$formulaString
   predictionLocations = object$predictionLocations
@@ -44,7 +51,9 @@ spatialPredict.block = function(object,...) {
 # as it can easily create some inconsistencies.
 # We have to be sure that the variogram is also found from the logarithmised data
     if (params$processType == "logNormal") observations[[depVar]] = log(observations[[depVar]])
-      predictions = krige(object$formulaString,observations, predictionLocations,object$variogramModel,block = block,nmax = nmax)
+      predictions = krige(object$formulaString, observations, predictionLocations,
+                          object$variogramModel, block = block, nmax = nmax, maxdist = maxdist, 
+                          nmin = nmin, omax = omax, beta = beta)
     if (params$processType == "logNormal") {
       predictions$var1.pred = exp(predictions$var1.pred + predictions$var1.var/2) 
       warning("Note that the back-calculated lognormal predictor is only approximate, as the Lagrange parameter is not included")
@@ -85,17 +94,18 @@ spatialPredict.block = function(object,...) {
           params = params)
 
 # Do we need point predictions or simulations?
-# Prediction only if only need mean
+# Simulations only necessary if we need non-linear aggregates
     
-    nsim = ifelse(all(names(outputWhat)=="mean") & blockWhat == "none",0, params$nsim) 
+    nsim = ifelse(all(names(outputWhat)=="mean") & all(blockWhat == "none"),0, params$nsim) 
     vmod = object$variogramModel
     nmax = ifelse(params$nmax == Inf & dim(coordinates(pointObject$predictionLocations))[1] > 200,20,params$nmax)
-    pointObject = spatialPredict(pointObject,nsim=params$nsim,nmax = nmax, ...)
+    pointObject = spatialPredict(pointObject, nsim = nsim, nmax = nmax, maxdist = params$maxdist, 
+                                 nmin = nmin, omax = omax, beta = beta, ...)
     pointObject$predictions = pointObject$predictions[,grep("sim",names(pointObject$predictions))]
     object$pointPredictions = pointObject$predictions
     object$pointLocations = pointObject$predictionLocations
     object = spatialAggregate(object, SpP)
-    if (object$params$debug.level < 2) object$pointPredictions = 
+    if (debug.level < 2) object$pointPredictions = 
                   "pointPredictions deleted from object, debug.level < 2"
   }
   return(object)
@@ -122,13 +132,13 @@ spatialAggregate = function(object, SpP) {
   outputWhat = object$outputWhat
   blockWhat = object$blockWhat
   if ("mean" %in% names(outputWhat)) {
-     if (blockWhat == "none") blockWhat = list(mean = TRUE) else blockWhat$mean = TRUE
+     if (all(blockWhat == "none")) blockWhat = list(mean = TRUE) else blockWhat$mean = TRUE
   }
   predAggr = aggregate(sims,by=SpP,mean)
   if ("data" %in% names(getSlots(class(predictions)))) {
     predictions@data = data.frame(predictions@data,predAggr@data)
   } else predictions = SpatialDataFrame(predictions,predAggr@data)
-  if (length(blockWhat) > 0 && blockWhat != "none") {
+  if (length(blockWhat) > 0 && !all(blockWhat == "none")) {
     for (ib in 1:length(blockWhat)) {
       what = blockWhat[ib]
       if (names(what) == "fat") {

@@ -1,12 +1,14 @@
-sYamKrige = function(newCor,cmat,Obs,depVar="value",nmax,model,inv,ikri){
+sYamKrige = function(newCor, cmat, Obs, depVar="value", nmax, maxdist, model, inv, ikri){
 # Function for predicting at one location
   if (!missing(ikri) && ikri %% 100 == 0) print(ikri)
   
-  c0dist = spDistsN1(coordinates(Obs),newCor)
+  c0dist = spDistsN1(coordinates(Obs), newCor)
   clen = length(c0dist)
+  if (!missing(maxdist) && !is.infinite(maxdist) && !is.null(maxdist)) clen = sum(c0dist < maxdist)
   if (nmax < clen) clen = nmax
   iobs = order(c0dist)[1:clen]
   c0dist = c0dist[iobs]
+  if (c0dist[length(c0dist)] > maxdist)  c0Dist = c0Dist[c0Dist < maxdist]
   if (!inv) {
     cmat = cmat[iobs,iobs]
     dl = dim(cmat)[1]
@@ -15,6 +17,7 @@ sYamKrige = function(newCor,cmat,Obs,depVar="value",nmax,model,inv,ikri){
     dl = dl+1
     cmat[dl,dl] = 0
     cinv = solve(cmat)
+#    print(dim(cinv))
   } else cinv = cmat
   c0arr = variogramLine(model,dist_vector = c0dist)$gamma
   c0arr[(clen+1)] = 1
@@ -32,7 +35,7 @@ sYamKrige = function(newCor,cmat,Obs,depVar="value",nmax,model,inv,ikri){
 
 
 
-yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
+yamamotoKrige = function(formula, Obs, newPoints, model, nsim = 0, nmax = 20, maxdist = Inf) {
   depVar=as.character(formula[[2]])
  
   if (nsim >0) {
@@ -40,8 +43,8 @@ yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
     for (i in 1:nsim) {
       cat(paste("Conditional simulation ",i,"\n"))
 #  cSim = condSim(Obs,newPoints,isim=i,...)
-      cSim = condSimYama(Obs,newPoints,isim=i,model = model,depVar=depVar,nmax = nmax)
-      if (i ==1) mSim = cSim  else   mSim@data = cbind(mSim@data,cSim@data)
+      cSim = condSimYama(Obs, newPoints, isim=i, model = model, depVar=depVar, nmax = nmax, maxdist = maxdist)
+      if (i ==1) mSim = cSim  else   mSim@data = cbind(mSim@data, cSim@data)
     } 
     names(mSim) = mapply(FUN = function(i) paste("sim",i,sep=""),seq(1:nsim))
 #    coordinates(mSim) = as.formula(paste("~",names(mSim)[1],"+",names(mSim)[2]))
@@ -67,8 +70,8 @@ yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
     inv = TRUE
   } else inv = FALSE
   ikri = c(1:dl) 
-  preds = t(apply(cNew,MARGIN = 1,FUN = sYamKrige,model = model, Obs = Obs, depVar=depVar,
-    cmat = cmat,nmax = nmax,inv = inv,ikri=ikri))
+  preds = t(apply(cNew, MARGIN = 1, FUN = sYamKrige, model = model, Obs = Obs, depVar=depVar,
+    cmat = cmat, nmax = nmax, maxdist = maxdist, inv = inv, ikri=ikri))
   preds = as.data.frame(cbind(preds,cNew))
   coordinates(preds) = as.formula(paste("~",dimnames(cNew)[2][[1]][1],"+",dimnames(cNew)[2][[1]][2]))
 #  print(preds)
@@ -77,7 +80,7 @@ yamamotoKrige = function(formula,Obs, newPoints,model,nsim = 0,nmax = 20) {
 
 
 
-condSimYama = function(Obs,newPoints,isim=1,model,depVar="value",nmax = 25) {
+condSimYama = function(Obs, newPoints, isim=1, model, depVar="value", nmax = 25, maxdist = Inf) {
   if (length(names(Obs)) == 1) depVar = names(Obs)
   ccObs = coordinates(Obs)
   nObs = dim(ccObs)[1]
@@ -88,7 +91,7 @@ condSimYama = function(Obs,newPoints,isim=1,model,depVar="value",nmax = 25) {
   nPred = dim(coords)[1]
   iord = sample(c(1:nPred))
 #  nPred = 100
-
+  nmax0 = nmax
   cObs = matrix(ncol = 2,nrow=(nObs+nPred))
   cObs[1:nObs,] = ccObs
   iObs = nObs
@@ -97,7 +100,9 @@ condSimYama = function(Obs,newPoints,isim=1,model,depVar="value",nmax = 25) {
     cNew = coords[iord[inew],]
     c0dist = spDistsN1(cObs[1:iObs,],cNew)
     clen = length(c0dist)
-    if (nmax < iObs) {
+    clenshort = sum(c0dist < maxdist)
+    nmax = min(nmax0, clenshort)
+    if (nmax < clen) {
       jord = order(c0dist)
       c0dist = c0dist[jord[1:nmax]]
       rObs = cObs[jord[1:nmax],]

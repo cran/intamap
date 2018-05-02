@@ -1,24 +1,21 @@
 
 estimateParameters.automap = function(object,...) {
 
+  params = getIntamapParams(object$params, ...)
+  debug.level = params$debug.level
+
   dots = list(...)
-  if ("debug.level" %in% names(dots)) 
-  	debug.level = dots$debug.level 
-  else 
-    debug.level = object$params$debug.level
   observations = object$observations
   depVar = as.character(object$formulaString[[2]])
-  if ("model" %in% names(dots)) {
-    model = dots$model
-  } else if ("model" %in% names(object$params)) {
-    model = object$params$model
+  if ("model" %in% names(params)) {
+    model = params$model
   } else {
     if (dim(coordinates(object$predictionLocations))[1] > 100000) 
             model = c("Sph", "Exp", "Gau") else model = c("Sph", "Exp", "Gau", "Ste")
   }
     
 #estimate Anisotropy
-  if (object$params$doAnisotropy) {
+  if (params$doAnisotropy) {
     object = estimateAnisotropy(object) 
     if (object$anisPar$doRotation && all(as.character(object$formulaString[[3]])=="1")){
 			#rotate Data
@@ -56,14 +53,15 @@ estimateParameters.automap = function(object,...) {
 }
 
 spatialPredict.automap = function(object, nsim = 0, ...) {
-# This function does not take the clusters properly into account at the moment. 
-# Variograms should be estimated separately, prediction locations needs to 
-# be associated with a cluster and we need to figure out what to do in the case 
-# of 
 # 
   params = getIntamapParams(object$params, ...)
   nmax = params$nmax
+  nmin = params$nmin
+  omax = params$omax
+  beta = params$beta
+  maxdist = params$maxdist
   debug.level = params$debug.level
+  if (is.null(maxdist)) maxdist = Inf
   
     if (! "variogramModel" %in% names(object)) object = estimateParameters(object,...)
     
@@ -91,25 +89,28 @@ spatialPredict.automap = function(object, nsim = 0, ...) {
       newdlst = lapply(as.list(1:nclus), function(w) predictionLocations[splt == w,])
       i = 1 # To avoid R CMD check complain about missing i
       pred <- foreach(i = 1:nclus, .combine = rbind) %dopar% {
-        gstat::krige(formulaString,observations, 
-           newdlst[[i]],variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
+        gstat::krige(formulaString, observations, 
+           newdlst[[i]], variogramModel, nsim=nsim, nmax = nmax, nmin = nmin, omax = omax,  
+           maxdist = maxdist, beta = beta, debug.level = debug.level)
       }
 #      pred = do.call("rbind", parLapply(cl, newdlst, function(lst) 
 #          krige(formulaString,observations, 
 #           predictionLocations,variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)))
       stopCluster(cl)
     } else {  
-      pred = krige(object$formulaString,object$observations, 
-           object$predictionLocations,object$variogramModel,nsim=nsim,nmax = nmax,debug.level = debug.level)
+      pred = krige(object$formulaString, object$observations, 
+           object$predictionLocations, object$variogramModel, nmax = nmax,
+           nmin = nmin, omax = omax, maxdist = maxdist, beta = beta, debug.level = debug.level)
       if (nsim >0) {
         pred2 = krige(object$formulaString,object$observations, 
-           object$predictionLocations,object$variogramModel,nmax = nmax,debug.level = debug.level)
-        pred@data = cbind(pred2@data,pred@data)
+                      object$predictionLocations, object$variogramModel, nsim=nsim, nmax = nmax,
+                      nmin = nmin, omax = omax, maxdist = maxdist, beta = beta, debug.level = debug.level)
+        pred@data = cbind(pred2@data, pred@data)
       }
     }
     object$predictions = pred
     if ("MOK" %in% names(object$outputWhat) | "IWQSEL" %in% names(object$outputWhat))
-      object$predictions = unbiasedKrige(object,debug.level = debug.level,...)$predictions
+      object$predictions = unbiasedKrige(object, debug.level = debug.level,...)$predictions
   object
 }
 
@@ -123,13 +124,16 @@ estimateParameters.yamamoto = function(object,...) {
 
 spatialPredict.yamamoto = function(object, nsim = 0, ...) {
 # 
-  dots = list(...)
-  if ("nmax" %in% names(dots)) {
-    nmax = dots$nmax
-  } else nmax = object$params$nmax
+  params = getIntamapParams(object$params, ...)
+  nmax = params$nmax
+  nmin = params$nmin
+  omax = params$omax
+  beta = params$beta
+  maxdist = params$maxdist
+  debug.level = params$debug.level
+  if (is.null(maxdist)) maxdist = Inf
+  
   formulaString = object$formulaString
-  if ("debug.level" %in% names(dots)) debug.level = dots$debug.level else 
-    debug.level = object$params$debug.level
 
   if (!"variogramModel" %in% names(object)) {
     afv = autofitVariogram(object$formulaString,object$observations,object$predictionLocations)
@@ -137,11 +141,13 @@ spatialPredict.yamamoto = function(object, nsim = 0, ...) {
 	object$sampleVariogram = afv$exp_var
   }
                      
+
   predictions = yamamotoKrige(formulaString,object$observations, 
-            object$predictionLocations,object$variogramModel,nsim=nsim,nmax = nmax,...)
+            object$predictionLocations,object$variogramModel, nsim=nsim, nmax = nmax, maxdist = maxdist, ...)
   object$predictions = predictions
     if ("MOK" %in% names(object$outputWhat) | "IWQSEL" %in% names(object$outputWhat))
-      object$predictions = unbiasedKrige(object,debug.level = debug.level,nsim = nsim, nmax = nmax,...)$predictions
+      object$predictions = unbiasedKrige(object,debug.level = debug.level,nsim = nsim, nmax = nmax, 
+                                         nmin = nmin, omax = omax, maxdist = maxdist, beta = beta, ...)$predictions
   object
 }
 

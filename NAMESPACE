@@ -7,7 +7,7 @@ import(evd)
 import(doParallel)
 import(parallel)
 import(foreach)
-import("rgdal")
+import(rgdal)
   importFrom("grDevices", "boxplot.stats", "chull", "dev.off", "pdf",
              "rainbow")
   importFrom("graphics", "image", "par", "points", "title")

@@ -5,7 +5,7 @@
 
 \description{ordinary kriging and simulation with an alternative kriging variance}
 
-\usage{yamamotoKrige(formula,Obs, newPoints,model,nsim = 0,nmax = 20)}
+\usage{yamamotoKrige(formula, Obs, newPoints, model, nsim = 0, nmax = 20, maxdist = Inf)}
 \arguments{
 \item{formula}{formula that defines the dependent variable as a linear model of 
                independent variables; suppose the dependent variable has name 
@@ -23,6 +23,7 @@
             be used for a kriging prediction or simulation, where nearest is 
             defined in terms of the space of the spatial locations. 
             By default, all observations are used. }
+\item{maxdist}{maximum number of neighbours to use in local kriging, defaults to Inf}
 } 
 
 \value{

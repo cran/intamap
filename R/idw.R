@@ -14,13 +14,16 @@ estimateParameters.idw = function(object, ...) {
 	# add parameter estimate
 	mse = rep(NA, length(idpRange))
   if ("formulaString" %in% names(object)) formulaString = object$formulaString else formulaString = as.formula("value ~ 1")
-  dots = list(...)
-  if ("nmax" %in% names(dots)) {
-    nmax = dots$nmax
-  } else nmax = object$params$nmax
+	params = getIntamapParams(object$params, ...)
+	nmax = params$nmax
+	nmin = params$nmin
+	omax = params$omax
+	maxdist = params$maxdist
+	debug.level = params$debug.level
+	
  	for (i in seq(along = idpRange)) {
   	mse[i] = mean(krige.cv(formulaString, object$observations, nfold = nfold, 
-  	nmax = nmax, set = list(idp = idpRange[i]), verbose = params$debug.level)$residual ** 2)	
+  	nmax = nmax, nmin = nmin, omax = omax, maxdist = maxdist, set = list(idp = idpRange[i]), verbose = params$debug.level)$residual ** 2)	
 	}
   best = which(mse == min(mse))[1]
 	object$inverseDistancePower = idpRange[best]
@@ -29,16 +32,23 @@ estimateParameters.idw = function(object, ...) {
 }
 
 spatialPredict.idw = function(object, ...) {
-  dots = list(...)
+
+  
+  params = getIntamapParams(object$params, ...)
+  nmax = params$nmax
+  nmin = params$nmin
+  omax = params$omax
+  maxdist = params$maxdist
+  debug.level = params$debug.level
+  
   if (!all(names(object$outputWhat) == "mean"))
     stop(paste("It is not possible to request other prediction types than mean for method idw",
           "requested",names(object$outputWhat))) 
   if ("formulaString" %in% names(object)) formulaString = object$formulaString else formulaString = as.formula("value ~ 1")
-  if ("nmax" %in% names(dots)) {
-    nmax = dots$nmax
-  } else nmax = object$params$nmax
+  
+  if (is.null(maxdist)) maxdist = Inf
  	object$predictions = idw(formulaString, object$observations, object$predictionLocations, 
-		nmax = nmax, idp = object$inverseDistancePower, debug.level = object$params$debug.level)
+		nmax = nmax, nmin = nmin, omax = omax, maxdist = maxdist, idp = object$inverseDistancePower, debug.level = debug.level)
 	return(object)
 }
 

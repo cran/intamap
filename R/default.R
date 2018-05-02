@@ -47,11 +47,6 @@ spatialPredict.default = function(object, ...) {
 }
 
 postProcess.default = function(object, ...) {
-	# smooth over boundaries?
-
-	# spatial aggregation?
-#	if (object$blockWhat != "none")
-#		object = spatialAggregate(object)
 
 # Tranform output to requested target projection
   if (requireNamespace("rgdal")) {

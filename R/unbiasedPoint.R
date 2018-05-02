@@ -1,8 +1,19 @@
 
 
-unbiasedKrige = function(object,formulaString,observations,predictionLocations,model,
-     outputWhat,nmax,nsim,yamamoto,iwqmaxit = 500, iwqCpAddLim = 0.0001, debug.level,...) {
+unbiasedKrige = function(object, formulaString, observations, predictionLocations, model,
+     outputWhat, yamamoto, iwqmaxit = 500, iwqCpAddLim = 0.0001, debug.level, ...) {
   dots = list(...)
+  
+  
+  params = getIntamapParams(object$params, ...)
+  nmax = params$nmax
+  nmin = params$nmin
+  omax = params$omax
+  beta = params$beta
+  nsim = params$nsim
+  maxdist = params$maxdist
+  debug.level = params$debug.level
+  
   if (is(object,"Spatial")) {
     predictions = object
     iwqs = outputWhat[names(outputWhat) == "IWQSEL"]
@@ -12,27 +23,22 @@ unbiasedKrige = function(object,formulaString,observations,predictionLocations,m
         formulaString = as.formula(paste(names(observations)[1],"~1"))
         print(paste("warning: formulaString not given, using ",formulaString))
       }
-      if (missing(nsim) || nsim == 0) nsim = 100
-      if (missing(nmax)) nmax = 10  
     }
     if (missing(predictionLocations)) predictionLocations = predictions
   } else {
     outputWhat = object$outputWhat
     iwqs = outputWhat[names(outputWhat) == "IWQSEL"]
     predictions = object$predictions
-    params = object$params
     if (missing(debug.level)) debug.level = object$debug.level
     if (length(iwqs) > 0) {
       model = object$variogramModel
       formulaString = object$formulaString
       observations = object$observations
-      if (missing(nsim)) nsim = object$params$nsim
-      if (missing(nmax)) nmax = object$params$nmax
-      if (nsim == 0) nsim = 100
       if (missing(predictionLocations)) predictionLocations = object$predictionLocations
     }
   }
-
+  if (nsim == 0) nsim = 100
+  if (is.null(maxdist)) maxdist = Inf
 # Creating the accumulative distribution function
   acdf = acdfDef(predictions,...)
 #  
@@ -42,10 +48,10 @@ unbiasedKrige = function(object,formulaString,observations,predictionLocations,m
 #    Simulations necessary
       if (inherits(object,"yamamoto") | ("yamamoto" %in% names(dots) && dots$yamamoto)) { 
         zPred = yamamotoKrige (formulaString,observations,predictionLocations,
-          nsim=nsim,nmax = nmax,model = model,...) 
+          nsim=nsim, nmax = nmax, maxdist = maxdist, model = model) 
       } else {
         zPred = krige(formulaString,observations,predictionLocations,
-                 nsim=nsim,model = model,nmax=nmax,...)
+                 nsim=nsim, maxdist = maxdist, model = model, nmax=nmax, nmin = nmin, omax = omax, beta = beta)
         print("Finished simulations")
       }
     } else {

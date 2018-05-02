@@ -1,4 +1,4 @@
-getOutputTable = function(object) {
+ getOutputTable = function(object) {
 	what = object$outputWhat
 	pred = object$predictions
 	nCols = length(what)

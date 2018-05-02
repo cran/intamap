@@ -68,7 +68,7 @@ the \code{idpRange}}
 \item{\code{linearVariogram}}{this function just returns the original data, no parameter 
 fitting is necessary for linear variogram kriging}
 
-%\item{\code{psgp}}{finding the best variogram model using \code{\link[psgp]{learnParameters}} in the \emph{psgp} package}
+\item{\code{psgp}}{finding the best variogram model using \code{\link[psgp]{learnParameters}} in the \emph{psgp} package}
 
 \item{\code{transGaussian}}{Finding the best model parameters for transGaussian kriging 
          (\code{\link[gstat]{krigeTg}}). This means finding the best \code{lambda} for 

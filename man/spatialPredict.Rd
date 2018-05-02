@@ -64,7 +64,7 @@ about particular interpolation methods
 \item{\code{linearVariogram}}{this function estimates the process using an unfitted linear variogram; although variance is returned it can not be relied upon}
 
   
-%\item{\code{psgp}}{spatial prediciton using the \code{\link[psgp]{makePrediction}} in the \emph{psgp} package}
+\item{\code{psgp}}{spatial prediciton using the \code{\link[psgp]{makePrediction}} in the \emph{psgp} package}
 
 \item{\code{transGaussian}}{spatial prediction using \code{\link[gstat:krigeTg]{krigeTg}}}
 

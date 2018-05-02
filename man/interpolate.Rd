@@ -83,7 +83,7 @@ arguments are \code{observations} and \code{predictionLocations}. It is also rec
 to set \code{outputWhat}, and \code{blockWhat} if necessary. If \code{outputWhat}
 contains \code{nsim}, the return table will also contain a number of realisations,
 for methods able to return simulations. 
-%These are at the moment \code{automap} and \code{psgp}.
+These are at the moment \code{automap} and \code{psgp}.
 
 \code{interpolate} can use different interpolation methods for the result. The function
 will internally call the following functions which can be method specific.
@@ -97,12 +97,13 @@ An indication of available methods can be given by \code{methods(estimateParamet
 or \code{methods(spatialPredict)}.
 The method can be set through the argument \code{methodName}, or through the 
 built-in automatic selection method. There are different criteria that helps 
-in selecting the right method for a particular data set. There are four 
+in selecting the right method for a particular data set. There are three 
 methods that are available for the automatic choice:
 \code{automap}, \code{psgp} (from the separate package \code{psgp}) 
 \code{copula} and \code{transgaussian} are the possibilities. 
 First of all, if observation errors are present, the \code{psgp} method is preferred. 
-If not, it is checked whether the data appear to deviate significantly from normality. 
+If not,
+it is checked whether the data appear to deviate significantly from normality. 
 This is assumed to be the case if any of the tests below are TRUE:
 
 \preformatted{
