@@ -211,9 +211,12 @@ estimateAnisotropySc<-function(x, y, r, len=length(x), method="linear", min.x=mi
   if (length(x) < 1500) {
 	  mesh<-meshgrid(xn,yn)
     ri<-biharmonicSplineAnisotropy(x,y,r,mesh$x,mesh$y)     
-  } else if (FALSE) {
+#  } else if (FALSE) {
+# JOS The following statement was removed for some reason, due to an issue
+# with MBA. Not able to find the reason now, might have been an 
+# earlier dependency on akima (non GPL)?
+  } else if (TRUE) {
     dat = data.frame(x = x, y = y, z = r)
-#    require(MBA)
     yex = max(y) - min(y)
     xex = max.x - min.x
     emax = max(yex, xex)
@@ -221,7 +224,7 @@ estimateAnisotropySc<-function(x, y, r, len=length(x), method="linear", min.x=mi
     ri <- mba.surf(dat, length(xn), length(yn))$xyz.est
     rri <- mba.surf(dat, max(length(xn),length(yn)), max(length(xn),length(yn)))$xyz.est
     mesh = meshgrid(ri$x, ri$y)
-  } else  warning("There is currently no method implemented for anisotropy detection in large data sets")
+  } else  warning("There is currently no method implemented for anisotropy detection in large data sets (above 1500 records)")
     		
 	#calculate anisotropy parameters over regular grid 
 	res=estimateAnisotropyGrid(mesh$x,mesh$y,ri$z)

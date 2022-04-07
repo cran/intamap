@@ -1,8 +1,8 @@
 data(intamap)
-require(rworldmap)
+if (!require(rworldmap)) stop("The demo needs rworldmap, please install")
 countryBoundaries = getMap()
-proj4string(observations) = "+init=epsg:4236"
-observations$country = countryBoundaries$ISO3[overlay(observations, countryBoundaries)]
+proj4string(observations) = "+init=epsg:4326"
+observations$country = over(observations, countryBoundaries)$ISO3
 # removing observations that have fallen outside country borders, mostly
 # because of the use of a low resolution map
 observations = observations[!is.na(observations$country),]

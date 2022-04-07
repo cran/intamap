@@ -53,43 +53,17 @@ predictTime=function(nObs,nPred,class,formulaString,calibration=FALSE,outputWhat
     for (ite in 1:2) {
       if (ite == 2 && nObs > nObsMax) nObs = nObsMax
       if (ite == 2 && nPred > nPredMax) nObs = nPredMax
-      eTime[ite] = predict(eModels,data.frame(nObs = nObs),se=TRUE)[[1]]
+      eTime[ite]<-predict(eModels,data.frame(nObs=nObs),se=TRUE)[[1]]
       if (class == "copula") {
       	nType = length(names(outputWhat)[!(names(outputWhat) %in% c("mean","variance"))])
         pModels=timeModels[[as.character(FUN)]]$pTimeModel
-	      pTime[ite] = predict(pModels, data.frame(nObs = nObs, nPred = nPred, nType = nType),se=TRUE)[[1]] 	  
-        if (ite == 2) {
-          pTime[3] = predict(pModels, data.frame(nObs = 1, nPred = nPred, nType = nType),se=TRUE)[[1]]
-          pTime[4] = predict(pModels, data.frame(nObs = nObs, nPred = 1,nType = nType),se=TRUE)[[1]]
-          for (ii in 5:15) {
-            pTime[ii] = predict(pModels, data.frame(nObs = floor(runif(1)*nObs), nPred = floor(runif(1)*nPred), nType = nType),se=TRUE)[[1]]
-          }
-        }
-	      tmm = tmm[tmm$nType == nType, ]
-	    } else {
+	      pTime[ite]<-predict(pModels,data.frame(nObs=nObs,nPred=nPred,nType = nType),se=TRUE)[[1]] 	  
+     	} else {
         pModels = timeModels[[as.character(FUN)]]$pTimeModel
-      	pTime[ite] = predict(pModels, data.frame(nObs = nObs, nPred = nPred), se=TRUE)[[1]]
-      	if (ite == 2) {
-      	  pTime[3] = predict(pModels, data.frame(nObs = 1, nPred = nPred),se=TRUE)[[1]]
-      	  pTime[4] = predict(pModels, data.frame(nObs = nObs, nPred = 1),se=TRUE)[[1]]
-      	  for (ii in 5:15) {
-      	    pTime[ii] = predict(pModels, data.frame(nObs = floor(runif(1)*nObs), 
-      	                                            nPred = floor(runif(1)*nPred)),se=TRUE)[[1]]
-      	  }
-      	}
-	    }
-      oints = sort(unique(tmm$nObs))
-      pints = sort(unique(tmm$nPred))
-      omin = max(oints[oints < nObs])
-      omax = min(oints[oints >= nObs])
-      pmin = max(pints[pints < nPred])
-      pmax = min(pints[pints >= nPred])
-      pts = tmm[(tmm$nObs %in% c(omin, omax) & tmm$nPred %in% c(pmin, pmax)), ]
-      newt = 1/(omax-omin)/(pmax-pmin)*matrix(c(omax-nObs, nObs-omin), nrow = 1) %*%
-                 matrix(pts$Time, nrow = 2, byrow = TRUE) %*% matrix(c(pmax - nPred, nPred - pmin), nrow = 2)
-      pTime = c(pTime, newt)
+      	pTime[ite]<-predict(pModels,data.frame(nObs=nObs,nPred=nPred),se=TRUE)[[1]]
+      }
     }
-
+    
     predTime = max(eTime) + max(pTime)
     if (predTime < 2) predTime = 2
 #  ind=which(result$fit<2)
@@ -378,8 +352,8 @@ generateTimeModels=function(genClasses = NULL, noGenClasses = NULL,nSam = 1, tes
 #	namespace=c("estimateAnisotropy","doSegmentation")
 #	formulas=c("value~1","value~r1+r2")
 	formulas=c("value~1")
-	classes=c("linearVariogram", "automap")
-	classes2=c("transGaussian", "copula", "idw", "psgp")
+	classes=c("linearVariogram","automap")
+	classes2=c("transGaussian","copula","psgp","idw")
 	timeModels=NULL
   if (!is.null(genClasses)) {
     classes = classes[classes %in% genClasses]

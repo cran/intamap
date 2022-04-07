@@ -1,7 +1,5 @@
-sYamKrige = function(newCor, cmat, Obs, depVar="value", nmax, maxdist, model, inv, ikri){
-# Function for predicting at one location
-  if (!missing(ikri) && ikri %% 100 == 0) print(ikri)
-  
+sYamKrige = function(newCor, cmat, Obs, depVar="value", nmax, maxdist, model, inv){
+
   c0dist = spDistsN1(coordinates(Obs), newCor)
   clen = length(c0dist)
   if (!missing(maxdist) && !is.infinite(maxdist) && !is.null(maxdist)) clen = sum(c0dist < maxdist)
@@ -69,9 +67,8 @@ yamamotoKrige = function(formula, Obs, newPoints, model, nsim = 0, nmax = 20, ma
     cmat = solve(cmat)
     inv = TRUE
   } else inv = FALSE
-  ikri = c(1:dl) 
   preds = t(apply(cNew, MARGIN = 1, FUN = sYamKrige, model = model, Obs = Obs, depVar=depVar,
-    cmat = cmat, nmax = nmax, maxdist = maxdist, inv = inv, ikri=ikri))
+    cmat = cmat, nmax = nmax, maxdist = maxdist, inv = inv))
   preds = as.data.frame(cbind(preds,cNew))
   coordinates(preds) = as.formula(paste("~",dimnames(cNew)[2][[1]][1],"+",dimnames(cNew)[2][[1]][2]))
 #  print(preds)

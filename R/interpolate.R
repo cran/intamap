@@ -253,7 +253,7 @@ methodNames = c("copula","automap")
  nPred = ifelse(is.numeric(predictionLocations), predictionLocations, 
         nrow(coordinates(predictionLocations)))
  
-if (length(obsChar) > 0 && !is.na(obsChar) && requireNamespace("psgp")) {
+if (length(obsChar) > 0 && !is.na(obsChar) ) { #} && requireNamespace("psgp")) {
   pTime = predictTime(nObs= dim(observations)[1], 
           nPred = nPred, formulaString = formulaString,
           class="psgp", outputWhat = outputWhat)

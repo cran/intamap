@@ -206,7 +206,7 @@ prediction locations.}
 \item{confProj = FALSE}{If set, the program will attempt conform projections in \code{\link{preProcess}},
                 calling the function \code{\link{conformProjections}}.}
 \item{nclus = 1}{The number of clusters to use, if applying to a method which can 
-   run processes in parallel. Currently implemented for methods \code{automap} and 
+   run processes in parallel. Currently implemented for methods \code{automap},
    \code{copula} and \code{psgp}.}
 \item{debug.level = 0}{Used in some functions for giving additional output. See 
                 individual functions for more information. }
