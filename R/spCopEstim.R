@@ -221,7 +221,7 @@ logis=list(name=margin$name,bounds=list(lower=c(-Inf,0.01),upper=c(Inf,Inf)),par
 `gammatesting` <-
 function(data){
 params<-try(fitdistr(data,"gamma")$estimate,TRUE)
-if(class(params)!="try-error"){
+if(!is(params, "try-error")){
 pvalue<-ks.test(data,pgamma,params[1],params[2])$statistic
 l<-list(params=params,pvalue=pvalue)
 } else {
@@ -233,8 +233,8 @@ l
 `logistesting` <-
 function(data){
 params<-try(fitdistr(data,"logistic")$estimate,TRUE)
-if(class(params)!="try-error"){
-pvalue<-ks.test(data,plogis,params[1],params[2])$statistic
+if(!is(params, "try-error")){
+  pvalue<-ks.test(data,plogis,params[1],params[2])$statistic
 l<-list(params=params,pvalue=pvalue)
 } else {
 l<-list(params=NULL,pvalue=Inf)
@@ -264,8 +264,8 @@ normtesting(log(data))
 `ttesting` <-
 function(data){
 params<-try(fitdistr(data,"t",start=NULL,s=1)$estimate,TRUE)
-if(class(params)!="try-error"){
-pvalue<-ks.test(data,pt,params[2],params[1])$statistic
+if(!is(params, "try-error")){
+  pvalue<-ks.test(data,pt,params[2],params[1])$statistic
 l<-list(params=c(params[2],params[1]),pvalue=pvalue)
 } else {
 l<-list(params=NULL,pvalue=Inf)
@@ -563,8 +563,8 @@ mu0 = b[1];
 if((k0 < 0 && (xmax > -sigma0/k0+mu0)) || (k0 > 0 && (xmin < -sigma0/k0+mu0))){
 
     p<-try(fgev(data,std.err=FALSE)$param)
-    if(class(p)!="try-error"){
-    	 mu0=p[1]
+    if(!is(p, "try-error")){
+      mu0=p[1]
     	 sigma0=p[2]
        k0=0;
     } else {

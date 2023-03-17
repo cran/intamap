@@ -32,25 +32,7 @@
 ########################################
 
 
-getIntamapParams2 = function(oldPar, newPar,...){
-  dots = list(...)
-  twoLists = FALSE
-  if (!missing(oldPar) && !inherits(oldPar,"IntamapParams")) {
-    if (!missing(newPar) && !is.null(dots)) {
-      newPar2 = newPar 
-      newPar = oldPar 
-      twoLists = TRUE
-    }  else newPar = oldPar
-    oldPar = getIntamapDefaultParams()
-  } else if (missing(oldPar)) {
-    oldPar = getIntamapDefaultParams()
-  }
-  if (!missing(newPar)) oldPar = modifyList(oldPar,newPar)
-  if (twoLists) oldPar = modifyList(oldPar,newPar2)
-  if (length(dots) >0) oldPar = modifyList(oldPar,dots)
-  class(oldPar) = "IntamapParams"
-  return(oldPar)
-}
+
 
 getIntamapParams = function(oldPar, newPar,...){
 
@@ -69,11 +51,11 @@ getIntamapDefaultParams = function(doAnisotropy = TRUE,
   testMean = FALSE, removeBias = NA,  addBias = NA, biasRemovalMethod = "LM", 
   nmax = 50, nmin = 0, omax = 0, beta = NULL, maxdist = Inf, ngrid = 100, nsim = 100, sMin = 4, block=numeric(0),  
   processType="gaussian",
-  confProj = FALSE, debug.level = 0, nclus = 1, ... ) {
+  confProj = FALSE, debug.level = 0, nclus = 1, usergdal = FALSE, ... ) {
 return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = removeBias, addBias = addBias,
   biasRemovalMethod = biasRemovalMethod, 
   nmax = nmax, nmin = nmin, omax = omax, beta = beta, maxdist = maxdist, ngrid = ngrid, nsim = nsim, sMin = 4, block = block, processType = processType,
-  confProj = confProj, debug.level = debug.level, nclus = nclus, ... ))
+  confProj = confProj, debug.level = debug.level, nclus = nclus, usergdal = FALSE, ... ))
 }
 
 
@@ -82,22 +64,53 @@ return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = remov
 createIntamapObject = function(observations, obsChar, formulaString, predictionLocations=100,
   targetCRS,boundaries,boundaryLines,intCRS, params=list(),boundFile,lineFile,class="idw",
   outputWhat, blockWhat = "none",...) {
+  
+  if (!inherits(observations, "Spatial")) observations = as(observations, "Spatial")
+  if (inherits(predictionLocations, "sf") | inherits(predictionLocations, "stars")) predictionLocations = as(predictionLocations, "Spatial")
   object = list()
   dots = list(...)
+  
+  rgdalMessage = FALSE
+  rgdalMessage2 = FALSE
+  rgdalMessage3 = FALSE
+  usergdal = getIntamapParams()$usergdal
+  if ("usergdal" %in% names(params)) usergdal = params$usergdal else if ("usergdal" %in% names(dots)) usergdal = dots$usergdal
   if ("targetCRS" %in% names(params) && missing(targetCRS)) {
     targetCRS = params$targetCRS
     params = params[-which(names(params) == "targetCRS")]
-    if (requireNamespace("rgdal")) targetCRS = CRSargs(CRS(targetCRS))
+    if (usergdal) {
+      if (requireNamespace("rgdal", quietly = TRUE)) targetCRS = rgdal::CRSargs(CRS(targetCRS)) else rgdalMessage = TRUE
+    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
   }
   if ("intCRS" %in% names(params) && missing(intCRS)) {
     intCRS = params$intCRS
     params = params[-which(names(params) == "intCRS")]
-    if (requireNamespace("rgdal")) intCRS = CRSargs(CRS(intCRS))
+    if (usergdal) {
+      if (requireNamespace("rgdal", quietly = TRUE)) intCRS = rgdal::CRSargs(CRS(intCRS)) else rgdalMessage = TRUE
+    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
   }
-  if (!is.na(proj4string(observations)) && requireNamespace("rgdal")) 
-      observations@proj4string = CRS(proj4string(observations))
-  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations)) && requireNamespace("rgdal")) 
-      predictionLocations@proj4string = CRS(proj4string(predictionLocations))
+  if (!is.na(proj4string(observations))) {
+    if (usergdal) {
+      if (requireNamespace("rgdal", quietly = TRUE)) {
+        observations@proj4string = CRS(proj4string(observations)) 
+      } else  rgdalMessage = TRUE
+    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
+  }
+  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations))) {
+    if (usergdal) {
+      if (requireNamespace("rgdal", quietly = TRUE)) 
+           predictionLocations@proj4string = CRS(proj4string(predictionLocations)) else rgdalMessage = TRUE
+    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
+  }
+  
+  if (rgdalMessage) print("rgdal is not installed, standardization of projections is not possible")
+  if (rgdalMessage3) print("standardization of projections is not possible when usergdal = FALSE")
+  if (rgdalMessage2) print("rgdal is about to be retired. After this, some of the checks on projections in the intamap package will disappear")
+  
   if (!missing(observations) && !extends(class(observations),"Spatial")) 
   	stop("observations not object of class Spatial*")
   if (missing(observations)) 
@@ -144,11 +157,8 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
     object$params = getIntamapParams(params) 
   if (!missing(boundaries)) {
     objectboundaries = boundaries
-  } else if (!missing(boundFile) && requireNamespace("rgdal")) {
-  	# EJP:
-    #if (require(maptools)) object$boundaries = readShapePoly(boundFile) else
-    #  warning("maptools not installed, not able to read boundaries")
-	  object$boundaries = readOGR(".", boundFile)
+  } else if (!missing(boundFile) && object$params$usergdal && requireNamespace("rgdal")) {
+	  object$boundaries = rgdal::readOGR(".", boundFile)
   }
   if (!missing(boundaryLines)) {
     object$boundaryLines = boundaryLines
@@ -253,13 +263,13 @@ conformProjections = function(object) {
   predictionLocations = object$predictionLocations
   obsCRS = proj4string(observations)
   predCRS = proj4string(predictionLocations)
-  if (requireNamespace("rgdal")) {
+  if (requireNamespace("rgdal", quietly = TRUE)) {
     if ("intCRS"%in% names(object)) {
       intCRS = object$intCRS
-    } else if (CRSargs(CRS(obsCRS)) == CRSargs(CRS(predCRS)) && !length(grep("longlat",obsCRS)) >0) {
-      intCRS = CRSargs(CRS(obsCRS))
+    } else if (rgdal::CRSargs(CRS(obsCRS)) == rgdal::CRSargs(CRS(predCRS)) && !length(grep("longlat",obsCRS)) >0) {
+      intCRS = rgdal::CRSargs(CRS(obsCRS))
     } else {
-      if ("targetCRS" %in% names(object) && !length(grep("longlat", CRSargs(CRS(object$targetCRS)))) > 0) {
+      if ("targetCRS" %in% names(object) && !length(grep("longlat", rgdal::CRSargs(CRS(object$targetCRS)))) > 0) {
         targetCRS = object$targetCRS
         intCRS = targetCRS
       } else {
@@ -276,19 +286,56 @@ conformProjections = function(object) {
         }
       }
     }
-    if (CRSargs(CRS(obsCRS)) != CRSargs(CRS(intCRS))) 
+    if (rgdal::CRSargs(CRS(obsCRS)) != rgdal::CRSargs(CRS(intCRS))) 
        object$observations = spTransform(observations,CRS(intCRS))
-    if (CRSargs(CRS(predCRS)) != CRSargs(CRS(intCRS))) 
+    if (rgdal::CRSargs(CRS(predCRS)) != rgdal::CRSargs(CRS(intCRS))) 
       object$predictionLocations = spTransform(predictionLocations,CRS(intCRS))
     if (!is.null(object$boundaries)) {
     	boundaries = object$boundaries
       boundCRS = proj4string(object$boundaries)
-    	if (CRSargs(CRS(boundCRS)) != CRSargs(CRS(intCRS))) 
+    	if (rgdal::CRSargs(CRS(boundCRS)) != rgdal::CRSargs(CRS(intCRS))) 
       	object$boundaries = spTransform(boundaries,CRS(intCRS))
     }
-    if (!intCRS %in% names(object)) object$intCRS = intCRS
+    if (!"intCRS" %in% names(object)) object$intCRS = intCRS
   } else {
-    warning("intamap: rgdal not installed, not able to transform coordinates, if necessary")
+    sfobs = as(observations, "sf")
+    sfpred = as(predictionLocations, "sf")
+    obsCRS = st_crs(sfobs)
+    predCRS = st_crs(sfpred)
+    if ("intCRS"%in% names(object)) {
+      intCRS = object$intCRS
+    } else if (obsCRS == predCRS && !length(grep("longlat",obsCRS)) >0) {
+      intCRS = obsCRS
+    } else {
+      if ("targetCRS" %in% names(object) && !length(grep("longlat", st_crs(object$targetCRS))) > 0) {
+        targetCRS = object$targetCRS
+        intCRS = targetCRS
+      } else {
+        targetCRS = predCRS
+        if (!length(grep("longlat",obsCRS)) > 0) {
+          intCRS = obsCRS
+        } else {
+          if (!length(grep("longlat",predCRS)) >0) {
+            intCRS = predCRS
+          } else {                
+            #          intCRS = "+init=epsg:3035"
+            stop("Interpolation in longlat not possible, a projection is needed.")          
+          } 
+        }
+      }
+    }
+    if (obsCRS != st_crs(intCRS))
+      object$observations = as(st_transform(sfobs, crs = st_crs(intCRS)), "Spatial")
+    if (predCRS != st_crs(intCRS))  
+      object$predictionLocations = as(st_transform(sfpred, crs = st_crs(intCRS)), "Spatial")
+    if (!is.null(object$boundaries)) {
+      boundaries = object$boundaries
+      boundCRS = st_crs(as(object$boundaries, "sf"))
+      if (boundCRS != st_crs(intCRS)) 
+        object$boundaries = as(st_transform(as(boundaries, "sf"), crs = st_crs(intCRS)), "Spatial")
+    }
+    if (!"intCRS" %in% names(object)) object$intCRS = intCRS
+    
   }
 	return(object)
 }

@@ -49,10 +49,15 @@ spatialPredict.default = function(object, ...) {
 postProcess.default = function(object, ...) {
 
 # Tranform output to requested target projection
-  if (requireNamespace("rgdal")) {
-    if ("targetCRS" %in% names(object) && 
-        (CRSargs(CRS(proj4string(object$predictions))) != CRSargs(CRS(object$targetCRS)))){
-      object$predictions = spTransform(object$predictions,CRS(object$targetCRS))
+    if ("targetCRS" %in% names(object)) {
+      targetCRS = object$targetCRS
+      if (proj4string(object$predictions) != targetCRS) {
+        if (object$params$usergdal && requireNamespace("rgdal", quietly = FALSE)) {
+          targetCRS = rgdal::CRSargs(CRS(object$targetCRS))
+          object$predictions = spTransform(object$predictions,CRS(object$targetCRS))
+        } else {
+          object$predictions = as(st_transform(as(object$predictions, "sf"), crs = targetCRS), "Spatial")
+        }
     }
   }
 # find out what to output
@@ -63,5 +68,4 @@ postProcess.default = function(object, ...) {
 	return(object)
 }
 
-#		blockFat=TRUE,??
 

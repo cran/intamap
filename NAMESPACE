@@ -1,4 +1,5 @@
 import(sp)
+import(sf)
 import(gstat)
 import(automap)
 import(mvtnorm)
@@ -8,7 +9,6 @@ import(MBA)
 import(doParallel)
 import(parallel)
 import(foreach)
-import("rgdal")
   importFrom("grDevices", "boxplot.stats", "chull", "dev.off", "pdf",
              "rainbow")
   importFrom("graphics", "image", "par", "points", "title")

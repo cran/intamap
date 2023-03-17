@@ -136,8 +136,8 @@ spatialAggregate = function(object, SpP) {
   }
   predAggr = aggregate(sims,by=SpP,mean)
   if ("data" %in% names(getSlots(class(predictions)))) {
-    predictions@data = data.frame(predictions@data,predAggr@data)
-  } else predictions = SpatialDataFrame(predictions,predAggr@data)
+    predictions@data = data.frame(data.frame(predictions),data.frame(predAggr)) 
+  } else predictions = SpatialDataFrame(predictions,data.frame(predAggr))
   if (length(blockWhat) > 0 && !all(blockWhat == "none")) {
     for (ib in 1:length(blockWhat)) {
       what = blockWhat[ib]

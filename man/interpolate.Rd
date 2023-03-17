@@ -7,11 +7,11 @@
 interpolate(observations, predictionLocations, 
             outputWhat = list(mean = TRUE, variance = TRUE), 
             obsChar = NA, methodName = "automatic", maximumTime = 30, 
-            optList = list(), cv = FALSE)
+            optList = list(), cv = FALSE, ...)
 interpolateBlock(observations, predictionLocations, outputWhat, 
             blockWhat = "none", obsChar = NA, methodName = "automatic", 
             maximumTime = 30, 
-            optList = list())
+            optList = list(), ...)
 }
 \arguments{
 \item{observations}{observation data, object of class \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}}. 
@@ -44,6 +44,7 @@ interpolateBlock(observations, predictionLocations, outputWhat,
                      }                  
                }
 \item{cv}{If cross-validation should be done}
+\item{...}{other arguments to be passed to other functions}
 } 
 
 

@@ -45,6 +45,7 @@ Pebesma, E., Cornford, D., Dubois, G., Heuvelink, G.B.M., Hristopulos, D., Pilz,
 \author{ Jon Olav Skoien}
 
 \examples{
+sessionInfo()
 data(meuse)
 coordinates(meuse) = ~x+y
 meuse$value = log(meuse$zinc)

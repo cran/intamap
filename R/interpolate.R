@@ -1,15 +1,21 @@
 
 interpolate = function(observations, predictionLocations, 
               outputWhat = list(mean = TRUE, variance = TRUE), obsChar = NA, 
-              methodName = "automatic", maximumTime = 30, optList = list(), cv = FALSE) {
+              methodName = "automatic", maximumTime = 30, optList = list(), cv = FALSE, ...) {
   startTime = Sys.time()
 #  save.image("debug.img")
-  npred = ifelse(is.numeric(predictionLocations), predictionLocations, 
-        nrow(coordinates(predictionLocations)))
-  msg = paste("R", startTime, "interpolating", nrow(coordinates(observations)), "observations,",
-    npred, "prediction locations\n")
+  nPred = ifelse(is.numeric(predictionLocations), predictionLocations, 
+        if (inherits(predictionLocations, "Spatial")) nrow(coordinates(predictionLocations)) else dim(predictionLocations)[1])
+  msg = paste("R", startTime, "interpolating", nrow(observations), "observations,",
+    nPred, "prediction locations\n")
 #    npred, "prediction locations", ifelse(cv, ", crossvalidating", " "), "\n")
   cat(msg)
+  
+  obsIsSf = FALSE
+  if (inherits(observations, "sf")) {observations = as(observations, "Spatial"); obsIsSf = TRUE}
+  if (inherits(predictionLocations, "sf")) predictionLocations = as(predictionLocations, "Spatial")
+  
+  
   if ("formulaString" %in% names(optList)) {
     formulaString = as.formula(optList$formulaString) 
   } else {
@@ -34,7 +40,7 @@ interpolate = function(observations, predictionLocations,
 #    predTime = try(predictTime("spatialPredict",nObs= dim(observations)[1], 
 #          nPred = dim(coordinates(predictionLocations))[1], formula = value~1, class = methodName, outputWhat = outputWhat))
     predTime = predictTime(nObs= dim(observations)[1], 
-          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, 
+          nPred = nPred, formulaString = formulaString, 
           class = methodName, outputWhat = outputWhat, FUN = "spatialPredict")
     if (is.na(predTime)) {
       warning(paste("was not able to estimate prediction time for methodName",methodName))
@@ -52,16 +58,8 @@ interpolate = function(observations, predictionLocations,
 		outputWhat = outputWhat,
 		obsChar = obsChar,
     params = getIntamapParams(localParams),
-    class = methodName
-    )
-#	krigingObject$returnPlot = TRUE
-	# it is here that the cleverness of auto method selection should take place;
-	# as of now, there's only:
-	# in addition: anisotropy estimation
-	#if (time_available > time_needed_for_Copula(nrow(observatsion), nrow(predictionLocations)))
-	#	class(krigingObject) = "spatialCopula"
-	#else
-	
+    class = methodName )
+
 # check:
 	debug.level = krigingObject$params$debug.level	
   checkSetup(krigingObject)
@@ -69,7 +67,7 @@ interpolate = function(observations, predictionLocations,
 	krigingObject = preProcess(krigingObject)
   if (is.null(krigingObject$variogramModel) && is.null(krigingObject$copulaParams)
                 && is.null(krigingObject$inverseDistancePower)) {
-    krigingObject = estimateParameters(krigingObject)
+    krigingObject = estimateParameters(krigingObject, ...)
   }
   krigingObjectMp = try(methodParameters(krigingObject))
   if (!is(krigingObjectMp,"try-error")) krigingObject = krigingObjectMp
@@ -86,7 +84,7 @@ interpolate = function(observations, predictionLocations,
       kObj$predictionLocations = krigingObject$observations[i,]
       kObj$observations = krigingObject$observations[-i,]
       if (debug.level == 0) {
-        tmp = capture.output(kObj <- spatialPredict(kObj))
+        tmp = capture.output(kObj <- spatialPredict(kObj, ...))
       } else kObj <- spatialPredict(kObj)
       if ("var1.pred" %in% names(kObj$predictions) & "var1.var" %in% names(kObj$predictions)) {
         predictions@data[i,1:2] = kObj$predictions@data[,c("var1.pred", "var1.var")]
@@ -115,6 +113,11 @@ interpolate = function(observations, predictionLocations,
 # Create a table easier to handle for the WPS   
 	krigingObject$outputTable = toJava(krigingObject$outputTable)
 	attr(krigingObject$outputTable, "transposed") = TRUE
+	if (obsIsSf) {
+	  krigingObject$observations = as(krigingObject$observations, "sf")
+	  krigingObject$predictionLocations = as(krigingObject$predictionLocations, "sf")
+	}
+	
   return(krigingObject)
 }
 
@@ -122,7 +125,14 @@ interpolate = function(observations, predictionLocations,
 
 
 interpolateBlock = function(observations, predictionLocations, outputWhat,  blockWhat = "none", 
-     obsChar = NA, methodName = "automatic", maximumTime = 30, optList = list()) {
+     obsChar = NA, methodName = "automatic", maximumTime = 30, optList = list(), ...) {
+  obsIsSf = FALSE
+  if (inherits(observations, "sf")) {
+    obsIsSf = TRUE
+    observations = as(observations, "Sptial")
+    predictionLocations = as(predictionLocations, "Sptial")
+  }
+  
   startTime = Sys.time()
   msg = paste("R", startTime, "interpolating", nrow(coordinates(observations)), "observations,",
     nrow(coordinates(predictionLocations)), "prediction locations\n")
@@ -141,12 +151,19 @@ interpolateBlock = function(observations, predictionLocations, outputWhat,  bloc
     debugOut = textConnection("debugOutput","w")
     sink(debugOut, split=TRUE)
   }
+  if (inherits(observations, "Spatial")) {
+    nObs = dim(coordinates(observations))[1]
+    nPred = dim(coordinates(predictionLocations))[1]
+  } else if (inherits(observations, "sf")) {
+    nObs = dim(observations)[1]
+    nPred = dim(predictionLocations)[1]
+  }
   
   if (methodName == "automatic") {
     methodName = chooseMethod(observations,predictionLocations,formulaString,obsChar,maximumTime, outputWhat)
   } else {
-    predTime = predictTime(nObs= dim(observations)[1], 
-          nPred = dim(coordinates(predictionLocations))[1], formulaString = formulaString, 
+    predTime = predictTime(nObs = nObs, 
+          nPred = nPred, formulaString = formulaString, 
           class = methodName, outputWhat = outputWhat, FUN = "spatialPredict")
     if (is.na(predTime)) {
       warning(paste("was not able to estimate prediction time for methodName",methodName))
@@ -156,15 +173,19 @@ interpolateBlock = function(observations, predictionLocations, outputWhat,  bloc
 	  }
   }
 	
-  if (!is(predictionLocations,"SpatialPolygons")) {
-    if (!is(predictionLocations,"SpatialGrid")) gridded(predictionLocations) = TRUE
-    cellsize = predictionLocations@grid@cellsize      
-    block = cellsize
-    ptext = paste("blocks of size = ",block)
+  if (inherits(predictionLocations, "Spatial")) {
+    if (!is(predictionLocations,"SpatialPolygons")) {
+      if (!is(predictionLocations,"SpatialGrid")) gridded(predictionLocations) = TRUE
+      cellsize = predictionLocations@grid@cellsize      
+      block = cellsize
+      ptext = paste("blocks of size = ",block)
+    } else {
+      block = numeric(0)      
+      ptext = "SpatialPolygons"
+    }    
   } else {
-    block = numeric(0)      
-    ptext = "SpatialPolygons"
-  }    
+    
+  }
   localParams$block = block
 	krigingObject = createIntamapObject(
 		observations = observations,
@@ -174,14 +195,10 @@ interpolateBlock = function(observations, predictionLocations, outputWhat,  bloc
 		blockWhat = blockWhat,
     obsChar = obsChar,
     params = getIntamapParams(localParams),
-    class = methodName
+    class = methodName)
 # blockWhat is only necessary for prediction types that only exist for blocks
 # e.g. fraction above threshold or max within block
-	)
-	# it is here that the cleverness of auto method selection should take place;
-	# as of now, there's only:
 
-	
 	# check:
 	debug.level = krigingObject$params$debug.level	
   checkSetup(krigingObject)
@@ -189,11 +206,11 @@ interpolateBlock = function(observations, predictionLocations, outputWhat,  bloc
 	krigingObject = preProcess(krigingObject)
   if (is.null(krigingObject$variogramModel) && is.null(krigingObject$copulaParams)
                 && is.null(krigingObject$inverseDistancePower)) {
-    krigingObject = estimateParameters(krigingObject)
+    krigingObject = estimateParameters(krigingObject, ...)
   }
   krigingObjectMp = try(methodParameters(krigingObject))
   if (!is(krigingObjectMp,"try-error")) krigingObject = krigingObjectMp
-  krigingObject = spatialPredict.block(krigingObject)
+  krigingObject = spatialPredict.block(krigingObject, ...)
   krigingObject = postProcess(krigingObject)
 # Add plot if wanted
 	if (!is.null(krigingObject$returnPlot) && krigingObject$returnPlot)
@@ -212,6 +229,10 @@ interpolateBlock = function(observations, predictionLocations, outputWhat,  bloc
   }
 # Create a table easier to handle for the WPS   
 	krigingObject$outputTable = toJava(krigingObject$outputTable)
+	if (obsIsSf) {
+	  krigingObject$observations = as(krigingObject$observations, "sf")
+	  krigingObject$predictionLocations = as(krigingObject$predictionLocations, "sf")
+	}
 	attr(krigingObject$outputTable, "transposed") = TRUE
   return(krigingObject)
 }
