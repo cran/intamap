@@ -34,7 +34,7 @@ predicitonLocations or by passing the block-argument through the parameters of t
 object or through the \code{...}-argument.
 
 There are esentially two ways to solve the problems of block predictions.
-\itemize{
+\describe{
   \item{analytical}{block predictions can be found directly by block kriging}
   \item{numerical}{block predictions can be found through numerical simulations
    over a set of points within the block, the requested output is found by 
@@ -88,8 +88,7 @@ proj4string(meuse.grid) = CRS("+init=epsg:28992")
 obj = createIntamapObject(
 	observations = meuse,
 	predictionLocations = meuse.grid[sample(1:length(meuse.grid),10),],
-# Prediction for a different projection possible if rgdal is available
-	targetCRS = ifelse(require(rgdal), "+init=epsg:3035", "+init=epsg:28992"),
+	targetCRS = "+init=epsg:3035",
 	class = "automap"
 )
 

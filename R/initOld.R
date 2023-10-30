@@ -51,7 +51,7 @@ getIntamapDefaultParams = function(doAnisotropy = TRUE,
   testMean = FALSE, removeBias = NA,  addBias = NA, biasRemovalMethod = "LM", 
   nmax = 50, nmin = 0, omax = 0, beta = NULL, maxdist = Inf, ngrid = 100, nsim = 100, sMin = 4, block=numeric(0),  
   processType="gaussian",
-  confProj = FALSE, debug.level = 0, nclus = 1, ... ) {
+  confProj = FALSE, debug.level = 0, nclus = 1, usergdal = FALSE, ... ) {
 return(list(doAnisotropy = doAnisotropy, testMean = testMean, removeBias = removeBias, addBias = addBias,
   biasRemovalMethod = biasRemovalMethod, 
   nmax = nmax, nmin = nmin, omax = omax, beta = beta, maxdist = maxdist, ngrid = ngrid, nsim = nsim, sMin = 4, block = block, processType = processType,
@@ -70,19 +70,51 @@ createIntamapObject = function(observations, obsChar, formulaString, predictionL
   object = list()
   dots = list(...)
   
+  rgdalMessage = FALSE
+  rgdalMessage2 = FALSE
+  rgdalMessage3 = FALSE
+  usergdal = getIntamapParams()$usergdal
+  if ("usergdal" %in% names(params)) usergdal = params$usergdal else if ("usergdal" %in% names(dots)) usergdal = dots$usergdal
   if ("targetCRS" %in% names(params) && missing(targetCRS)) {
     targetCRS = params$targetCRS
     params = params[-which(names(params) == "targetCRS")]
-    targetCRS = st_crs(targetCRS)
+#    if (usergdal) {
+#      if (requireNamespace("rgdal", quietly = TRUE)) targetCRS = rgdal::CRSargs(CRS(targetCRS)) else rgdalMessage = TRUE
+#    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
   }
   if ("intCRS" %in% names(params) && missing(intCRS)) {
     intCRS = params$intCRS
     params = params[-which(names(params) == "intCRS")]
-    intCRS = st_crs(intCRS)
+#    if (usergdal) {
+#      if (requireNamespace("rgdal", quietly = TRUE)) intCRS = rgdal::CRSargs(CRS(intCRS)) else rgdalMessage = TRUE
+#    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
   }
-
-  if (!missing(observations) && (!extends(class(observations),"Spatial") | !extends(class(observations),"sf"))) 
-  	stop("observations not object of class Spatial* or sf")
+  if (!is.na(proj4string(observations))) {
+ #   if (usergdal) {
+#      if (requireNamespace("rgdal", quietly = TRUE)) {
+#        observations@proj4string = CRS(proj4string(observations)) 
+#      } else  rgdalMessage = TRUE
+#    } else rgdalMessage3 = TRUE
+   rgdalMessage2 = TRUE
+  }
+  if (!missing(predictionLocations) && !is.na(proj4string(predictionLocations))) {
+#    if (usergdal) {
+#      if (requireNamespace("rgdal", quietly = TRUE)) 
+#           predictionLocations@proj4string = CRS(proj4string(predictionLocations)) else rgdalMessage = TRUE
+#    } else rgdalMessage3 = TRUE
+    rgdalMessage2 = TRUE
+  }
+  
+ # if (rgdalMessage) print("rgdal is not installed, standardization of projections is not possible")
+#  if (rgdalMessage3) print("standardization of projections is not possible when usergdal = FALSE")
+  if (rgdalMessage2) print("rgdal has been retired. 
+                           As a result of this, some of the checks on projections in the 
+                           intamap package have  disappeared")
+  
+  if (!missing(observations) && !extends(class(observations),"Spatial")) 
+  	stop("observations not object of class Spatial*")
   if (missing(observations)) 
   	stop("Observations not submitted, cannot perform interpolation without data")
   if (!missing(observations)) 

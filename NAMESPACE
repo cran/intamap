@@ -67,6 +67,7 @@ S3method(plot, automap)
 
 S3method(spatialPredict, default)
 S3method(spatialPredict, idw)
+S3method(spatialPredict, block)
 S3method(spatialPredict, linearVariogram)
 S3method(spatialPredict, automap)
 S3method(spatialPredict, copula)

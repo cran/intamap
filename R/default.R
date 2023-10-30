@@ -52,12 +52,7 @@ postProcess.default = function(object, ...) {
     if ("targetCRS" %in% names(object)) {
       targetCRS = object$targetCRS
       if (proj4string(object$predictions) != targetCRS) {
-        if (object$params$usergdal && requireNamespace("rgdal", quietly = FALSE)) {
-          targetCRS = rgdal::CRSargs(CRS(object$targetCRS))
-          object$predictions = spTransform(object$predictions,CRS(object$targetCRS))
-        } else {
           object$predictions = as(st_transform(as(object$predictions, "sf"), crs = targetCRS), "Spatial")
-        }
     }
   }
 # find out what to output

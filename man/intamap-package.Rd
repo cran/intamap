@@ -20,11 +20,15 @@ estimate parameters, compute spatial predictions, and post process them
 
 \preformatted{
 library(intamap)
-
+library(sf)
 # set up intamap object, either manually:
+data(meuse)
+coordinates(meuse) = ~x + y
+data(meuse.grid)
+gridded(meuse.grid) = ~x + y
 obj = list(
-        observations = readOGR("PG:dbname=postgis", "eurdep.data"),
-        predictionLocations = readOGR("PG:dbname=postgis", "eurdep1km.grid"),
+        observations = meuse,
+        predictionLocations = meuse.grid,
         targetCRS = "+init=epsg:3035",
         params = getIntamapParams()
 )
@@ -32,8 +36,8 @@ class(obj) = c("idw")
 
 # or using createIntamapObject
 obj = createIntamapObject(
-        observations = readOGR("PG:dbname=postgis", "eurdep.data"),
-        predictionLocations = readOGR("PG:dbname=postgis", "eurdep1km.grid"),
+        observations = meuse,
+        predictionLocations = meuse.grid,
         targetCRS = "+init=epsg:3035",class = c("idw")
 )
 
@@ -64,8 +68,8 @@ library(intamap)
 }
 The command \code{library(intamap)} loads the R code of the \code{intamap}
 package to the current R session, along with the packages required for
-this (sp, gstat, akima, automap, mvtnorm, evd, MASS). It is also recommended
-to install and load rgdal on those platforms where this package is available.
+this (sp, gstat, akima, automap, mvtnorm, evd, MASS). After the retirement
+of rgdal, it is recommended to use sf-objects from the sf package.
 All packages need to be available to the
 R session, which is possible after downloading them from 
 the Comprehensive R Network Archives (CRAN) (\url{https://cran.r-project.org})
@@ -73,8 +77,8 @@ the Comprehensive R Network Archives (CRAN) (\url{https://cran.r-project.org})
 \preformatted{
 # set up intamap object:
 obj = createIntamapObject(
-        observations = readOGR("PG:dbname=postgis", "eurdep.data"),
-        predictionLocations = readOGR("PG:dbname=postgis", "inspire1km.grid"),
+        observations = meuse,
+        predictionLocations = meuse.grid,
         targetCRS = "+init=epsg:3051", 
         class = "idw"
 )
@@ -112,7 +116,6 @@ To see that, we get in an interactive session:
 > library(intamap)
 Loading required package: sp
 Loading required package: gstat
-Loading required package: rgdal
 Geospatial Data Abstraction Library extensions to R successfully loaded
 > methods(estimateParameters)
 [1] estimateParameters.automap*         estimateParameters.copula*         
@@ -167,8 +170,8 @@ a value larger than 1.
 
 \section{Input object components}{
 \describe{
-\item{\code{observations}}{ object of class \
-                code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}}, containing
+\item{\code{observations}}{ object of class 
+                \code{\link[sp:SpatialPoints]{SpatialPointsDataFrame}}, containing
                 a field \code{value} that is the target variable.}
 \item{\code{predictionLocations}}{ object extending class \code{\link[sp:Spatial-class]{Spatial}}, containing
 prediction locations.}

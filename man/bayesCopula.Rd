@@ -15,7 +15,7 @@ bayesCopula(obj,estimates,search=10,calc=list(mean=TRUE,variance=TRUE),testMean=
   \item{estimates}{List of estimated parameters (typically obtained by calling \code{\link{copulaEstimation}})}
   \item{search}{local prediction: number of observed locations considered for prediction at each unknown point}
   \item{calc}{list of what prediction type is required:
-  \itemize{ 
+  \describe{ 
     \item{\code{mean = TRUE}}{\code{TRUE} if the predictive mean should be calculated, \code{FALSE} otherwise}
     \item{\code{variance = TRUE}}{\code{TRUE} if the predictive variance should be calculated, \code{FALSE} otherwise}
     \item{\code{quantiles = NULL}}{Vector of desired predictive quantiles, e.g. 0.95 or 0.05}
@@ -38,10 +38,12 @@ of the package \code{doParallel}.
 }
 \value{
   List with the following elements:
+  \describe{
   \item{mean}{Mean of the predictive distribution. NULL if not calculated.}
   \item{variance}{Variance of the predtictive distribution. NULL if not calculated.}
   \item{quantiles}{Quantiles of the predictive distribution NULL if not calculated.}
   \item{excprob}{Probabilities for the predictive distribution to exceed predefined thresholds. NULL if not calculated.}
+  }
 }
 \references{
 [1] Kazianka, H. and Pilz, J. (2009), Spatial Interpolation Using Copula-Based Geostatistical Models. GeoENV2008 - Geostatistics for Environmental Application (P. Atkinson, C. Lloyd, eds.), Springer, New York 
