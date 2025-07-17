@@ -1,6 +1,5 @@
 Package: intamap
-Version: 1.5-7
-Date: 2023-10-30
+Version: 1.5-10
 Title: Procedures for Automated Interpolation
 Authors@R: c(person("Edzer", "Pebesma", role = c("aut"), email = "edzer.pebesma@uni-muenster.de"),
            person("Jon Olav", "Skoien", role = c("aut", "cre"), email = "jon.skoien@gmail.com"),
@@ -15,11 +14,11 @@ Depends: R (>= 2.14.0), sp (>= 0.9-0)
 Imports: gstat (>= 0.9-36), sf, automap, MBA, mvtnorm, MASS, evd,
         doParallel, foreach, parallel, stats, methods, grDevices,
         utils, graphics
-Suggests: psgp
+Suggests: rworldmap
 Description: Geostatistical interpolation has traditionally been done by manually fitting a variogram and then interpolating. Here, we introduce classes and methods that can do this interpolation automatically. Pebesma et al (2010) gives an overview of the methods behind and possible usage <doi:10.1016/j.cageo.2010.03.019>.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2023-10-30 10:34:22 UTC; skoiejo
+Packaged: 2025-07-17 09:28:44 UTC; jonsk
 Author: Edzer Pebesma [aut],
   Jon Olav Skoien [aut, cre],
   Olivier Baume [ctb],
@@ -29,4 +28,4 @@ Author: Edzer Pebesma [aut],
   Stepahnie Melles [ctb],
   Giannis Spiliopoulos [ctb]
 Repository: CRAN
-Date/Publication: 2023-10-30 11:40:06 UTC
+Date/Publication: 2025-07-17 10:10:02 UTC
